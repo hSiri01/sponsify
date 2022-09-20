@@ -1,0 +1,624 @@
+{
+    "modelName": "model",
+    "collections": [
+        {
+            "collectionName": "organization",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "name",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "a1930655-c16e-49d0-b988-af47e3347620",
+                    "error": {}
+                },
+                {
+                    "name": "address",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "document",
+                    "properties": [
+                        {
+                            "name": "street address",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "string",
+                            "GUID": "bea74b3f-868b-4cd9-a283-dec8c3a88838",
+                            "error": {}
+                        },
+                        {
+                            "name": "zipcode",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "numeric",
+                            "GUID": "3a9f17cf-0360-40e5-adab-ee10a0e9295c",
+                            "error": {}
+                        },
+                        {
+                            "name": "city",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "string",
+                            "GUID": "7ca7e803-8fd1-4bc6-aa00-4f182a047f8c",
+                            "error": {}
+                        },
+                        {
+                            "name": "state",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "string",
+                            "GUID": "fe390dd2-818b-4e95-8420-a6386e4c8e33",
+                            "error": {}
+                        },
+                        {
+                            "name": "country",
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "string",
+                            "GUID": "6526696c-3fb7-4ef7-8de8-c6eb6eaeda3d",
+                            "error": {}
+                        }
+                    ],
+                    "additionalProperties": false,
+                    "GUID": "037dc398-8c6a-4ceb-9b59-6b15b2e81f40",
+                    "error": {}
+                },
+                {
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "7e4a2256-88ab-4c11-b17a-be7b3f52db92",
+                    "name": "event code",
+                    "error": {}
+                },
+                {
+                    "name": "valid admins",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "string",
+                            "GUID": "29d9c5cf-43ad-4b5a-80ca-c77c578529c1",
+                            "arrayItem": true,
+                            "arrayParentType": "array",
+                            "displayName": "email",
+                            "error": {}
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "cf344643-c165-45ec-8ee3-b8c73a30e3f9",
+                    "error": {}
+                },
+                {
+                    "name": "logo image",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "7b55c673-aa0f-4235-a324-190f459d2680",
+                    "error": {}
+                },
+                {
+                    "name": "faq",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "document",
+                            "properties": [
+                                {
+                                    "name": "question",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "b5e76906-f09a-47b1-8690-07f112a33a97",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "answer",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "2f5aeb82-56fa-4399-a3ce-91d4bbfc256f",
+                                    "error": {}
+                                }
+                            ],
+                            "additionalProperties": false,
+                            "GUID": "c631b86d-a01c-4dda-8dc7-090d3b8dd855",
+                            "arrayItem": true,
+                            "arrayParentType": "array"
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "937d3ce6-72a6-4d46-bdce-1ab0210510c1",
+                    "error": {}
+                },
+                {
+                    "name": "levels",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "document",
+                            "properties": [
+                                {
+                                    "name": "min amount",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "numeric",
+                                    "GUID": "928ecae8-dd5f-4c2b-8be0-ad2140ca055c",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "max amount",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "numeric",
+                                    "GUID": "e96f6998-0332-4107-a8bc-0fb7a2d5ef35",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "name",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "2e659099-9db0-4c01-945f-a069dca8c5c8",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "color (hex)",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "f8365a62-bcaf-4d2d-a034-08cb444f6876",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "description",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "fa646dee-0918-4aae-8028-cf69d12d7eae",
+                                    "error": {}
+                                }
+                            ],
+                            "additionalProperties": false,
+                            "GUID": "2cf98890-88be-41c2-b15e-5a3f5b248092",
+                            "arrayItem": true,
+                            "arrayParentType": "array"
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "00f044ec-e343-4ad9-9df7-be42d0e1a1a5",
+                    "error": {}
+                },
+                {
+                    "name": "events ID",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "objectId",
+                            "GUID": "4b430913-e09b-4522-8ff0-9d2569a7b34c",
+                            "arrayItem": true,
+                            "arrayParentType": "array"
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "410f20fc-b0b1-40ef-9413-1ebc7aaa64b4",
+                    "error": {}
+                },
+                {
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "7e70de31-daa7-4fc7-92a4-a3ff0e3dd81c",
+                    "name": "example invoice",
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "b0eb1a94-e783-4c17-87ae-b776aef0361a"
+            },
+            "isActivated": true,
+            "additionalProperties": true,
+            "validationLevel": "Off",
+            "validationAction": "Warn",
+            "storageEngineName": "WiredTiger",
+            "collectionUsers": [],
+            "indexes": [],
+            "collation": {},
+            "sharding": {
+                "unique": true,
+                "collation": "null"
+            },
+            "GUID": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+            "error": {},
+            "bucketId": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
+        },
+        {
+            "collectionName": "event",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "ID",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "objectId",
+                    "GUID": "3397d4b3-fe88-4737-bc0e-303e92cf3092",
+                    "error": {}
+                },
+                {
+                    "name": "name",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "77bd8af4-580f-48a2-b132-446ba230b3b9",
+                    "error": {}
+                },
+                {
+                    "name": "date",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "date",
+                    "primaryKey": false,
+                    "GUID": "f2e13013-0923-4a69-bfc6-e4e8006e2103",
+                    "error": {}
+                },
+                {
+                    "name": "price",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "numeric",
+                    "GUID": "c9ecee84-a547-4dfa-80dd-b75148d2a63c",
+                    "error": {}
+                },
+                {
+                    "name": "description",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "32150c2d-e0d5-4980-85c6-0109c13a941c",
+                    "error": {}
+                },
+                {
+                    "name": "average attendance",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "numeric",
+                    "GUID": "39be78ba-13db-4444-a753-eb05af376edf",
+                    "error": {}
+                },
+                {
+                    "name": "total availability",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "numeric",
+                    "GUID": "66d22544-e740-4cab-99d9-a55066c29a81",
+                    "error": {}
+                },
+                {
+                    "name": "remaining availability",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "numeric",
+                    "GUID": "67392ac2-f798-479b-b423-f0b19f646526",
+                    "error": {}
+                },
+                {
+                    "name": "visible",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "boolean",
+                    "GUID": "4e4bf02a-a5ec-4c4e-9b11-adfdc959dc6e",
+                    "error": {}
+                },
+                {
+                    "name": "sponsors",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "document",
+                            "properties": [
+                                {
+                                    "name": "first name",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "numeric",
+                                    "GUID": "bb23d172-73ce-4fce-93fb-273447b72598",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "last name",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "daecfadb-c090-4b3d-8840-864f14d908c1",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "email",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "03002875-a4c6-47a6-9468-98c18dc8abac",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "company",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "aded8f0b-8ed2-4c0b-ab22-eebbc7e3cf47",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "sponsor level",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "string",
+                                    "GUID": "94902518-df0b-4765-82f7-3af9b5ceec70",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "total amount",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "numeric",
+                                    "GUID": "725e685d-4cef-410b-a5bd-2c705dc6c98a",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "date sponsored",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "date",
+                                    "primaryKey": false,
+                                    "GUID": "d1e3dfcc-8c6e-4841-873b-2139d08c8f0a",
+                                    "error": {}
+                                }
+                            ],
+                            "additionalProperties": false,
+                            "GUID": "48f69536-f0e1-4b5a-8299-6e934ff4a0c3",
+                            "arrayItem": true,
+                            "arrayParentType": "array"
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "05ede3e8-c667-459c-afc2-efdc00e797d9",
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "8624feea-22bd-4c0d-8e74-b9137523250c"
+            },
+            "isActivated": true,
+            "additionalProperties": false,
+            "validationLevel": "Off",
+            "validationAction": "Warn",
+            "storageEngineName": "WiredTiger",
+            "collectionUsers": [],
+            "indexes": [],
+            "collation": {},
+            "sharding": {
+                "unique": true,
+                "collation": "null"
+            },
+            "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+            "bucketId": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
+        }
+    ],
+    "buckets": [
+        {
+            "name": "sponsify db",
+            "type": "bucket",
+            "collectionIds": [
+                "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                "08dcfcc2-c8a2-49ac-b05f-c19641a7c567"
+            ],
+            "backgroundColor": {
+                "r": 119,
+                "g": 119,
+                "b": 119,
+                "a": 1
+            },
+            "show": true,
+            "isActivated": true,
+            "GUID": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26",
+            "hackoladeMeta": {
+                "namingConvention": "",
+                "validationErrors": {
+                    "name": true
+                }
+            },
+            "fontStyle": [
+                "bold"
+            ]
+        }
+    ],
+    "views": [],
+    "relationships": [
+        {
+            "name": "New Relationship",
+            "relationshipType": "Foreign Key",
+            "parentField": [],
+            "parentCardinality": "1",
+            "childField": [],
+            "childCardinality": "0..n",
+            "GUID": "55237e7a-d33c-48ab-83ca-6766ae4ab02c",
+            "parentCollection": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+            "childCollection": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+            "hackoladeStyles": {
+                "GUID": "c51f1bbd-557e-4e08-9352-de00e1335ad9",
+                "thickness": 2,
+                "color": "#777777"
+            }
+        }
+    ],
+    "users": [],
+    "diagramViews": [],
+    "idToNameHashTable": {
+        "c95a3765-a9ab-4263-8dc4-bc086acef818": "organization",
+        "a1930655-c16e-49d0-b988-af47e3347620": "name",
+        "037dc398-8c6a-4ceb-9b59-6b15b2e81f40": "address",
+        "bea74b3f-868b-4cd9-a283-dec8c3a88838": "street address",
+        "3a9f17cf-0360-40e5-adab-ee10a0e9295c": "zipcode",
+        "08dcfcc2-c8a2-49ac-b05f-c19641a7c567": "event",
+        "55237e7a-d33c-48ab-83ca-6766ae4ab02c": "New Relationship",
+        "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26": "sponsify db",
+        "7ca7e803-8fd1-4bc6-aa00-4f182a047f8c": "city",
+        "fe390dd2-818b-4e95-8420-a6386e4c8e33": "state",
+        "6526696c-3fb7-4ef7-8de8-c6eb6eaeda3d": "country",
+        "7e4a2256-88ab-4c11-b17a-be7b3f52db92": "event code",
+        "cf344643-c165-45ec-8ee3-b8c73a30e3f9": "valid admins",
+        "7b55c673-aa0f-4235-a324-190f459d2680": "logo image",
+        "937d3ce6-72a6-4d46-bdce-1ab0210510c1": "faq",
+        "e9ff641c-5dee-4cac-8d09-f799868493cf": "New Field",
+        "735f7319-6a34-454f-b032-b5adacdd1130": "question",
+        "4024153b-69af-4d46-a8ac-6f29906ae911": "answer",
+        "b5e76906-f09a-47b1-8690-07f112a33a97": "question",
+        "2f5aeb82-56fa-4399-a3ce-91d4bbfc256f": "answer",
+        "00f044ec-e343-4ad9-9df7-be42d0e1a1a5": "levels",
+        "928ecae8-dd5f-4c2b-8be0-ad2140ca055c": "min amount",
+        "e96f6998-0332-4107-a8bc-0fb7a2d5ef35": "max amount",
+        "2e659099-9db0-4c01-945f-a069dca8c5c8": "name",
+        "f8365a62-bcaf-4d2d-a034-08cb444f6876": "color (hex)",
+        "fa646dee-0918-4aae-8028-cf69d12d7eae": "description",
+        "410f20fc-b0b1-40ef-9413-1ebc7aaa64b4": "events ID",
+        "3397d4b3-fe88-4737-bc0e-303e92cf3092": "ID",
+        "77bd8af4-580f-48a2-b132-446ba230b3b9": "name",
+        "f2e13013-0923-4a69-bfc6-e4e8006e2103": "date",
+        "c9ecee84-a547-4dfa-80dd-b75148d2a63c": "price",
+        "32150c2d-e0d5-4980-85c6-0109c13a941c": "description",
+        "39be78ba-13db-4444-a753-eb05af376edf": "average attendance",
+        "66d22544-e740-4cab-99d9-a55066c29a81": "total availability",
+        "67392ac2-f798-479b-b423-f0b19f646526": "remaining availability",
+        "4e4bf02a-a5ec-4c4e-9b11-adfdc959dc6e": "visible",
+        "05ede3e8-c667-459c-afc2-efdc00e797d9": "sponsors",
+        "bb23d172-73ce-4fce-93fb-273447b72598": "first name",
+        "daecfadb-c090-4b3d-8840-864f14d908c1": "last name",
+        "03002875-a4c6-47a6-9468-98c18dc8abac": "email",
+        "aded8f0b-8ed2-4c0b-ab22-eebbc7e3cf47": "company",
+        "725e685d-4cef-410b-a5bd-2c705dc6c98a": "total amount",
+        "94902518-df0b-4765-82f7-3af9b5ceec70": "sponsor level",
+        "d1e3dfcc-8c6e-4841-873b-2139d08c8f0a": "date sponsored",
+        "7e70de31-daa7-4fc7-92a4-a3ff0e3dd81c": "example invoice"
+    },
+    "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "174f3b21-7972-4117-8ea2-68f834c3b56b"
+    },
+    "polyglotDefinitions": {
+        "type": "polyglotDefinitions",
+        "properties": [],
+        "GUID": "74fcf1ea-7a04-44ae-8a6f-c73cb0fffa03"
+    },
+    "externalDefinitions": {
+        "type": "externalDefinitions",
+        "properties": [],
+        "GUID": "4d701f68-b77d-47e9-a948-8ef837700a02"
+    },
+    "sources": [],
+    "decorativeSymbols": [],
+    "dbVersion": "v5.0",
+    "dbVendor": "MongoDB",
+    "appTarget": "MONGODB",
+    "creationTS": "2022-09-18T21:07:04.897Z",
+    "GUID": "9cf859d6-2ec0-4962-b2a9-b66d7f77f8a6",
+    "isLineageEnabled": false,
+    "hackoladeMeta": {
+        "validationErrors": {
+            "modelName": false
+        }
+    },
+    "lastModifTS": "2022-09-19T19:06:57.843Z",
+    "persistenceSchemaVersion": "6",
+    "isCreatedByPlugin": true,
+    "pluginInformation": {
+        "pluginEngineVersion": "1.0.0"
+    },
+    "applicationInformation": {
+        "version": "6.5.0"
+    },
+    "settings": {
+        "centralPane": {
+            "dbLevel": {
+                "erd": [
+                    {
+                        "GUID": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                        "x": 510.6666666666667,
+                        "y": 348,
+                        "width": 241,
+                        "height": 483,
+                        "color": {
+                            "hex": "#2196f3"
+                        }
+                    },
+                    {
+                        "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                        "x": 693.3333333333335,
+                        "y": 884.6666666666672,
+                        "width": 269,
+                        "height": 357,
+                        "color": {
+                            "hex": "#fc6c85"
+                        }
+                    }
+                ],
+                "buckets": [
+                    {
+                        "x": 470.6666666666667,
+                        "y": 308,
+                        "GUID": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
+                    }
+                ],
+                "collapsedNodes": [],
+                "activeRelationship": "",
+                "activeRelationshipFields": {
+                    "childField": [],
+                    "parentField": []
+                },
+                "selectedCollections": [],
+                "displayColorPicker": false,
+                "graphView": {
+                    "erd": [],
+                    "buckets": [],
+                    "decorativeSymbols": [],
+                    "forceLayout": true,
+                    "defaultLinkLength": 300
+                },
+                "diagramViews": [],
+                "decorativeSymbols": [],
+                "nestedCollectionsLayout": "horizontal",
+                "options": []
+            },
+            "collectionLevel": {},
+            "changed": false
+        },
+        "dtDiagram": {
+            "collapsedNodes": [],
+            "shouldDistributeCollections": false
+        }
+    }
+}
