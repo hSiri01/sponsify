@@ -31,7 +31,6 @@
   "bugs": {
     "url": "https://github.com/hSiri01/sponsify/issues"
   },
-  "homepage": "https://github.com/hSiri01/sponsify#readme",
   "eslintConfig": {
     "extends": [
       "react-app",
