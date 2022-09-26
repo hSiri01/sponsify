@@ -202,7 +202,7 @@
                     "error": {}
                 },
                 {
-                    "name": "events ID",
+                    "name": "events",
                     "hackoladeMeta": {},
                     "isActivated": true,
                     "type": "array",
@@ -213,7 +213,16 @@
                             "type": "objectId",
                             "GUID": "4b430913-e09b-4522-8ff0-9d2569a7b34c",
                             "arrayItem": true,
-                            "arrayParentType": "array"
+                            "arrayParentType": "array",
+                            "displayName": "event ID",
+                            "foreignCollection": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                            "foreignField": [
+                                "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                                "3397d4b3-fe88-4737-bc0e-303e92cf3092"
+                            ],
+                            "relationshipType": "Foreign Key",
+                            "parentRelationship": "16f7510c-06ba-496d-86c4-a96fdfb8dea5",
+                            "error": {}
                         }
                     ],
                     "additionalItems": true,
@@ -255,12 +264,17 @@
             "type": "object",
             "properties": [
                 {
-                    "name": "ID",
+                    "name": "event ID",
                     "hackoladeMeta": {},
                     "isActivated": true,
                     "type": "objectId",
                     "GUID": "3397d4b3-fe88-4737-bc0e-303e92cf3092",
-                    "error": {}
+                    "primaryKey": true,
+                    "error": {},
+                    "childRelationships": [
+                        "f2a1441e-b66d-498f-bcac-ab2e270e8673",
+                        "16f7510c-06ba-496d-86c4-a96fdfb8dea5"
+                    ]
                 },
                 {
                     "name": "name",
@@ -336,70 +350,19 @@
                         {
                             "hackoladeMeta": {},
                             "isActivated": true,
-                            "type": "document",
-                            "properties": [
-                                {
-                                    "name": "first name",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "numeric",
-                                    "GUID": "bb23d172-73ce-4fce-93fb-273447b72598",
-                                    "error": {}
-                                },
-                                {
-                                    "name": "last name",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "string",
-                                    "GUID": "daecfadb-c090-4b3d-8840-864f14d908c1",
-                                    "error": {}
-                                },
-                                {
-                                    "name": "email",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "string",
-                                    "GUID": "03002875-a4c6-47a6-9468-98c18dc8abac",
-                                    "error": {}
-                                },
-                                {
-                                    "name": "company",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "string",
-                                    "GUID": "aded8f0b-8ed2-4c0b-ab22-eebbc7e3cf47",
-                                    "error": {}
-                                },
-                                {
-                                    "name": "sponsor level",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "string",
-                                    "GUID": "94902518-df0b-4765-82f7-3af9b5ceec70",
-                                    "error": {}
-                                },
-                                {
-                                    "name": "total amount",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "numeric",
-                                    "GUID": "725e685d-4cef-410b-a5bd-2c705dc6c98a",
-                                    "error": {}
-                                },
-                                {
-                                    "name": "date sponsored",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "date",
-                                    "primaryKey": false,
-                                    "GUID": "d1e3dfcc-8c6e-4841-873b-2139d08c8f0a",
-                                    "error": {}
-                                }
-                            ],
-                            "additionalProperties": false,
+                            "type": "objectId",
                             "GUID": "48f69536-f0e1-4b5a-8299-6e934ff4a0c3",
                             "arrayItem": true,
-                            "arrayParentType": "array"
+                            "arrayParentType": "array",
+                            "displayName": "sponsor ID",
+                            "foreignCollection": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                            "foreignField": [
+                                "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                                "f19eba62-f348-4175-9ae8-1937a7e49f70"
+                            ],
+                            "relationshipType": "Foreign Key",
+                            "parentRelationship": "2da9221b-760c-4cca-a73d-e5eb119afbcd",
+                            "error": {}
                         }
                     ],
                     "additionalItems": true,
@@ -426,6 +389,178 @@
             },
             "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
             "bucketId": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
+        },
+        {
+            "collectionName": "purchase",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "purchase ID",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "objectId",
+                    "GUID": "32805a3f-05fe-42c7-968e-4053a623529a",
+                    "primaryKey": true,
+                    "error": {}
+                },
+                {
+                    "name": "sponsor ID",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "objectId",
+                    "GUID": "9cb5c951-e211-425a-a164-5e35f778e45f",
+                    "foreignCollection": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                    "foreignField": [
+                        "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                        "f19eba62-f348-4175-9ae8-1937a7e49f70"
+                    ],
+                    "relationshipType": "Foreign Key",
+                    "parentRelationship": "4b3f9bcf-1066-43a5-8376-1156cc0546c2",
+                    "error": {}
+                },
+                {
+                    "name": "events",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "array",
+                    "properties": [
+                        {
+                            "hackoladeMeta": {},
+                            "isActivated": true,
+                            "type": "objectId",
+                            "GUID": "1b4d09df-c1f9-424c-9923-7edd84e5c628",
+                            "arrayItem": true,
+                            "arrayParentType": "array",
+                            "displayName": "event ID",
+                            "foreignCollection": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                            "foreignField": [
+                                "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                                "3397d4b3-fe88-4737-bc0e-303e92cf3092"
+                            ],
+                            "relationshipType": "Foreign Key",
+                            "parentRelationship": "f2a1441e-b66d-498f-bcac-ab2e270e8673",
+                            "error": {}
+                        }
+                    ],
+                    "additionalItems": true,
+                    "GUID": "e362042c-6b9c-4460-943e-9083bec88687",
+                    "error": {}
+                },
+                {
+                    "name": "total amount",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "numeric",
+                    "GUID": "47484b71-011e-420d-a564-8f0843b02517",
+                    "error": {}
+                },
+                {
+                    "name": "date sponsored",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "date",
+                    "primaryKey": false,
+                    "GUID": "04447b31-c9a6-4ae5-afe8-c42e2d88a810",
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "fd5d3554-556c-4df1-ba32-4c532172d05f"
+            },
+            "isActivated": true,
+            "additionalProperties": false,
+            "validationLevel": "Off",
+            "validationAction": "Warn",
+            "storageEngineName": "WiredTiger",
+            "collectionUsers": [],
+            "indexes": [],
+            "collation": {},
+            "sharding": {
+                "unique": true,
+                "collation": "null"
+            },
+            "GUID": "3887f311-3705-4855-ad36-f36de51d822b",
+            "bucketId": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
+        },
+        {
+            "collectionName": "sponsor",
+            "type": "object",
+            "properties": [
+                {
+                    "name": "sponsor ID",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "objectId",
+                    "GUID": "f19eba62-f348-4175-9ae8-1937a7e49f70",
+                    "primaryKey": true,
+                    "error": {},
+                    "childRelationships": [
+                        "4b3f9bcf-1066-43a5-8376-1156cc0546c2",
+                        "2da9221b-760c-4cca-a73d-e5eb119afbcd"
+                    ]
+                },
+                {
+                    "name": "first name",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "36ba011a-64af-46ff-9b3c-e7346c2e75a4",
+                    "error": {}
+                },
+                {
+                    "name": "last name",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "6d9beef6-a3d5-46b6-9536-008e7e447799",
+                    "error": {}
+                },
+                {
+                    "name": "email",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "35c8a012-7dfc-4e80-b2ff-0e66f43cbfdd",
+                    "error": {}
+                },
+                {
+                    "name": "company",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "bce690ba-f7f4-45ce-be5f-75edc079e56f",
+                    "error": {}
+                },
+                {
+                    "name": "sponsor level",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "bbf69438-27a2-4bfe-aba8-f907ccc2f456",
+                    "error": {}
+                }
+            ],
+            "definitions": {
+                "type": "definitions",
+                "properties": [],
+                "GUID": "b1cbd2f5-53b2-4d00-9868-341d69a06cbb"
+            },
+            "isActivated": true,
+            "additionalProperties": false,
+            "validationLevel": "Off",
+            "validationAction": "Warn",
+            "storageEngineName": "WiredTiger",
+            "collectionUsers": [],
+            "indexes": [],
+            "collation": {},
+            "sharding": {
+                "unique": true,
+                "collation": "null"
+            },
+            "GUID": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+            "bucketId": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
         }
     ],
     "buckets": [
@@ -434,7 +569,9 @@
             "type": "bucket",
             "collectionIds": [
                 "c95a3765-a9ab-4263-8dc4-bc086acef818",
-                "08dcfcc2-c8a2-49ac-b05f-c19641a7c567"
+                "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                "3887f311-3705-4855-ad36-f36de51d822b",
+                "787f2610-f5d0-4e3b-8857-dc5b0d7f0341"
             ],
             "backgroundColor": {
                 "r": 119,
@@ -459,19 +596,110 @@
     "views": [],
     "relationships": [
         {
-            "name": "New Relationship",
+            "name": "fk purchase.sponsor ID to sponsor.sponsor ID",
             "relationshipType": "Foreign Key",
-            "parentField": [],
+            "parentField": [
+                [
+                    "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                    "f19eba62-f348-4175-9ae8-1937a7e49f70"
+                ]
+            ],
             "parentCardinality": "1",
-            "childField": [],
-            "childCardinality": "0..n",
-            "GUID": "55237e7a-d33c-48ab-83ca-6766ae4ab02c",
-            "parentCollection": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+            "childField": [
+                [
+                    "3887f311-3705-4855-ad36-f36de51d822b",
+                    "9cb5c951-e211-425a-a164-5e35f778e45f"
+                ]
+            ],
+            "childCardinality": "1",
+            "GUID": "4b3f9bcf-1066-43a5-8376-1156cc0546c2",
+            "parentCollection": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+            "childCollection": "3887f311-3705-4855-ad36-f36de51d822b",
+            "hackoladeStyles": {
+                "GUID": "3e936a51-d169-40fc-903a-177588413803",
+                "thickness": 2,
+                "color": "#333333"
+            }
+        },
+        {
+            "name": "fk purchase.events.[0] to event.event ID",
+            "relationshipType": "Foreign Key",
+            "parentField": [
+                [
+                    "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                    "3397d4b3-fe88-4737-bc0e-303e92cf3092"
+                ]
+            ],
+            "parentCardinality": "1..n",
+            "childField": [
+                [
+                    "3887f311-3705-4855-ad36-f36de51d822b",
+                    "e362042c-6b9c-4460-943e-9083bec88687",
+                    "1b4d09df-c1f9-424c-9923-7edd84e5c628"
+                ]
+            ],
+            "childCardinality": "1",
+            "GUID": "f2a1441e-b66d-498f-bcac-ab2e270e8673",
+            "parentCollection": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+            "childCollection": "3887f311-3705-4855-ad36-f36de51d822b",
+            "hackoladeStyles": {
+                "GUID": "e4a63c0c-509d-4a9d-b3e3-ec192524ed73",
+                "thickness": 2,
+                "color": "#333333"
+            }
+        },
+        {
+            "name": "fk event.sponsors.[0] to sponsor.sponsor ID",
+            "relationshipType": "Foreign Key",
+            "parentField": [
+                [
+                    "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                    "f19eba62-f348-4175-9ae8-1937a7e49f70"
+                ]
+            ],
+            "parentCardinality": "1..n",
+            "childField": [
+                [
+                    "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                    "05ede3e8-c667-459c-afc2-efdc00e797d9",
+                    "48f69536-f0e1-4b5a-8299-6e934ff4a0c3"
+                ]
+            ],
+            "childCardinality": "1",
+            "GUID": "2da9221b-760c-4cca-a73d-e5eb119afbcd",
+            "parentCollection": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
             "childCollection": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
             "hackoladeStyles": {
-                "GUID": "c51f1bbd-557e-4e08-9352-de00e1335ad9",
+                "GUID": "6b76e475-0365-444a-86d8-7860bee61de6",
                 "thickness": 2,
-                "color": "#777777"
+                "color": "#333333"
+            }
+        },
+        {
+            "name": "fk organization.events.[0] to event.event ID",
+            "relationshipType": "Foreign Key",
+            "parentField": [
+                [
+                    "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+                    "3397d4b3-fe88-4737-bc0e-303e92cf3092"
+                ]
+            ],
+            "parentCardinality": "1..n",
+            "childField": [
+                [
+                    "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                    "410f20fc-b0b1-40ef-9413-1ebc7aaa64b4",
+                    "4b430913-e09b-4522-8ff0-9d2569a7b34c"
+                ]
+            ],
+            "childCardinality": "1",
+            "GUID": "16f7510c-06ba-496d-86c4-a96fdfb8dea5",
+            "parentCollection": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
+            "childCollection": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+            "hackoladeStyles": {
+                "GUID": "1abcbe6f-dadc-4e23-8e37-7d83c91663fd",
+                "thickness": 2,
+                "color": "#333333"
             }
         }
     ],
@@ -484,7 +712,6 @@
         "bea74b3f-868b-4cd9-a283-dec8c3a88838": "street address",
         "3a9f17cf-0360-40e5-adab-ee10a0e9295c": "zipcode",
         "08dcfcc2-c8a2-49ac-b05f-c19641a7c567": "event",
-        "55237e7a-d33c-48ab-83ca-6766ae4ab02c": "New Relationship",
         "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26": "sponsify db",
         "7ca7e803-8fd1-4bc6-aa00-4f182a047f8c": "city",
         "fe390dd2-818b-4e95-8420-a6386e4c8e33": "state",
@@ -504,8 +731,8 @@
         "2e659099-9db0-4c01-945f-a069dca8c5c8": "name",
         "f8365a62-bcaf-4d2d-a034-08cb444f6876": "color (hex)",
         "fa646dee-0918-4aae-8028-cf69d12d7eae": "description",
-        "410f20fc-b0b1-40ef-9413-1ebc7aaa64b4": "events ID",
-        "3397d4b3-fe88-4737-bc0e-303e92cf3092": "ID",
+        "410f20fc-b0b1-40ef-9413-1ebc7aaa64b4": "events",
+        "3397d4b3-fe88-4737-bc0e-303e92cf3092": "event ID",
         "77bd8af4-580f-48a2-b132-446ba230b3b9": "name",
         "f2e13013-0923-4a69-bfc6-e4e8006e2103": "date",
         "c9ecee84-a547-4dfa-80dd-b75148d2a63c": "price",
@@ -515,14 +742,24 @@
         "67392ac2-f798-479b-b423-f0b19f646526": "remaining availability",
         "4e4bf02a-a5ec-4c4e-9b11-adfdc959dc6e": "visible",
         "05ede3e8-c667-459c-afc2-efdc00e797d9": "sponsors",
-        "bb23d172-73ce-4fce-93fb-273447b72598": "first name",
-        "daecfadb-c090-4b3d-8840-864f14d908c1": "last name",
-        "03002875-a4c6-47a6-9468-98c18dc8abac": "email",
-        "aded8f0b-8ed2-4c0b-ab22-eebbc7e3cf47": "company",
-        "725e685d-4cef-410b-a5bd-2c705dc6c98a": "total amount",
-        "94902518-df0b-4765-82f7-3af9b5ceec70": "sponsor level",
-        "d1e3dfcc-8c6e-4841-873b-2139d08c8f0a": "date sponsored",
-        "7e70de31-daa7-4fc7-92a4-a3ff0e3dd81c": "example invoice"
+        "7e70de31-daa7-4fc7-92a4-a3ff0e3dd81c": "example invoice",
+        "3887f311-3705-4855-ad36-f36de51d822b": "purchase",
+        "32805a3f-05fe-42c7-968e-4053a623529a": "purchase ID",
+        "9cb5c951-e211-425a-a164-5e35f778e45f": "sponsor ID",
+        "e362042c-6b9c-4460-943e-9083bec88687": "events",
+        "47484b71-011e-420d-a564-8f0843b02517": "total amount",
+        "787f2610-f5d0-4e3b-8857-dc5b0d7f0341": "sponsor",
+        "f19eba62-f348-4175-9ae8-1937a7e49f70": "sponsor ID",
+        "36ba011a-64af-46ff-9b3c-e7346c2e75a4": "first name",
+        "6d9beef6-a3d5-46b6-9536-008e7e447799": "last name",
+        "35c8a012-7dfc-4e80-b2ff-0e66f43cbfdd": "email",
+        "bce690ba-f7f4-45ce-be5f-75edc079e56f": "company",
+        "bbf69438-27a2-4bfe-aba8-f907ccc2f456": "sponsor level",
+        "04447b31-c9a6-4ae5-afe8-c42e2d88a810": "date sponsored",
+        "4b3f9bcf-1066-43a5-8376-1156cc0546c2": "fk purchase.sponsor ID to sponsor.sponsor ID",
+        "f2a1441e-b66d-498f-bcac-ab2e270e8673": "fk purchase.events.[0] to event.event ID",
+        "2da9221b-760c-4cca-a73d-e5eb119afbcd": "fk event.sponsors.[0] to sponsor.sponsor ID",
+        "16f7510c-06ba-496d-86c4-a96fdfb8dea5": "fk organization.events.[0] to event.event ID"
     },
     "definitions": {
         "type": "definitions",
@@ -552,14 +789,14 @@
             "modelName": false
         }
     },
-    "lastModifTS": "2022-09-19T19:06:57.843Z",
+    "lastModifTS": "2022-09-26T16:29:04.005Z",
     "persistenceSchemaVersion": "6",
     "isCreatedByPlugin": true,
     "pluginInformation": {
         "pluginEngineVersion": "1.0.0"
     },
     "applicationInformation": {
-        "version": "6.5.0"
+        "version": "6.5.1"
     },
     "settings": {
         "centralPane": {
@@ -567,8 +804,8 @@
                 "erd": [
                     {
                         "GUID": "c95a3765-a9ab-4263-8dc4-bc086acef818",
-                        "x": 510.6666666666667,
-                        "y": 348,
+                        "x": 451.1572535991141,
+                        "y": 325.8298265042453,
                         "width": 241,
                         "height": 483,
                         "color": {
@@ -577,19 +814,39 @@
                     },
                     {
                         "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
-                        "x": 693.3333333333335,
-                        "y": 884.6666666666672,
-                        "width": 269,
-                        "height": 357,
+                        "x": 633.8239202657809,
+                        "y": 871.8313030638619,
+                        "width": 248,
+                        "height": 231,
                         "color": {
                             "hex": "#fc6c85"
+                        }
+                    },
+                    {
+                        "GUID": "3887f311-3705-4855-ad36-f36de51d822b",
+                        "x": 787.6245847176083,
+                        "y": 388.5614617940205,
+                        "width": 216,
+                        "height": 141,
+                        "color": {
+                            "hex": "#008a00"
+                        }
+                    },
+                    {
+                        "GUID": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
+                        "x": 1075.8368401624216,
+                        "y": 795.7925433739392,
+                        "width": 197,
+                        "height": 141,
+                        "color": {
+                            "hex": "#d80073"
                         }
                     }
                 ],
                 "buckets": [
                     {
-                        "x": 470.6666666666667,
-                        "y": 308,
+                        "x": 411.1572535991141,
+                        "y": 285.8298265042453,
                         "GUID": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
                     }
                 ],
