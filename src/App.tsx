@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import SponsorHome from './organism/SponsorHome/App';
+import SponsorHome from './sponsor/organism/Home/App';
 import { ThemeProvider } from '@mui/system';
 import { theme,} from './utils/theme';
 
