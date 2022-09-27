@@ -1,4 +1,5 @@
 import { createTheme, PaletteColorOptions, responsiveFontSizes } from '@mui/material/styles';
+import { hover } from '@testing-library/user-event/dist/hover';
 
 declare module '@mui/material/styles' {
     interface Theme {
@@ -24,6 +25,10 @@ export const darkGreen: PaletteColorOptions = {
     main: '#367c63',
 }
 
+export const grey: PaletteColorOptions = {
+    main: '#434343',
+}
+
 
 export const theme = responsiveFontSizes(createTheme({
     spacing,
@@ -32,11 +37,38 @@ export const theme = responsiveFontSizes(createTheme({
         primary: mediumGreen,
         secondary: lightGreen,
     },
+    components: {
+        MuiButtonBase: {
+            defaultProps: {
+                disableRipple: true,
+            },
+        },
+        MuiButton: {
+            defaultProps:{
+                disableElevation: true,
+                sx:{
+                    color:'white',
+                    backgroundColor:'#4baa89',
+                    borderRadius: 0,
+                    fontFamily: 'Oxygen',
+                    pt:spacing(3),
+                    pb: spacing(3),
+                    pl: spacing(8),
+                    pr: spacing(8),
+                    "&:hover":{
+                        color:'white',
+                        backgroundColor:'#367c63',
+                    }
+                }
+            },
+        },
+    },
     typography: {
         fontFamily: [
             'Poppins',
             'sans-serif'
         ].join(','),
         
-    }
+    },
+    
 }));
