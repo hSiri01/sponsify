@@ -1,5 +1,6 @@
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
+import Support from '../../../assets/images/graphics/support.svg';
 import { theme, darkGreen } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
@@ -38,7 +39,11 @@ const SponsorHome = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
-                    <Button variant="contained" size="large" color="secondary" >Get Started</Button>
+                    <Button href="/how-it-works"variant="contained" size="large" color="secondary" >Get Started</Button>
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
+                    <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Support} alt="Giving money" />
                 </Grid>
 
             </Grid>
