@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import SponsorHome from './sponsor/organism/Home/App';
 import HowItWorks from './sponsor/organism/HowItWorks/App';
+import FAQ from './sponsor/organism/FAQ/App';
 import { ThemeProvider } from '@mui/system';
 import { theme,} from './utils/theme';
 
@@ -21,6 +22,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<SponsorHome/>} />
             <Route path="/how-it-works" element={<HowItWorks/>} />
+            <Route path="/faq-swe" element={<FAQ/>} />
           </Routes>
       </BrowserRouter>
       </ThemeProvider>
