@@ -11,6 +11,15 @@
                     "isActivated": true,
                     "type": "string",
                     "GUID": "a1930655-c16e-49d0-b988-af47e3347620",
+                    "primaryKey": false,
+                    "error": {}
+                },
+                {
+                    "name": "logo image",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "7b55c673-aa0f-4235-a324-190f459d2680",
                     "error": {}
                 },
                 {
@@ -91,14 +100,6 @@
                     ],
                     "additionalItems": true,
                     "GUID": "cf344643-c165-45ec-8ee3-b8c73a30e3f9",
-                    "error": {}
-                },
-                {
-                    "name": "logo image",
-                    "hackoladeMeta": {},
-                    "isActivated": true,
-                    "type": "string",
-                    "GUID": "7b55c673-aa0f-4235-a324-190f459d2680",
                     "error": {}
                 },
                 {
@@ -235,6 +236,15 @@
                     "type": "string",
                     "GUID": "7e70de31-daa7-4fc7-92a4-a3ff0e3dd81c",
                     "name": "example invoice",
+                    "error": {}
+                },
+                {
+                    "name": "org ID",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "22236ea7-05a0-4471-963d-b5ecf684dbf3",
+                    "primaryKey": true,
                     "error": {}
                 }
             ],
@@ -718,7 +728,6 @@
         "6526696c-3fb7-4ef7-8de8-c6eb6eaeda3d": "country",
         "7e4a2256-88ab-4c11-b17a-be7b3f52db92": "event code",
         "cf344643-c165-45ec-8ee3-b8c73a30e3f9": "valid admins",
-        "7b55c673-aa0f-4235-a324-190f459d2680": "logo image",
         "937d3ce6-72a6-4d46-bdce-1ab0210510c1": "faq",
         "e9ff641c-5dee-4cac-8d09-f799868493cf": "New Field",
         "735f7319-6a34-454f-b032-b5adacdd1130": "question",
@@ -759,7 +768,9 @@
         "4b3f9bcf-1066-43a5-8376-1156cc0546c2": "fk purchase.sponsor ID to sponsor.sponsor ID",
         "f2a1441e-b66d-498f-bcac-ab2e270e8673": "fk purchase.events.[0] to event.event ID",
         "2da9221b-760c-4cca-a73d-e5eb119afbcd": "fk event.sponsors.[0] to sponsor.sponsor ID",
-        "16f7510c-06ba-496d-86c4-a96fdfb8dea5": "fk organization.events.[0] to event.event ID"
+        "16f7510c-06ba-496d-86c4-a96fdfb8dea5": "fk organization.events.[0] to event.event ID",
+        "7b55c673-aa0f-4235-a324-190f459d2680": "logo image",
+        "22236ea7-05a0-4471-963d-b5ecf684dbf3": "org ID"
     },
     "definitions": {
         "type": "definitions",
@@ -789,14 +800,14 @@
             "modelName": false
         }
     },
-    "lastModifTS": "2022-09-26T16:29:04.005Z",
+    "lastModifTS": "2022-09-29T18:34:22.336Z",
     "persistenceSchemaVersion": "6",
     "isCreatedByPlugin": true,
     "pluginInformation": {
         "pluginEngineVersion": "1.0.0"
     },
     "applicationInformation": {
-        "version": "6.5.1"
+        "version": "6.5.2"
     },
     "settings": {
         "centralPane": {
@@ -804,18 +815,18 @@
                 "erd": [
                     {
                         "GUID": "c95a3765-a9ab-4263-8dc4-bc086acef818",
-                        "x": 451.1572535991141,
-                        "y": 325.8298265042453,
+                        "x": 438.6175508510428,
+                        "y": 336.57814314544925,
                         "width": 241,
-                        "height": 483,
+                        "height": 501,
                         "color": {
                             "hex": "#2196f3"
                         }
                     },
                     {
                         "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
-                        "x": 633.8239202657809,
-                        "y": 871.8313030638619,
+                        "x": 761.0123338533622,
+                        "y": 606.7061592474959,
                         "width": 248,
                         "height": 231,
                         "color": {
@@ -824,8 +835,8 @@
                     },
                     {
                         "GUID": "3887f311-3705-4855-ad36-f36de51d822b",
-                        "x": 787.6245847176083,
-                        "y": 388.5614617940205,
+                        "x": 1081.4119062438529,
+                        "y": 483.5049254579897,
                         "width": 216,
                         "height": 141,
                         "color": {
@@ -834,8 +845,8 @@
                     },
                     {
                         "GUID": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
-                        "x": 1075.8368401624216,
-                        "y": 795.7925433739392,
+                        "x": 786.6322908499106,
+                        "y": 335.40631390903076,
                         "width": 197,
                         "height": 141,
                         "color": {
@@ -845,8 +856,8 @@
                 ],
                 "buckets": [
                     {
-                        "x": 411.1572535991141,
-                        "y": 285.8298265042453,
+                        "x": 398.6175508510428,
+                        "y": 295.40631390903076,
                         "GUID": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
                     }
                 ],
