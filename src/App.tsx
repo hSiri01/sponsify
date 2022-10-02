@@ -4,6 +4,7 @@ import SponsorHome from './sponsor/organism/Home/App';
 import HowItWorks from './sponsor/organism/HowItWorks/App';
 import FAQ from './sponsor/organism/FAQ/App';
 import Levels from './sponsor/organism/Levels/App';
+import Events from './sponsor/organism/Events/App';
 import { ThemeProvider } from '@mui/system';
 import { theme} from './utils/theme';
 import SWELogo from './assets/images/graphics/SWE_logo.png';
@@ -23,8 +24,9 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<SponsorHome/>} />
             <Route path="/how-it-works" element={<HowItWorks/>} />
-          <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} />} />
-          <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo}/>} />
+            <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} />} />
+            <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo}/>} />
+            <Route path="/events-swe" element={<Events student_org_logo={SWELogo}/>} />
           </Routes>
       </BrowserRouter>
       </ThemeProvider>
