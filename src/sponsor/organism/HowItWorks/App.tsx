@@ -50,7 +50,7 @@ const HowItWorks = (props: Props) => {
                     </ol>
                 </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
+                <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Question} alt="Giving money" />
                 </Grid>
 

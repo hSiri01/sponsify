@@ -28,6 +28,9 @@ export const darkGreen: PaletteColorOptions = {
 export const grey: PaletteColorOptions = {
     main: '#434343',
 }
+export const darkGrey: PaletteColorOptions = {
+    main: '#434343',
+}
 
 
 export const theme = responsiveFontSizes(createTheme({
@@ -35,7 +38,7 @@ export const theme = responsiveFontSizes(createTheme({
     palette: {
         mode: 'light',
         primary: mediumGreen,
-        secondary: lightGreen,
+        secondary: darkGrey,
     },
     components: {
         MuiButtonBase: {
