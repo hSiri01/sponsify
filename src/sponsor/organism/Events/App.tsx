@@ -138,7 +138,7 @@ const Events = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(5) }}>
-                                <Button href="/" variant="contained" size="large" color="primary" sx={{
+                                <Button href="/checkout-swe" variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
@@ -217,7 +217,7 @@ const Events = (props: Props) => {
                         <Typography variant="body1" sx={{fontWeight:600, pt: theme.spacing(4), textAlign:'center'}}>{level_name} Sponsor</Typography> 
                     </Paper>
                     
-                    <Button href="/" variant="contained" size="large" color="primary" sx={{
+                    <Button href="/checkout-swe" variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),

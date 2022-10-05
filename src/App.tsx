@@ -8,6 +8,8 @@ import Events from './sponsor/organism/Events/App';
 import { ThemeProvider } from '@mui/system';
 import { theme} from './utils/theme';
 import SWELogo from './assets/images/graphics/SWE_logo.png';
+import Checkout from './sponsor/organism/Checkout/App'
+import Inbox from './sponsor/organism/Inbox/App'
 
 
 import {
@@ -26,7 +28,10 @@ const App: React.FC = () => {
             <Route path="/how-it-works" element={<HowItWorks/>} />
             <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} />} />
             <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo}/>} />
-          <Route path="/events-swe" element={<Events student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/events-swe" element={<Events student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
+
           </Routes>
       </BrowserRouter>
       </ThemeProvider>
