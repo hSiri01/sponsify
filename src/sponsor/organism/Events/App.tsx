@@ -186,7 +186,7 @@ const Events = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
                     <Event name="First General Meeting" 
                            short_description='Present at First General Meeting'
-                           long_description='Blah'
+                        long_description={`SWE-TAMU holds bi-weekly meetings throughout the school year to provide members insight about opportunities after college and allow companies to interact with students. At meetings, we encourage our speakers to discuss topics that will help members enter and excel in the industry in a 30-minute presentation. Past topics have included resume writing, interview skills, work-life balance, expectations as a new engineer and more. Technical presentations are discouraged due to the variety of engineering disciplines represented by our members. All meetings will be on a Tuesday, running from 7:30 p.m. until 8:30 p.m. with an in-person and hybrid option. The first general meeting will run from 8:30 p.m. to 9:30 p.m. Sponsors will receive a follow up email after the meeting, which includes access to our members resumes and stats for that meeting. The payment for food and beverage is included in the General Meeting fee.`}
                            avg_attendance={100}
                            occurances={1}
                            price={3500}
@@ -197,7 +197,7 @@ const Events = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
                     <Event name="Leadership Conference"
                         short_description='Sponsor and Present at Conference'
-                        long_description='Blah'
+                        long_description={`The Leadership Conference will be held hybrid as a three day series. This will be the third ever Leadership Conference SWE-TAMU holds! Members will have an opportunity to explore leadership through lectures and interactive learning. The goal is to help members grow and develop their leadership skills to aid them in their personal and professional aspirations. The sponsoring company is invited to present a topic their company values, as part of the Leadership Conference. Some examples include: leadership styles, communication, organization and mental health awareness. The Conference is a multi-day event in Fall 2022.`}
                         avg_attendance={50}
                         occurances={1}
                         price={2000}
