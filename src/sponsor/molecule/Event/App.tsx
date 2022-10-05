@@ -32,15 +32,22 @@ const Event = (props: Props) => {
     const handleOpenEvent = () => setOpenEvent(true);
     const handleCloseEvent = () => setOpenEvent(false);
 
+    const [checked, setChecked] = React.useState(false);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target.checked);
+    };
+
 
     return (
         <ThemeProvider theme={theme}>
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper onClick={handleOpenEvent} variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
+                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             <Grid item xs={1} sx={{marginTop: theme.spacing(2)}}>
-                                <Checkbox/>
+                                <Checkbox checked={checked}
+                                    onChange={handleChange} />
                             </Grid>
 
                             <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
@@ -65,7 +72,7 @@ const Event = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
-                                <Typography sx={{ color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
+                                <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
                                     {'>'}
                                 </Typography>
                             </Grid>
@@ -136,7 +143,8 @@ const Event = (props: Props) => {
                                             <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
                                         </Grid>
                                         <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                            <Checkbox />
+                                            <Checkbox checked={checked}
+                                                onChange={handleChange} />
                                         </Grid>
                                     </Grid>
                                 ):(
@@ -146,7 +154,8 @@ const Event = (props: Props) => {
                                             <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
                                         </Grid>
                                         <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                            <Checkbox />
+                                            <Checkbox checked={checked}
+                                                onChange={handleChange} />
                                         </Grid>
                                     </Grid>
                                 )}
