@@ -10,11 +10,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import MenuIcon from '@mui/icons-material/Menu';
-import IconButton from '@mui/material/IconButton';
-import MenuBar from '../MenuBar/App'
+import MenuBar from '../../molecule/MenuBar/App'
 
 
 interface Props {
@@ -77,9 +73,7 @@ const EditFAQ = (props: Props) => {
                 </Grid>
 
                 
-
                 
-
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
 
                     <EditQuestion question="I want to send company swag to distribute at the event I'm sponsoring. Where do I sent it?" 
@@ -93,9 +87,6 @@ const EditFAQ = (props: Props) => {
                         answer="Our General Meetings generally have higher attendance than most other events. Our Lunch & Learns and Dinner & Develops are smaller and more personable events. Additionally, this is because our members are busy with other events on campus, exams, homework and classes and so conflicts with our events are sometimes inevitable. For more information on current registration for your sponsored event, contact <b>CorporateVP@swetamu.org</b>. Please note, SWE-TAMU does not guarantee attendance for any event." />
 
                 </Grid>
-
-               
-
 
             </Grid>
 
