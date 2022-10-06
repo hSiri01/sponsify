@@ -1,5 +1,4 @@
 import { createTheme, PaletteColorOptions, responsiveFontSizes } from '@mui/material/styles';
-import { hover } from '@testing-library/user-event/dist/hover';
 
 declare module '@mui/material/styles' {
     interface Theme {
