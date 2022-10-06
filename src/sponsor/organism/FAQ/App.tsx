@@ -9,11 +9,12 @@ import Button from '@mui/material/Button';
 
 interface Props {
     student_org_logo: string,
+    student_org_name: string, 
 }
 
 const FAQ = (props: Props) => {
 
-    const { student_org_logo } = props
+    const { student_org_logo, student_org_name } = props
 
 
     return (
@@ -42,7 +43,7 @@ const FAQ = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        SWE FAQ
+                        {student_org_name} FAQ
                     </Typography>
                 </Grid>
 
