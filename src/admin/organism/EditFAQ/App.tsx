@@ -10,15 +10,21 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
+import MenuBar from '../MenuBar/App'
 
 
 interface Props {
     student_org_logo: string,
+    student_org_name: string, 
 }
 
 const EditFAQ = (props: Props) => {
 
-    const { student_org_logo } = props
+    const { student_org_logo, student_org_name } = props
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
     const handleCloseNewQuestion = () => setOpenNewQuestion(false);
@@ -26,6 +32,8 @@ const EditFAQ = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
+
+            <MenuBar/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -48,7 +56,7 @@ const EditFAQ = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6),}}>
                     <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
@@ -64,7 +72,7 @@ const EditFAQ = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        SWE FAQ
+                        {student_org_name} FAQ
                     </Typography>
                 </Grid>
 
@@ -118,7 +126,7 @@ const EditFAQ = (props: Props) => {
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                             }} >
-                                Edit Question
+                                Add Question
                             </Typography>
                         </Grid>
 

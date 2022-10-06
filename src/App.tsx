@@ -3,7 +3,7 @@ import './App.css';
 import SponsorHome from './sponsor/organism/Home/App';
 import HowItWorks from './sponsor/organism/HowItWorks/App';
 import FAQ from './sponsor/organism/FAQ/App';
-import EditFAQ from './admin/organism/FAQ/App';
+import EditFAQ from './admin/organism/EditFAQ/App';
 import Levels from './sponsor/organism/Levels/App';
 import Events from './sponsor/organism/Events/App';
 import { ThemeProvider } from '@mui/system';
@@ -32,7 +32,7 @@ const App: React.FC = () => {
             <Route path="/events-swe" element={<Events student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
             <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
             <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
-          <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} />} />
+          <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
 
           </Routes>
       </BrowserRouter>
