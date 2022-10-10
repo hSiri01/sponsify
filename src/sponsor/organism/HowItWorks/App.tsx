@@ -1,3 +1,4 @@
+import React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Question from '../../../assets/images/graphics/question.svg';
@@ -9,9 +10,15 @@ import Button from '@mui/material/Button';
 
 
 interface Props {
+    organization: String
 }
 
 const HowItWorks = (props: Props) => {
+    
+    const { organization }  = props
+    const [buttonClick, setButtonClick] = React.useState(false)
+    
+    console.log(organization)
 
     return (
         <ThemeProvider theme={theme}>

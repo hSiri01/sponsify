@@ -16,7 +16,6 @@ const FAQ = (props: Props) => {
 
     const { student_org_logo, student_org_name } = props
 
-
     return (
         <ThemeProvider theme={theme}>
 

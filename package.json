@@ -32,6 +32,7 @@
     "eject": "react-scripts eject",
     "dev": "concurrently \"cd backend && npm run dev\" \"npm start\" "
   },
+  "proxy": "http://localhost:3001",
   "license": "ISC",
   "repository": {
     "type": "git",

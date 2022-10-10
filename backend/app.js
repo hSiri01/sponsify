@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
-const events = require('./event')
+const events = require('./event');
+const org = require('./org');
 const orgs = require('./org')
 const app = express()
 const port = 3001
@@ -58,7 +59,7 @@ app.get('/get-enabled-events', (req, res) => {
 })
 
 app.get('/get-all-events', (req, res) => {
-    events.find()
+    events.find({})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on getAllOrgs, " + err)
@@ -70,6 +71,20 @@ app.get('/get-all-events', (req, res) => {
 
 app.get('/create-event', (req, res) => {
     res.send('Create event')
+})
+
+app.get('/get-event-code/:code', (req, res) => {
+    console.log(req.params.code)
+    // h2kd93n5hs(j
+
+    orgs.find({ eventCode: req.params.code })
+        .select({ name: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-event-code, " + err)
+            }
+            res.json(result[0])
+    })
 })
 
 app.listen(port, () => {
