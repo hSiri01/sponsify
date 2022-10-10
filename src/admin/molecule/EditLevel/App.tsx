@@ -26,13 +26,12 @@ const EditLevel = (props: Props) => {
 
     const {level, lowerbound, upperbound, description, hexcode} = props
     const [openLevel, setOpenLevel] = React.useState(false);
-    
     const handleOpenLevel = () => setOpenLevel(true);
     const handleCloseLevel = () => setOpenLevel(false);
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode }}>
+            <Grid container sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4), }}>
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', borderTop: 1, borderBottom: 1,borderLeft: 1 }}>
                        

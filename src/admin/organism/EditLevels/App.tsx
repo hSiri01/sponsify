@@ -33,7 +33,7 @@ const EditLevels = (props: Props) => {
 
             <MenuBar/>
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
+            <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -54,7 +54,7 @@ const EditLevels = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6),}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', maxHeight: theme.spacing(13), mr: theme.spacing(10)}}>
                     <Button onClick={handleOpenNewLevel} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
@@ -67,7 +67,7 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4), }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
                     <EditLevel level="Diamond" 
                               description="Be recognized and appreciated at our annual banquet along with everything included below"                              
@@ -77,7 +77,7 @@ const EditLevels = (props: Props) => {
                     
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4)  }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
 
                 <EditLevel level="Platinum" 
                               description="Have the opportunity to be a title company at our first general meeting along with everything included below"
@@ -86,7 +86,7 @@ const EditLevels = (props: Props) => {
                
 
                 </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4)  }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
                  <EditLevel level="Gold" 
                               description="Have the opportunity to present at some of our most widely attended events along with everything included below
                               "
