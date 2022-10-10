@@ -29,7 +29,6 @@ const EditQuestion = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
-           
             <Grid container sx={{backgroundColor:"white", border:1, maxWidth:theme.spacing(300)}}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right' }}>
                     <IconButton onClick={handleOpenQuestion} color="secondary" aria-label="Edit" sx={{ mr: theme.spacing(4), mt:theme.spacing(5) }}>
