@@ -25,16 +25,15 @@ interface Props {
 const EditLevel = (props: Props) => {
 
     const {level, lowerbound, upperbound, description, hexcode} = props
-
     const [openLevel, setOpenLevel] = React.useState(false);
+    
     const handleOpenLevel = () => setOpenLevel(true);
     const handleCloseLevel = () => setOpenLevel(false);
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container sx={{maxWidth:theme.spacing(275), backgroundColor:{hexcode}}}>
-
-                
+            <Grid container sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode }}>
+            
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', borderTop: 1, borderBottom: 1,borderLeft: 1 }}>
                        
                         <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2) }}>
@@ -43,22 +42,32 @@ const EditLevel = (props: Props) => {
 
                     </Grid>
 
-                <Grid container item xs={2} direction = "column" sx={{ borderTop: 1, borderBottom: 1, maxWidth:theme.spacing(200)}}>
+                <Grid container  item xs={2} direction = "column" sx={{ borderTop: 1, borderBottom: 1, maxWidth:theme.spacing(200), }}>
                     
                     <Grid item sx={{ display: 'flex', justifyContent: 'center',  mt: theme.spacing(2)}}>
                         <Typography variant="h6">
                             {level}
                         </Typography>
                         
-                    </Grid>      
+                    </Grid>     
+                    
                     <Grid item sx={{display: 'flex', justifyContent:'center',  margin: (2)}}>
                        
                         <Typography >
                             {lowerbound} 
                         </Typography>
-                        <Typography >
-                             - 
+                        {props.upperbound && 
+                        <Typography>
+                            -
                         </Typography>
+                        }
+                        {!props.upperbound && 
+                        <Typography>
+                            +
+                        </Typography>
+                        }
+                        
+                        
                         <Typography >
                             {upperbound}
                         </Typography>
@@ -137,7 +146,7 @@ const EditLevel = (props: Props) => {
                         
                     </Grid>
                     <Grid container >
-                            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'left', mt: theme.spacing(20) }}>
+                            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'left', mt: theme.spacing(20),  }}>
                                 <IconButton color="secondary" aria-label="Edit" size = "large">
                                     <DeleteIcon />
                                 </IconButton>
@@ -145,13 +154,14 @@ const EditLevel = (props: Props) => {
 
                             <Grid item  xs={6} sx={{
                                 display: 'flex', justifyContent: 'right',  mt: theme.spacing(20) }}>
-                                <Button href="/" variant="contained" size="large" color="primary" sx={{
+                                <Button  href="/" variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
                                     pl: theme.spacing(8),
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
+
                                 }}>Submit</Button>
                                 
                             </Grid>

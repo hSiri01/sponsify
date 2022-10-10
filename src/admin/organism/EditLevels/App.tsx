@@ -11,15 +11,17 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
+import Level from '../../../sponsor/molecule/Level/App';
 
 
 interface Props {
     student_org_logo: string,
     student_org_name: string, 
+  
 }
 
 const EditLevels = (props: Props) => {
-
+    
     const { student_org_logo, student_org_name } = props
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const handleOpenNewLevel = () => setOpenNewLevel(true);
@@ -64,16 +66,13 @@ const EditLevels = (props: Props) => {
 
                 </Grid>
 
-
-
                 
-                
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4), }}>
 
                     <EditLevel level="Diamond" 
                               description="Be recognized and appreciated at our annual banquet along with everything included below"                              
                               lowerbound = "$5000"
-                              upperbound = "+"
+                              
                               hexcode = "#ca7171"/>
                     
                 </Grid>
@@ -93,7 +92,7 @@ const EditLevels = (props: Props) => {
                               "
                               lowerbound = "$2500"
                               upperbound = "$3499"
-                              hexcode = "##ffefbe"/>
+                              hexcode = "#fff2c8"/>
                 </Grid>
             </Grid>
 
@@ -154,7 +153,7 @@ const EditLevels = (props: Props) => {
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'right', mt: theme.spacing(10)
                         }}>
-                            <Button href="/" variant="contained" size="large" color="primary" sx={{
+                            <Button href="/"  variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
                                 pb: theme.spacing(3),
