@@ -36,6 +36,18 @@ app.get('/delete-FAQ', (req, res) => {
     res.send('This route will delete an FAQ')
 })
 
+app.get('/get-enabled-events', (req, res) => {
+    res.send('This page will show enabled events')
+})
+
+app.get('/get-all-events', (req, res) => {
+    res.send('This page will show all events')
+})
+
+app.get('/create-event', (req, res) => {
+    res.send('Create event')
+})
+
 app.listen(port, () => {
     console.log(`App listening on port ${port} :)`)
 })
