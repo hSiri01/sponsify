@@ -22,3 +22,15 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`App listening on port ${port} :)`)
 })
+app.get('/create-sponsor', (req,res) => {
+    res.send('Create Sponsor')
+})
+app.get('/update-event', (req,res) => {
+    res.send('Update Event')
+})
+app.get('/delete-event', (req,res) => {
+    res.send('Delete Event')
+})
+app.get('/checkout', (req,res) => {
+    res.send('Checkout')
+})
