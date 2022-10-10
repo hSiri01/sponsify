@@ -43,7 +43,7 @@ const EditLevel = (props: Props) => {
 
                 <Grid container  item xs={2} direction = "column" sx={{ borderTop: 1, borderBottom: 1, maxWidth:theme.spacing(200), }}>
                     
-                    <Grid item sx={{ display: 'flex', justifyContent: 'center',  mt: theme.spacing(2)}}>
+                    <Grid item sx={{ display: 'flex', justifyContent: 'center',  mt: theme.spacing(4)}}>
                         <Typography variant="h6">
                             {level}
                         </Typography>
@@ -74,13 +74,13 @@ const EditLevel = (props: Props) => {
                     
                 </Grid>  
 
-                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'left',  borderTop: 1, borderBottom: 1, }}>
-                        <Typography variant="body1" sx={{textAlign:"left", margin: (4)}} dangerouslySetInnerHTML={{ __html: description}} />
+                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'left',  borderTop: 1, borderBottom: 1,}}>
+                        <Typography variant="body1" sx={{textAlign:"left",  mt: theme.spacing(6)}} dangerouslySetInnerHTML={{ __html: description}} />
                     </Grid>
 
-                <Grid item xs={1} sx={{ borderRight: 1, borderTop: 1, borderBottom: 1, maxWidth:theme.spacing(5) }}>
+                <Grid item xs={1} sx={{ borderRight: 1, borderTop: 1, borderBottom: 1,  }}>
                     <Grid item sx={{ display: 'flex', justifyContent: 'right' }}>
-                        <IconButton onClick={handleOpenLevel} color="secondary" aria-label="Edit" sx={{ margin: (4),  }}>
+                        <IconButton onClick={handleOpenLevel} color="secondary" aria-label="Edit" sx={{  mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(8), mb: theme.spacing(4), }}>
                             <EditIcon />
                         </IconButton>
                     </Grid>
