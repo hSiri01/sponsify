@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
+const events = require('./event')
+const orgs = require('./org')
 const app = express()
 const port = 3001
 
@@ -21,7 +23,15 @@ app.get('/', (req, res) => {
 })
 
 app.get('/get-all-FAQ', (req, res) => {
-    res.send('This route will retrieve all FAQs for a given org')
+    orgs.find({ name: 'Society of Women Engineers'})
+        .select({ FAQ: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on getAllOrgs, " + err)
+            }
+            res.send(result[0].FAQ)
+        }
+    )
 })
 
 app.get('/update-FAQ', (req, res) => {
@@ -37,11 +47,25 @@ app.get('/delete-FAQ', (req, res) => {
 })
 
 app.get('/get-enabled-events', (req, res) => {
-    res.send('This page will show enabled events')
+    events.find({ visible: true })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on getAllOrgs, " + err)
+            }
+            res.send(result)
+        }
+    )
 })
 
 app.get('/get-all-events', (req, res) => {
-    res.send('This page will show all events')
+    events.find()
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on getAllOrgs, " + err)
+            }
+            res.send(result)
+        }
+    )
 })
 
 app.get('/create-event', (req, res) => {
