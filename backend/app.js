@@ -12,11 +12,28 @@ mongoose.connect(
     }
 )
 
-const db = mongoose.connection;  // access default connection
-db.on('error', console.error.bind(console, 'MongoDB connection error'))
+// Access database connection
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error!!\n'))
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello! This is the default route for the backend server.')
+})
+
+app.get('/get-all-FAQ', (req, res) => {
+    res.send('This route will retrieve all FAQs for a given org')
+})
+
+app.get('/update-FAQ', (req, res) => {
+    res.send('This route will update an FAQ')
+})
+
+app.get('/create-FAQ', (req, res) => {
+    res.send('This route will create a new FAQ')
+})
+
+app.get('/delete-FAQ', (req, res) => {
+    res.send('This route will delete an FAQ')
 })
 
 app.listen(port, () => {
