@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import HowItWorks from '../HowItWorks/App'
+import HowItWorks from '../HowItWorks/App';
 
 
 
@@ -20,7 +20,7 @@ const SponsorHome = (props: Props) => {
     const [buttonClick, setButtonClick] = React.useState(false);
 
     const SetOrg = async() => {
-        // console.log(input)
+        console.log(input)
         let response = await fetch("/get-event-code/" + input)
           .then((res) => res.json())
           .then((data) => setOrg(data.name));

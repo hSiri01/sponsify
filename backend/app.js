@@ -23,8 +23,8 @@ app.get('/', (req, res) => {
     res.send('Hello! This is the default route for the backend server.')
 })
 
-app.get('/get-all-FAQ', (req, res) => {
-    orgs.find({ name: 'Society of Women Engineers'})
+app.get('/get-all-FAQ/:org', (req, res) => {
+    orgs.find({ name: req.params.org})
         .select({ FAQ: 1 })
         .exec((err, result) => {
             if (err) {
