@@ -17,12 +17,13 @@ import Level from '../../../sponsor/molecule/Level/App';
 interface Props {
     student_org_logo: string,
     student_org_name: string, 
+    student_org_short_name: string, 
   
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo, student_org_name } = props
+    const { student_org_logo, student_org_name, student_org_short_name } = props
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const handleOpenNewLevel = () => setOpenNewLevel(true);
     const handleCloseNewLevel = () => setOpenNewLevel(false);
@@ -31,7 +32,7 @@ const EditLevels = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar/>
+            <MenuBar student_org_short_name={student_org_short_name}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
