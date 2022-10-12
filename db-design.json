@@ -12,6 +12,23 @@
                     "type": "string",
                     "GUID": "a1930655-c16e-49d0-b988-af47e3347620",
                     "primaryKey": false,
+                    "error": {},
+                    "childRelationships": [
+                        "fd814344-1a7f-4a49-a56c-99a1cfb5fe39"
+                    ]
+                },
+                {
+                    "name": "fund name",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "ad51222e-c4ce-42f7-af29-0abc99847ffe",
+                    "foreignCollection": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                    "foreignField": [
+                        "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                        "a1930655-c16e-49d0-b988-af47e3347620"
+                    ],
+                    "parentRelationship": "fd814344-1a7f-4a49-a56c-99a1cfb5fe39",
                     "error": {}
                 },
                 {
@@ -304,6 +321,15 @@
                     "error": {}
                 },
                 {
+                    "name": "end date",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "date",
+                    "primaryKey": false,
+                    "GUID": "f18a5e2a-fcf8-4243-9861-b8fa7723c3cb",
+                    "error": {}
+                },
+                {
                     "name": "price",
                     "hackoladeMeta": {},
                     "isActivated": true,
@@ -320,6 +346,15 @@
                     "error": {}
                 },
                 {
+                    "name": "brief description",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "primaryKey": false,
+                    "GUID": "3a4ad0fe-5423-4638-ad18-a8cf6f9c954e",
+                    "error": {}
+                },
+                {
                     "name": "average attendance",
                     "hackoladeMeta": {},
                     "isActivated": true,
@@ -328,7 +363,7 @@
                     "error": {}
                 },
                 {
-                    "name": "total availability",
+                    "name": "total spots",
                     "hackoladeMeta": {},
                     "isActivated": true,
                     "type": "numeric",
@@ -336,7 +371,7 @@
                     "error": {}
                 },
                 {
-                    "name": "remaining availability",
+                    "name": "spots taken",
                     "hackoladeMeta": {},
                     "isActivated": true,
                     "type": "numeric",
@@ -711,6 +746,27 @@
                 "thickness": 2,
                 "color": "#333333"
             }
+        },
+        {
+            "name": "fk organization.New Field to organization.name",
+            "relationshipType": "",
+            "parentField": [
+                [
+                    "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                    "a1930655-c16e-49d0-b988-af47e3347620"
+                ]
+            ],
+            "parentCardinality": "1",
+            "childField": [
+                [
+                    "c95a3765-a9ab-4263-8dc4-bc086acef818",
+                    "ad51222e-c4ce-42f7-af29-0abc99847ffe"
+                ]
+            ],
+            "childCardinality": "1",
+            "parentCollection": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+            "childCollection": "c95a3765-a9ab-4263-8dc4-bc086acef818",
+            "GUID": "fd814344-1a7f-4a49-a56c-99a1cfb5fe39"
         }
     ],
     "users": [],
@@ -747,8 +803,8 @@
         "c9ecee84-a547-4dfa-80dd-b75148d2a63c": "price",
         "32150c2d-e0d5-4980-85c6-0109c13a941c": "description",
         "39be78ba-13db-4444-a753-eb05af376edf": "average attendance",
-        "66d22544-e740-4cab-99d9-a55066c29a81": "total availability",
-        "67392ac2-f798-479b-b423-f0b19f646526": "remaining availability",
+        "66d22544-e740-4cab-99d9-a55066c29a81": "total spots",
+        "67392ac2-f798-479b-b423-f0b19f646526": "spots taken",
         "4e4bf02a-a5ec-4c4e-9b11-adfdc959dc6e": "visible",
         "05ede3e8-c667-459c-afc2-efdc00e797d9": "sponsors",
         "7e70de31-daa7-4fc7-92a4-a3ff0e3dd81c": "example invoice",
@@ -770,7 +826,11 @@
         "2da9221b-760c-4cca-a73d-e5eb119afbcd": "fk event.sponsors.[0] to sponsor.sponsor ID",
         "16f7510c-06ba-496d-86c4-a96fdfb8dea5": "fk organization.events.[0] to event.event ID",
         "7b55c673-aa0f-4235-a324-190f459d2680": "logo image",
-        "22236ea7-05a0-4471-963d-b5ecf684dbf3": "org ID"
+        "22236ea7-05a0-4471-963d-b5ecf684dbf3": "org ID",
+        "fd814344-1a7f-4a49-a56c-99a1cfb5fe39": "fk organization.New Field to organization.name",
+        "ad51222e-c4ce-42f7-af29-0abc99847ffe": "fund name",
+        "f18a5e2a-fcf8-4243-9861-b8fa7723c3cb": "end date",
+        "3a4ad0fe-5423-4638-ad18-a8cf6f9c954e": "brief description"
     },
     "definitions": {
         "type": "definitions",
@@ -800,14 +860,14 @@
             "modelName": false
         }
     },
-    "lastModifTS": "2022-09-29T18:34:22.336Z",
+    "lastModifTS": "2022-10-12T23:20:39.440Z",
     "persistenceSchemaVersion": "6",
     "isCreatedByPlugin": true,
     "pluginInformation": {
         "pluginEngineVersion": "1.0.0"
     },
     "applicationInformation": {
-        "version": "6.5.2"
+        "version": "6.5.0"
     },
     "settings": {
         "centralPane": {
@@ -818,7 +878,7 @@
                         "x": 438.6175508510428,
                         "y": 336.57814314544925,
                         "width": 241,
-                        "height": 501,
+                        "height": 519,
                         "color": {
                             "hex": "#2196f3"
                         }
@@ -827,8 +887,8 @@
                         "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
                         "x": 761.0123338533622,
                         "y": 606.7061592474959,
-                        "width": 248,
-                        "height": 231,
+                        "width": 240,
+                        "height": 267,
                         "color": {
                             "hex": "#fc6c85"
                         }
