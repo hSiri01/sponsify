@@ -14,6 +14,7 @@ import Inbox from './sponsor/organism/Inbox/App'
 import EditFAQ from './admin/organism/EditFAQ/App';
 import Dashboard from './admin/organism/Dashboard/App'
 import EditEvents from './admin/organism/EditEvents/App'
+import EditLevels from './admin/organism/EditLevels/App';
 
 
 
@@ -38,7 +39,8 @@ const App: React.FC = () => {
             <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
             
             <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
-            <Route path="/dashboard-swe" element={<Dashboard student_org_logo={SWELogo} sponsor_code="1l2x9gkd/I3GJD!%[
+              <Route path="/levels-edit-swe" element={<EditLevels student_org_logo={SWELogo} student_org_name="SWE" />} />
+          <Route path="/dashboard-swe" element={<Dashboard student_org_logo={SWELogo} sponsor_code="1l2x9gkd/I3GJD!%[
             " valid_until_date={new Date(2022, 10, 14)} student_org_name="Society of Women Engineers" student_org_short_name="swe" street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
           <Route path="/events-edit-swe" element={<EditEvents student_org_logo={SWELogo} student_org_name="SWE" />} />
 
