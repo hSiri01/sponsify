@@ -31,6 +31,7 @@ app.get('/get-all-FAQ/:org', (req, res) => {
                 console.log("Error on getAllOrgs, " + err)
             }
             res.send(result[0].FAQ)
+            console.log(result[0])
         }
     )
 })
@@ -84,6 +85,7 @@ app.get('/get-event-code/:code', (req, res) => {
                 console.log("Error on get-event-code, " + err)
             }
             res.json(result[0])
+            console.log(result[0])
     })
 })
 

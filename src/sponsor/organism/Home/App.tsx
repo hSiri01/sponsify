@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import HowItWorks from '../HowItWorks/App';
+import HowItWorks from '../HowItWorks/App'
 
 
 
@@ -19,8 +19,9 @@ const SponsorHome = (props: Props) => {
     const [org, setOrg] = React.useState('');
     const [buttonClick, setButtonClick] = React.useState(false);
 
-    const SetOrg = async() => {
-        console.log(input)
+    const handleOrgChange = async() => {
+        // TO DO: validation so button click only changes to true if code matches an org
+        // console.log(input)
         let response = await fetch("/get-event-code/" + input)
           .then((res) => res.json())
           .then((data) => setOrg(data.name));
@@ -61,7 +62,7 @@ const SponsorHome = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <Button 
                     // href="/how-it-works"
-                    variant="contained" size="large" color="secondary" onClick={SetOrg}>Get Started</Button>
+                    variant="contained" size="large" color="secondary" onClick={handleOrgChange}>Get Started</Button>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>

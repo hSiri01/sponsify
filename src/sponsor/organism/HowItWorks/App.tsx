@@ -16,8 +16,6 @@ const HowItWorks = (props: Props) => {
     
     const { organization }  = props
     const [buttonClick, setButtonClick] = React.useState(false)
-    
-    console.log(organization)
 
     return (
         <ThemeProvider theme={theme}>
