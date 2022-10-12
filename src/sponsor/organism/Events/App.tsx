@@ -179,7 +179,49 @@ const Events = (props: Props) => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
+                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0),maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10)}} >
+                        <Grid container>
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5)}}>
+                                    SELECT
+                                </Typography>
+                            </Grid>
+                            
+                            <Grid item xs={2}>
+                                <Typography variant="body2" sx={{ color: "#979797",ml:theme.spacing(16), mt: theme.spacing(5) }}>
+                                    DATE
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={3}>
+                                <Typography variant="body2" sx={{ color: "#979797",ml:theme.spacing(16), mt: theme.spacing(5) }}>
+                                    EVENT NAME
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml:theme.spacing(16) }}>
+                                    AVG ATTENDANCE
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(16) }}>
+                                    OCCURANCES
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(30) }}>
+                                    PRICE
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',}}>
                     <GeneralDonation/>
                 </Grid>
 
