@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 
 const orgSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
     fundName: String,
     address: {
         streetAddress: String,
@@ -10,7 +13,10 @@ const orgSchema = new mongoose.Schema({
         state: String,
         country: String
     },
-    eventCode: String,
+    eventCode: {
+        type: String,
+        required: true
+    },
     validAdmins: [String],
     FAQ: [{
         question: String,

@@ -1,15 +1,31 @@
 const mongoose = require('mongoose')
 
 const eventSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
     date: Date,
     endDate: Date,
-    price: Number,
+    price: {
+        type: Number,
+        required: true
+    },
     description: String,
     briefDescription: String,
-    totalSpots: Number,
-    spotsTaken: Number,
-    visible: Boolean,
+    totalSpots: {
+        type: Number,
+        required: true
+    },
+    spotsTaken: {
+        type: Number,
+        required: true
+    },
+    visible: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     sponsors: [mongoose.SchemaTypes.ObjectId]
 })
 

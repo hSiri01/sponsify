@@ -108,7 +108,7 @@ app.get('/get-enabled-events/:org', (req, res) => {
 })
 
 app.get('/get-all-events/:org', (req, res) => {
-    events.find({ name: req.params.org })
+    events.find({ org: req.params.org })
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-events, " + err)
