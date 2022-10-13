@@ -84,34 +84,34 @@ const PurchaseHistory = (props: Props) => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={11} sx={{textAlign: 'center', justifyContent:'center', ml: theme.spacing(20)}}>
+                <Grid item xs={12} sx={{textAlign: 'center', justifyContent:'center', ml: theme.spacing(15)}}>
 
-                    <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
-                        <Grid item xs={2}>
+                    <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5)}}>
+                        <Grid item xs={1}>
                             <LevelSponsors name="Diamond" color_level="efefef" />
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20)}}>
                             <LevelSponsors name="Platinum" color_level="ebeaea" />
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
                             <LevelSponsors name="Gold" color_level="ffefbe" />
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
                             <LevelSponsors name="Silver" color_level="b7b7b7" />
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
                             <LevelSponsors name="Bronze" color_level="eb9770" />
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
                             <LevelSponsors name="Maroon" color_level="ca7171" />
                         </Grid>
 
-                        <Grid item xs={2}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
                             <LevelSponsors name="Other" color_level="ffffff" />
                         </Grid>
 
