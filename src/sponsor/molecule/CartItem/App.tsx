@@ -3,7 +3,6 @@ import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import Date from '../../atom/Date/App'
 
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Question from '../../../assets/images/graphics/question.svg';
-import { theme, darkGreen } from '../../../utils/theme';
+import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
