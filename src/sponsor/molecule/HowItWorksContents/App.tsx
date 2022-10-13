@@ -1,5 +1,4 @@
 import { Grid } from '@mui/material';
-import Logo from '../../../assets/images/logos/logo.png';
 import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
