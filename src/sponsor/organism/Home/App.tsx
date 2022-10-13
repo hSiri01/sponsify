@@ -61,7 +61,7 @@ const SponsorHome = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <Button 
-                    // href="/how-it-works"
+                    href="/how-it-works"
                     variant="contained" size="large" color="secondary" onClick={handleOrgChange}>Get Started</Button>
                 </Grid>
 
