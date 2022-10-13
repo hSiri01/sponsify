@@ -3,6 +3,8 @@ const express = require('express')
 const mongoose = require('mongoose')
 const events = require('./event')
 const orgs = require('./org')
+const sponsors = require('./sponsor')
+const purchases = require('./purchase')
 const app = express()
 const port = 3001
 
@@ -74,4 +76,16 @@ app.get('/create-event', (req, res) => {
 
 app.listen(port, () => {
     console.log(`App listening on port ${port} :)`)
+})
+app.get('/create-sponsor', (req,res) => {
+    res.send('Create Sponsor')
+})
+app.get('/update-event', (req,res) => {
+    res.send('Update Event')
+})
+app.get('/delete-event', (req,res) => {
+    res.send('Delete Event')
+})
+app.get('/checkout', (req,res) => {
+    res.send('Checkout')
 })
