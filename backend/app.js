@@ -51,7 +51,15 @@ app.get('/delete-FAQ', (req, res) => {
 })
 
 app.get('/get-all-levels', (req, res) => {
-    res.send('Get all sponsorship levels and info')
+    orgs.find({ name: 'Society of Women Engineers' })
+        .select({ levels: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-event-code, " + err)
+            }
+            res.json(result[0])
+            console.log(result[0])
+    })
 })
 
 app.get('/get-level-by-amount', (req, res) => {
@@ -111,36 +119,77 @@ app.get('/get-org/:code', (req, res) => {
     })
 })
 
-app.listen(port, () => {
-    console.log(`App listening on port ${port} :)`)
-})
 app.get('/create-sponsor', (req,res) => {
     res.send('Create Sponsor')
 })
+
 app.get('/update-event', (req,res) => {
     res.send('Update Event')
 })
+
 app.get('/delete-event', (req,res) => {
     res.send('Delete Event')
 })
+
 app.get('/checkout', (req,res) => {
     res.send('Checkout')
 })
-app.get('/get-org-info', (req,res) => {
-    res.send('Org info')
+
+app.get('/get-org-info/:fundName', (req,res) => {
+    orgs.find({ fundName: req.params.fundName })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-org-info " + err)
+            }
+            res.json(result[0])
+            console.log(result[0])
+    })
 })
+
 app.get('/update-org-info', (req,res) => {
     res.send('Update org info')
 })
-app.get('/get-valid-admins', (req,res) => {
-    res.send('Valid admins')
+
+app.get('/get-valid-admins/:fundName', (req,res) => {
+    orgs.find({ fundName: req.params.fundName })
+        .select({ validAdmins: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-valid-admins " + err)
+            }
+            res.json(result[0])
+            console.log(result[0])
+    })
 })
-app.get('/get-event-code', (req,res) => {
-    res.send('gets Event code')
+
+app.get('/get-event-code/:fundName', (req,res) => {
+    orgs.find({ fundName: req.params.fundName })
+        .select({ eventCode: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-event-code" + err)
+            }
+            res.json(result[0])
+            console.log(result[0])
+    })
 })
-app.get('/get-logo', (req,res) => {
-    res.send('Org logo')
+
+app.get('/get-logo/:fundName', (req,res) => {
+    orgs.find({ fundName: req.params.fundName })
+        .select({ logoImage: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-event-code" + err)
+            }
+            res.json(result[0])
+            console.log(result[0])
+    })
 })
+
 app.get('/verify-sponsor-code', (req,res) => {
     res.send('Verify sponsor code')
+})
+
+app.listen(port, () => {
+    console.log(`App listening on port ${port} :)`)
 })
