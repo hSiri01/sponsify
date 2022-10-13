@@ -132,8 +132,13 @@ app.get('/get-org/:code', (req, res) => {
             if (err) {
                 console.log("Error on get-org, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+
+            if (result.length == 0) {
+                res.json({})
+            } else {
+                res.json(result[0])
+                console.log(result[0])
+            }
     })
 })
 
