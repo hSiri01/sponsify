@@ -35,7 +35,7 @@ const Level = (props: Props) => {
                                 </Paper>  
                                 </Grid>
 
-                                <Grid item xs={2} sx={{mt:theme.spacing(4)}}>
+                                <Grid item xs={2} sx={{mt:theme.spacing(4),}}>
                                     <Typography sx={{textAlign: "center" }} variant="body1">-</Typography>
                                 </Grid>
 

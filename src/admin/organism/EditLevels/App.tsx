@@ -4,34 +4,37 @@ import Logo from '../../../assets/images/logos/logo.png';
 import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
-import EditQuestion from '../../molecule/EditQuestion/App'
+import EditLevel from '../../molecule/EditLevel/App'
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
+import Level from '../../../sponsor/molecule/Level/App';
 
 
 interface Props {
     student_org_logo: string,
     student_org_name: string, 
+    student_org_short_name: string, 
+  
 }
 
-const EditFAQ = (props: Props) => {
-
-    const { student_org_logo, student_org_name } = props
-    const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
-    const handleOpenNewQuestion = () => setOpenNewQuestion(true);
-    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
+const EditLevels = (props: Props) => {
+    
+    const { student_org_logo, student_org_name, student_org_short_name } = props
+    const [openNewLevel, setOpenNewLevel] = React.useState(false);
+    const handleOpenNewLevel = () => setOpenNewLevel(true);
+    const handleCloseNewLevel = () => setOpenNewLevel(false);
 
 
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar student_org_short_name='swe'/>
+            <MenuBar student_org_short_name={student_org_short_name}/>
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
+            <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -52,48 +55,52 @@ const EditFAQ = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6),}}>
-                    <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', maxHeight: theme.spacing(13), mr: theme.spacing(10)}}>
+                    <Button onClick={handleOpenNewLevel} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
                         pl: theme.spacing(8),
                         pr: theme.spacing(8),
                         ml: theme.spacing(5),
-                    }}>Add Q&A</Button>
+                    }}>Add Level</Button>
 
                 </Grid>
 
-
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
-                    <Typography variant="h4">
-                        {student_org_name} FAQ
-                    </Typography>
-                </Grid>
-
                 
-                
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
-                    <EditQuestion question="I want to send company swag to distribute at the event I'm sponsoring. Where do I sent it?" 
-                              answer="This address you can send you package at is: <br> Society of Women Engineers <br> TAMU <br> 3127 TAMU <br> College Station, TX 77843-3127"/>
+                    <EditLevel level="Diamond" 
+                              description="Be recognized and appreciated at our annual banquet along with everything included below"                              
+                              lowerbound = "$5000"
+                              
+                              hexcode = "#ca7171"/>
                     
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
 
-                    <EditQuestion question="How many people can I expect at the event I’m sponsoring?"
-                        answer="Our General Meetings generally have higher attendance than most other events. Our Lunch & Learns and Dinner & Develops are smaller and more personable events. Additionally, this is because our members are busy with other events on campus, exams, homework and classes and so conflicts with our events are sometimes inevitable. For more information on current registration for your sponsored event, contact <b>CorporateVP@swetamu.org</b>. Please note, SWE-TAMU does not guarantee attendance for any event." />
+                <EditLevel level="Platinum" 
+                              description="Have the opportunity to be a title company at our first general meeting along with everything included below"
+                              lowerbound = "$5000"
+                              hexcode = "#ebeaea"/>
+               
 
                 </Grid>
-
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
+                 <EditLevel level="Gold" 
+                              description="Have the opportunity to present at some of our most widely attended events along with everything included below
+                              "
+                              lowerbound = "$2500"
+                              upperbound = "$3499"
+                              hexcode = "#fff2c8"/>
+                </Grid>
             </Grid>
 
 
             <Modal
-                open={openNewQuestion}
-                onClose={handleCloseNewQuestion}
+                open={openNewLevel}
+                onClose={handleCloseNewLevel}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
                 disableScrollLock
@@ -112,38 +119,42 @@ const EditFAQ = (props: Props) => {
                     p: 4,
                     overflow: 'scroll',
                 }}>
-                    <Grid container>
-                        <Grid item xs={12}>
+                    <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
+                        <Grid item xs={1}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                             }} >
-                                Add Question
+                                Add Level
                             </Typography>
                         </Grid>
 
-                        <Grid item xs={12} sx={{
-                            display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
-                        }}>
-                            <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" />
+                        <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
+                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" variant="outlined" />
+                        </Grid>
+                        <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
+                            <TextField sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" variant="outlined" />
+                            <TextField sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" variant="outlined" />
                         </Grid>
 
-                        <Grid item xs={12} sx={{
-                            display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
+                        <Grid item xs={3} sx={{
+                            display: 'flex', justifyContent: 'left', mt: theme.spacing(5)
                         }}>
                             <TextareaAutosize
                                 aria-label="empty textarea"
-                                placeholder="Answer"
-                                minRows={8}
+                                placeholder="Description of level benefits, details, etc."
+                                minRows={3}
                                 style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                             />
                         </Grid>
+                        <Grid item xs={2 }>
+                        <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" variant="outlined" />
 
-                        
+                        </Grid>
 
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'right', mt: theme.spacing(10)
                         }}>
-                            <Button href="/" variant="contained" size="large" color="primary" sx={{
+                            <Button href="/"  variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
                                 pb: theme.spacing(3),
@@ -166,4 +177,4 @@ const EditFAQ = (props: Props) => {
     )
 }
 
-export default EditFAQ
+export default EditLevels

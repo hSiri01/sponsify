@@ -24,6 +24,7 @@ import Link from '@mui/material/Link';
 interface Props {
     student_org_logo: string,
     student_org_name: string, 
+    student_org_short_name: string, 
     sponsor_code: string,
     valid_until_date: Date,
     street_address: string,
@@ -36,12 +37,12 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
-    const { student_org_logo, sponsor_code, valid_until_date, student_org_name, street_address, address_2, city, state, zip_code, fund_name} = props
+    const { student_org_logo, sponsor_code, valid_until_date, student_org_name, street_address, address_2, city, state, zip_code, fund_name, student_org_short_name } = props
 
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar/>
+            <MenuBar student_org_short_name='swe'/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -70,7 +71,7 @@ const Dashboard = (props: Props) => {
                 </Grid> 
 
                 <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5),}}>
-                    <Link href="/" underline='none'>
+                    <Link href={`/events-edit-`+ student_org_short_name.toString()} underline='none'>
                         <Paper variant="outlined" sx={{border:'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                         <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb:theme.spacing(1) }} >
                             <Grid container>
@@ -150,7 +151,7 @@ const Dashboard = (props: Props) => {
                     </Link>
 
 
-                    <Link href="/" underline='none'>
+                    <Link href={`/levels-edit-` + student_org_short_name.toString()} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>
@@ -283,7 +284,7 @@ const Dashboard = (props: Props) => {
 
 
                 <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr:theme.spacing(15) }}>
-                    <Link href="/" underline='none'>
+                    <Link href={`/basic-info-` + student_org_short_name.toString()} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>
@@ -362,7 +363,7 @@ const Dashboard = (props: Props) => {
                         </Paper>
                     </Link>
 
-                    <Link href="/faq-edit-swe" underline='none'>
+                    <Link href={`/faq-edit-` + student_org_short_name.toString()} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>
@@ -441,7 +442,7 @@ const Dashboard = (props: Props) => {
                         </Paper>
                     </Link>
 
-                    <Link href="/" underline='none'>
+                    <Link href={`/summary-` + student_org_short_name.toString()} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>

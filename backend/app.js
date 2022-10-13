@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const events = require('./event');
 const org = require('./org');
 const orgs = require('./org')
+const sponsors = require('./sponsor')
+const purchases = require('./purchase')
 const app = express()
 const port = 3001
 
@@ -46,6 +48,26 @@ app.get('/create-FAQ', (req, res) => {
 
 app.get('/delete-FAQ', (req, res) => {
     res.send('This route will delete an FAQ')
+})
+
+app.get('/get-all-levels', (req, res) => {
+    res.send('Get all sponsorship levels and info')
+})
+
+app.get('/get-level-by-amount', (req, res) => {
+    res.send('Get sponsorship level based on amount')
+})
+
+app.get('/update-level', (req, res) => {
+    res.send('Update sponsorship level')
+})
+
+app.get('/create-level', (req, res) => {
+    res.send('Create sponsorship level')
+})
+
+app.get('/delete-level', (req, res) => {
+    res.send('Delete sponsorship level')
 })
 
 app.get('/get-enabled-events', (req, res) => {
@@ -91,4 +113,16 @@ app.get('/get-org/:code', (req, res) => {
 
 app.listen(port, () => {
     console.log(`App listening on port ${port} :)`)
+})
+app.get('/create-sponsor', (req,res) => {
+    res.send('Create Sponsor')
+})
+app.get('/update-event', (req,res) => {
+    res.send('Update Event')
+})
+app.get('/delete-event', (req,res) => {
+    res.send('Delete Event')
+})
+app.get('/checkout', (req,res) => {
+    res.send('Checkout')
 })
