@@ -20,6 +20,8 @@
     "concurrently": "^7.4.0",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.5",
+    "debug": "^4.3.4",
+    "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -31,6 +33,9 @@
     "express": "^4.18.1",
     "mongoose": "^6.6.1",
     "nodemon": "^2.0.20"
+  },
+  "engines": {
+    "node": "16.18.0"
   },
   "scripts": {
     "start": "react-scripts start",
