@@ -41,16 +41,16 @@ const EditLevel = (props: Props) => {
 
                     </Grid>
 
-                <Grid  item xs={2} direction = "column" sx={{  }}>
+                <Grid  item xs={2} direction = "column" sx={{margin:theme.spacing(1)  }}>
                     
-                    <Grid item  sx={{ display: 'flex', justifyContent: 'center',  mt: theme.spacing(4)}}>
+                    <Grid item  sx={{ display: 'flex', justifyContent: 'center', }}>
                         <Typography variant="h6">
                             {level}
                         </Typography>
                         
                     </Grid>     
                     
-                    <Grid item    sx={{display: 'flex', justifyContent:'center',  margin: (2)}}>
+                    <Grid item    sx={{display: 'flex', justifyContent:'center',  mb: theme.spacing(2)}}>
                        
                         <Typography >
                             {lowerbound} 
@@ -72,7 +72,7 @@ const EditLevel = (props: Props) => {
                     
                 </Grid>  
 
-                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
+                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
                         <Typography variant="body1" sx={{textAlign:"left", }} dangerouslySetInnerHTML={{ __html: description}} />
                     </Grid>
 
