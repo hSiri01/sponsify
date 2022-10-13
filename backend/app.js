@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose')
 const events = require('./event');
-const org = require('./org');
 const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
@@ -26,11 +25,11 @@ app.get('/', (req, res) => {
 })
 
 app.get('/get-all-FAQ/:org', (req, res) => {
-    orgs.find({ name: req.params.org})
+    orgs.find({ name: req.params.org })
         .select({ FAQ: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on getAllOrgs, " + err)
+                console.log("Error on get-all-FAQ, " + err)
             }
             res.send(result[0].FAQ)
             console.log(result[0])
@@ -50,20 +49,39 @@ app.get('/delete-FAQ', (req, res) => {
     res.send('This route will delete an FAQ')
 })
 
-app.get('/get-all-levels', (req, res) => {
-    orgs.find({ name: 'Society of Women Engineers' })
+app.get('/get-all-levels/:org', (req, res) => {
+    orgs.find({ name: req.params.org })
         .select({ levels: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code, " + err)
+                console.log("Error on get-all-levels, " + err)
             }
             res.json(result[0])
             console.log(result[0])
     })
 })
 
-app.get('/get-level-by-amount', (req, res) => {
-    res.send('Get sponsorship level based on amount')
+app.get('/get-level-by-amount/:org/:amount', (req, res) => {
+    orgs.find({ name: req.params.org })
+        .select({ levels: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-level-by-amount, " + err)
+            }
+
+            const amount = req.params.amount
+            const levels = result[0].levels
+            let currLevel = {}
+
+            for (let i = 0; i < levels.length; i++) {
+                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                    currLevel = levels[i]
+                }
+                console.log(levels[i])
+            }
+
+            res.json(currLevel)
+    })
 })
 
 app.get('/update-level', (req, res) => {
@@ -78,22 +96,22 @@ app.get('/delete-level', (req, res) => {
     res.send('Delete sponsorship level')
 })
 
-app.get('/get-enabled-events', (req, res) => {
-    events.find({ visible: true })
+app.get('/get-enabled-events/:org', (req, res) => {
+    events.find({ visible: true, name: req.params.org })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on getAllOrgs, " + err)
+                console.log("Error on get-enabled-events, " + err)
             }
             res.send(result)
         }
     )
 })
 
-app.get('/get-all-events', (req, res) => {
-    events.find({})
+app.get('/get-all-events/:org', (req, res) => {
+    events.find({ name: req.params.org })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on getAllOrgs, " + err)
+                console.log("Error on get-all-events, " + err)
             }
             res.send(result)
         }
@@ -112,7 +130,7 @@ app.get('/get-org/:code', (req, res) => {
         .select({ name: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code, " + err)
+                console.log("Error on get-org, " + err)
             }
             res.json(result[0])
             console.log(result[0])
@@ -135,11 +153,11 @@ app.get('/checkout', (req,res) => {
     res.send('Checkout')
 })
 
-app.get('/get-org-info/:fundName', (req,res) => {
-    orgs.find({ fundName: req.params.fundName })
+app.get('/get-org-info/:org', (req,res) => {
+    orgs.find({ name: req.params.org })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-org-info " + err)
+                console.log("Error on get-org-info, " + err)
             }
             res.json(result[0])
             console.log(result[0])
@@ -150,36 +168,36 @@ app.get('/update-org-info', (req,res) => {
     res.send('Update org info')
 })
 
-app.get('/get-valid-admins/:fundName', (req,res) => {
-    orgs.find({ fundName: req.params.fundName })
+app.get('/get-valid-admins/:org', (req,res) => {
+    orgs.find({ name: req.params.org })
         .select({ validAdmins: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-valid-admins " + err)
+                console.log("Error on get-valid-admins, " + err)
             }
             res.json(result[0])
             console.log(result[0])
     })
 })
 
-app.get('/get-event-code/:fundName', (req,res) => {
-    orgs.find({ fundName: req.params.fundName })
+app.get('/get-event-code/:org', (req,res) => {
+    orgs.find({ name: req.params.org })
         .select({ eventCode: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code" + err)
+                console.log("Error on get-event-code, " + err)
             }
             res.json(result[0])
             console.log(result[0])
     })
 })
 
-app.get('/get-logo/:fundName', (req,res) => {
-    orgs.find({ fundName: req.params.fundName })
+app.get('/get-logo/:org', (req,res) => {
+    orgs.find({ name: req.params.org })
         .select({ logoImage: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code" + err)
+                console.log("Error on get-logo, " + err)
             }
             res.json(result[0])
             console.log(result[0])
