@@ -48,6 +48,26 @@ app.get('/delete-FAQ', (req, res) => {
     res.send('This route will delete an FAQ')
 })
 
+app.get('/get-all-levels', (req, res) => {
+    res.send('Get all sponsorship levels and info')
+})
+
+app.get('/get-level-by-amount', (req, res) => {
+    res.send('Get sponsorship level based on amount')
+})
+
+app.get('/update-level', (req, res) => {
+    res.send('Update sponsorship level')
+})
+
+app.get('/create-level', (req, res) => {
+    res.send('Create sponsorship level')
+})
+
+app.get('/delete-level', (req, res) => {
+    res.send('Delete sponsorship level')
+})
+
 app.get('/get-enabled-events', (req, res) => {
     events.find({ visible: true })
         .exec((err, result) => {
