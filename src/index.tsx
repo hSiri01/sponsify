@@ -13,8 +13,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Auth0Provider
-    domain="dev-ejvogaq1.us.auth0.com"
-    clientId="GACaIJzDFNXvg83OOun6QGMy1SDZ4gOf"
+    domain="dev-laoquug3.us.auth0.com"
+    clientId="QmSkQRLon0Xp1ZUmfGMi5oszDNF0Rder"
     redirectUri="http://localhost:3000/dashboard-swe"
   >
     <App />
