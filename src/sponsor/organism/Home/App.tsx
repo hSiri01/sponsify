@@ -19,10 +19,10 @@ const SponsorHome = (props: Props) => {
     const [org, setOrg] = React.useState('');
     const [buttonClick, setButtonClick] = React.useState(false);
 
-    const handleOrgChange = async() => {
+    const handleOrgChange = async () => {
         // TO DO: validation so button click only changes to true if code matches an org
         // console.log(input)
-        let response = await fetch("/get-event-code/" + input)
+        let response = await fetch("/get-org/" + input)
           .then((res) => res.json())
           .then((data) => setOrg(data.name));
         //   .then(() => console.log(org)); 

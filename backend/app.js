@@ -74,7 +74,7 @@ app.get('/create-event', (req, res) => {
     res.send('Create event')
 })
 
-app.get('/get-event-code/:code', (req, res) => {
+app.get('/get-org/:code', (req, res) => {
     console.log(req.params.code)
     // h2kd93n5hs(j
 
