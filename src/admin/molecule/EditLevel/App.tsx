@@ -31,9 +31,9 @@ const EditLevel = (props: Props) => {
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4), }}>
+            <Grid container spacing = {4} wrap="nowrap"  sx={{maxWidth:theme.spacing(275),height: '60%', backgroundColor: props.hexcode,  border: 1,mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4), }}>
             
-                    <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', borderTop: 1, borderBottom: 1,borderLeft: 1 }}>
+                    <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left',  }}>
                        
                         <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2) }}>
                             <DeleteIcon />
@@ -41,16 +41,16 @@ const EditLevel = (props: Props) => {
 
                     </Grid>
 
-                <Grid container  item xs={2} direction = "column" sx={{ borderTop: 1, borderBottom: 1, maxWidth:theme.spacing(200), }}>
+                <Grid  item xs={2} direction = "column" sx={{  }}>
                     
-                    <Grid item sx={{ display: 'flex', justifyContent: 'center',  mt: theme.spacing(4)}}>
+                    <Grid item  sx={{ display: 'flex', justifyContent: 'center',  mt: theme.spacing(4)}}>
                         <Typography variant="h6">
                             {level}
                         </Typography>
                         
                     </Grid>     
                     
-                    <Grid item sx={{display: 'flex', justifyContent:'center',  margin: (2)}}>
+                    <Grid item    sx={{display: 'flex', justifyContent:'center',  margin: (2)}}>
                        
                         <Typography >
                             {lowerbound} 
@@ -65,8 +65,6 @@ const EditLevel = (props: Props) => {
                             +
                         </Typography>
                         }
-                        
-                        
                         <Typography >
                             {upperbound}
                         </Typography>
@@ -74,17 +72,20 @@ const EditLevel = (props: Props) => {
                     
                 </Grid>  
 
-                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'left',  borderTop: 1, borderBottom: 1,}}>
-                        <Typography variant="body1" sx={{textAlign:"left",  mt: theme.spacing(6)}} dangerouslySetInnerHTML={{ __html: description}} />
+                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
+                        <Typography variant="body1" sx={{textAlign:"left", }} dangerouslySetInnerHTML={{ __html: description}} />
                     </Grid>
 
-                <Grid item xs={1} sx={{ borderRight: 1, borderTop: 1, borderBottom: 1,  }}>
-                    <Grid item sx={{ display: 'flex', justifyContent: 'right' }}>
-                        <IconButton onClick={handleOpenLevel} color="secondary" aria-label="Edit" sx={{  mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(8), mb: theme.spacing(4), }}>
+             
+                    
+                    <Grid item xs ={1} sx={{ display: 'flex', }}>
+                        <IconButton onClick={handleOpenLevel} color="secondary" aria-label="Edit" sx={{  mr: theme.spacing(20),  mt: theme.spacing(2), mb: theme.spacing(4), }}>
                             <EditIcon />
                         </IconButton>
                     </Grid>
-                </Grid>
+
+            
+
             </Grid>
             
 
