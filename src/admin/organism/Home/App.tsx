@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, Link } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Support from '../../../assets/images/graphics/support.svg';
 import Admin from '../../../assets/images/graphics/admin_login.svg';
@@ -47,6 +47,10 @@ const AdminLogin = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(80), marginTop: theme.spacing(10) }} src={Admin} alt="Setting up webpage" />
+                </Grid>
+                
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
+                    <Link href="/" color = "inherit">Sponsor? </Link>
                 </Grid>
 
             </Grid>
