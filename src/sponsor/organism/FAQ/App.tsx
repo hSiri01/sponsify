@@ -1,3 +1,4 @@
+import React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import { theme} from '../../../utils/theme';
@@ -15,7 +16,19 @@ interface Props {
 const FAQ = (props: Props) => {
 
     const { student_org_logo, student_org_name } = props
+    const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
 
+    React.useEffect(() => {
+
+        const fetchData = async() => {
+            const data = await fetch("/get-all-FAQ/" + student_org_name)
+                .then((res) => res.json())
+                .then((data) => setFAQ(data))
+        }
+
+        fetchData()
+        // console.log(FAQ)
+    }, [])
 
     return (
         <ThemeProvider theme={theme}>
@@ -55,7 +68,7 @@ const FAQ = (props: Props) => {
 
                 
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
+                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
 
                     <Question question="I want to send company swag to distribute at the event I'm sponsoring. Where do I sent it?" 
                               answer="This address you can send you package at is: <br> Society of Women Engineers <br> TAMU <br> 3127 TAMU <br> College Station, TX 77843-3127"/>
@@ -66,10 +79,23 @@ const FAQ = (props: Props) => {
                     <Question question="How many people can I expect at the event I'm sponsoring?"
                         answer="Our General Meetings generally have higher attendance than most other events. Our Lunch & Learns and Dinner & Develops are smaller and more personable events. Additionally, this is because our members are busy with other events on campus, exams, homework and classes and so conflicts with our events are sometimes inevitable. For more information on current registration for your sponsored event, contact <b>CorporateVP@swetamu.org.</b> Please note, SWE-TAMU does not guarantee attendance for any event." />
                    
-                </Grid>
+                </Grid> */}
+
+                <>
+                    {faq.map((one: any) =>   
+                    <>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
+                        <Question question= {one.question}
+                            answer={one.answer}/>
+                       
+                        </Grid>
+                    </>
+                    )}
+                </>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button href="/levels-swe"
+                    <Button 
+                    // href="/levels-swe"
                         variant="contained"
                         size="large"
                         color="secondary"
