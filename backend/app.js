@@ -126,3 +126,21 @@ app.get('/delete-event', (req,res) => {
 app.get('/checkout', (req,res) => {
     res.send('Checkout')
 })
+app.get('/get-org-info', (req,res) => {
+    res.send('Org info')
+})
+app.get('/update-org-info', (req,res) => {
+    res.send('Update org info')
+})
+app.get('/get-valid-admins', (req,res) => {
+    res.send('Valid admins')
+})
+app.get('/get-event-code', (req,res) => {
+    res.send('gets Event code')
+})
+app.get('/get-logo', (req,res) => {
+    res.send('Org logo')
+})
+app.get('/verify-sponsor-code', (req,res) => {
+    res.send('Verify sponsor code')
+})
