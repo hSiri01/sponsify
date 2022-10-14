@@ -2,6 +2,7 @@
   "name": "sponsify-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://sponsify.herokuapp.com/",
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/style": "^0.8.0",
@@ -20,6 +21,7 @@
     "concurrently": "^7.4.0",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.5",
+    "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -36,7 +38,6 @@
     "dev": "concurrently \"cd backend && npm run dev\" \"npm start\" ",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
-  "proxy": "http://localhost:3001",
   "license": "ISC",
   "repository": {
     "type": "git",
