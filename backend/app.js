@@ -59,8 +59,8 @@ app.get('/get-all-levels/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-levels, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            res.json(result[0].levels)
+            
     })
 })
 

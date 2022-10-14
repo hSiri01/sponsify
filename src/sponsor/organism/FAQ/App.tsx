@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Question from '../../molecule/Question/App';
 import Button from '@mui/material/Button';
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
+import Levels from '../Levels/App'
 
 
 interface Props {
@@ -17,6 +19,7 @@ const FAQ = (props: Props) => {
 
     const { student_org_logo, student_org_name } = props
     const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
+    const [buttonClick, setButtonClick] = React.useState(false)
 
     React.useEffect(() => {
 
@@ -27,11 +30,12 @@ const FAQ = (props: Props) => {
         }
 
         fetchData()
-        // console.log(FAQ)
     }, [])
 
     return (
         <ThemeProvider theme={theme}>
+
+            {buttonClick ? (<Levels student_org_logo={SWELogo} student_org_name={student_org_name} />):(
 
             <Grid container>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -96,6 +100,7 @@ const FAQ = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button 
                     // href="/levels-swe"
+                        onClick={() => setButtonClick(true)}
                         variant="contained"
                         size="large"
                         color="secondary"
@@ -117,7 +122,7 @@ const FAQ = (props: Props) => {
 
 
             </Grid>
-
+            )}
         </ThemeProvider>
 
 
