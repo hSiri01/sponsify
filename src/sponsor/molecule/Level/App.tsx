@@ -23,7 +23,7 @@ const Level = (props: Props) => {
         <ThemeProvider theme={theme}>
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper sx={{ borderRadius: 0, background: `#${color_level}`, maxWidth: theme.spacing(200), minWidth: theme.spacing(200), minHeight: theme.spacing(20) }} elevation={0}>
+                    <Paper sx={{ borderRadius: 0, background: `${color_level}`, maxWidth: theme.spacing(200), minWidth: theme.spacing(200), minHeight: theme.spacing(20) }} elevation={0}>
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(4) }}>
                             <Grid item xs={4}>
                                 <Typography sx={{ fontWeight: "900" }} variant="h6">{name}</Typography>
