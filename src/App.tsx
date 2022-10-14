@@ -16,6 +16,7 @@ import Dashboard from './admin/organism/Dashboard/App'
 import EditEvents from './admin/organism/EditEvents/App'
 import PurchaseHistory from './admin/organism/PurchaseHistory/App';
 import EditLevels from './admin/organism/EditLevels/App';
+import BasicInfo from './admin/organism/BasicInfo/App';
 
 
 
@@ -45,6 +46,7 @@ const App: React.FC = () => {
           <Route path="/dashboard-swe" element={<Dashboard student_org_logo={SWELogo} sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} student_org_name="Society of Women Engineers" student_org_short_name="swe" street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
           <Route path="/events-edit-swe" element={<EditEvents student_org_logo={SWELogo} student_org_name="SWE" />} />
           <Route path="/summary-swe" element={<PurchaseHistory student_org_logo={SWELogo}  total_sponsored={50000} />} />
+          <Route path="/basic-info-swe" element={<BasicInfo student_org_logo={SWELogo} student_org_short_name="SWE" student_org_name="Society of Women Engineers" street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
 
           </Routes>
       </BrowserRouter>
