@@ -4,39 +4,22 @@ import Logo from '../../../assets/images/logos/logo.png';
 import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
 import Transaction from '../../molecule/Transaction/App';
 import { Paper } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import LevelSponsors from '../../molecule/LevelSponsors/App';
 
 
 
 interface Props {
-    student_org_logo: string,
-    student_org_name: string, 
+    student_org_logo: string, 
     total_sponsored: number,
 }
 
 const PurchaseHistory = (props: Props) => {
 
-    const { student_org_logo, student_org_name, total_sponsored } = props
-    const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
-    const handleOpenNewQuestion = () => setOpenNewQuestion(true);
-    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
-
-    const [checked, setChecked] = React.useState(true);
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
-    };
-
-
-
+    const { student_org_logo, total_sponsored } = props
+   
     return (
 
         <ThemeProvider theme={theme}>

@@ -11,19 +11,17 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
-import Level from '../../../sponsor/molecule/Level/App';
 
 
 interface Props {
     student_org_logo: string,
-    student_org_name: string, 
     student_org_short_name: string, 
   
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo, student_org_name, student_org_short_name } = props
+    const { student_org_logo, student_org_short_name } = props
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const handleOpenNewLevel = () => setOpenNewLevel(true);
     const handleCloseNewLevel = () => setOpenNewLevel(false);

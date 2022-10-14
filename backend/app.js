@@ -6,6 +6,7 @@ const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
 const app = express()
+const bodyParser = require('body-parser')
 const port = 3001
 
 mongoose.connect(
@@ -19,6 +20,8 @@ mongoose.connect(
 // Access database connection
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error!!\n'))
+
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.send('Hello! This is the default route for the backend server.')
@@ -108,7 +111,7 @@ app.get('/get-enabled-events/:org', (req, res) => {
 })
 
 app.get('/get-all-events/:org', (req, res) => {
-    events.find({ name: req.params.org })
+    events.find({ org: req.params.org })
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-events, " + err)
@@ -142,10 +145,6 @@ app.get('/get-org/:code', (req, res) => {
     })
 })
 
-app.get('/create-sponsor', (req,res) => {
-    res.send('Create Sponsor')
-})
-
 app.get('/update-event', (req,res) => {
     res.send('Update Event')
 })
@@ -156,6 +155,10 @@ app.get('/delete-event', (req,res) => {
 
 app.get('/checkout', (req,res) => {
     res.send('Checkout')
+})
+
+app.get('/create-sponsor', (req,res) => {
+    res.send('Create Sponsor')
 })
 
 app.get('/get-org-info/:org', (req,res) => {

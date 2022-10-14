@@ -248,6 +248,7 @@ const EditEvents = (props: Props) => {
                                 <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Price" variant="outlined" />
                                 <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Occurances" variant="outlined" />
                                 <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Sponsored" variant="outlined" />
+                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Avg Attendance" variant="outlined" />
                             </Grid>
 
 

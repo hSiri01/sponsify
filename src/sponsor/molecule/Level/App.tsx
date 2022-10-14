@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { theme, darkGreen } from '../../../utils/theme';
+import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';

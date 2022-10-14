@@ -1,16 +1,49 @@
 const mongoose = require('mongoose')
 
 const eventSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
     date: Date,
     endDate: Date,
-    price: Number,
-    description: String,
-    briefDescription: String,
-    totalSpots: Number,
-    spotsTaken: Number,
-    visible: Boolean,
-    sponsors: [mongoose.SchemaTypes.ObjectId]
+    price: {
+        type: Number,
+        required: true
+    },
+    description: {
+        type: String,
+        default: ""
+    },
+    briefDescription: {
+        type: String,
+        default: ""
+    },
+    totalSpots: {
+        type: Number,
+        required: true
+    },
+    spotsTaken: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    visible: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    org: {
+        type: String,
+        required: true
+    },
+    sponsors: {
+        type: [{
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'sponsor'
+        }],
+        default: []
+    }
 })
 
 module.exports = mongoose.model('events', eventSchema);
