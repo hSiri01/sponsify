@@ -4,10 +4,14 @@ const mongoose = require('mongoose')
 const purchaseSchema = new mongoose.Schema({
     sponsorID: {
         type: mongoose.SchemaTypes.ObjectId,
+        ref: 'sponsor',
         required: true
     },
     events: {
-        type: [mongoose.SchemaTypes.ObjectId],
+        type: [{
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'event'
+        }],
         required: true,
         validate: {
             validator: v => v.length > 0,

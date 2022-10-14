@@ -11,22 +11,39 @@ const eventSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    description: String,
-    briefDescription: String,
+    description: {
+        type: String,
+        default: ""
+    },
+    briefDescription: {
+        type: String,
+        default: ""
+    },
     totalSpots: {
         type: Number,
         required: true
     },
     spotsTaken: {
         type: Number,
-        required: true
+        required: true,
+        default: 0
     },
     visible: {
         type: Boolean,
         required: true,
         default: false
     },
-    sponsors: [mongoose.SchemaTypes.ObjectId]
+    org: {
+        type: String,
+        required: true
+    },
+    sponsors: {
+        type: [{
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'sponsor'
+        }],
+        default: []
+    }
 })
 
 module.exports = mongoose.model('events', eventSchema);

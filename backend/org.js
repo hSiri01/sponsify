@@ -5,7 +5,10 @@ const orgSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    fundName: String,
+    fundName: {
+        type: String,
+        default: ""
+    },
     address: {
         streetAddress: String,
         zip: Number,
@@ -17,20 +20,38 @@ const orgSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    validAdmins: [String],
-    FAQ: [{
-        question: String,
-        answer: String
-    }],
-    levels: [{
-        minAmount: Number,
-        maxAmount: Number,
-        name: String,
-        color: String,
-        description: String
-    }],
-    events: [mongoose.SchemaTypes.ObjectId],
-    exampleInvoice: String
+    validAdmins: {
+        type: [String],
+        default: []
+    },
+    FAQ: {
+        type: [{
+            question: String,
+            answer: String
+        }],
+        default: []
+    },
+    levels: {
+        type: [{
+            minAmount: Number,
+            maxAmount: Number,
+            name: String,
+            color: String,
+            description: String
+        }],
+        default: []
+    },
+    events: {
+        type: [{
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'event'
+        }],
+        default: []
+    },
+    exampleInvoice: {
+        type: String,
+        default: ""
+    }
 })
 
 module.exports = mongoose.model('organizations', orgSchema);
