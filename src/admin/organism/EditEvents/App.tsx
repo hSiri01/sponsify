@@ -33,7 +33,15 @@ const EditEvents = (props: Props) => {
         setChecked(event.target.checked);
     };
 
+    const createEvent = async() => {
+        console.log('creating event');
+        
+        await fetch('/create-event', {
 
+            method: 'POST',
+            body: JSON.stringify({ visible: checked })
+        })
+    }
 
     return (
 
@@ -280,7 +288,7 @@ const EditEvents = (props: Props) => {
                         </Grid>
 
                         <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
-                            <Button href="/" variant="contained" size="large" color="primary" sx={{
+                            <Button /*href="/"*/ onClick={createEvent} variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
                                 pb: theme.spacing(3),
