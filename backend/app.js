@@ -118,8 +118,26 @@ app.get('/get-all-events/:org', (req, res) => {
     )
 })
 
-app.get('/create-event', (req, res) => {
-    res.send('Create event')
+app.post('/create-event', async (req, res) => {
+    console.log(req.body);
+
+    /*const newEvent = await events.create({
+        name: req.params.name,
+        date: req.params.date,
+        endDate: req.params.endDate,
+        price: req.params.price,
+        description: req.params.desc,
+        briefDescription: req.params.briefDesc,
+        totalSpots: req.params.quantity,
+        spotsTaken: 0,
+        visible: req.params.visible,
+        org: req.params.org,
+        sponsors: []
+    })*/
+
+    console.log(newEvent);
+
+    res.json({ status: '200' })
 })
 
 app.get('/get-org/:code', (req, res) => {
