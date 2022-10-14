@@ -30,7 +30,6 @@ const FAQ = (props: Props) => {
         }
 
         fetchData()
-        // console.log(FAQ)
     }, [])
 
     return (

@@ -15,7 +15,6 @@ interface Props {
 const Levels = (props: Props) => {
 
     const { student_org_name, student_org_logo } = props
-    console.log(student_org_name);
 
     const [levels, setLevels] = React.useState([{}])
 
@@ -30,7 +29,6 @@ const Levels = (props: Props) => {
 
     }, [])
 
-    console.log(levels)
 
 
     return (
