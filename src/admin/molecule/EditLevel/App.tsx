@@ -30,7 +30,7 @@ const EditLevel = (props: Props) => {
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container spacing = {4} wrap="nowrap"  sx={{maxWidth:theme.spacing(275),height: '60%', backgroundColor: props.hexcode, padding: theme.spacing(3), border: 1, mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4) }}>
+            <Grid container spacing = {4} wrap="nowrap"  sx={{maxWidth:theme.spacing(275),height: '60%', backgroundColor: props.hexcode,  border: 1,mr: theme.spacing(8), ml: theme.spacing(8), mt: theme.spacing(4), mb: theme.spacing(4), }}>
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left',  }}>
                        
@@ -40,7 +40,7 @@ const EditLevel = (props: Props) => {
 
                     </Grid>
 
-                <Grid item xs={2} direction = "column" sx={{margin:theme.spacing(1) }}>
+                <Grid  item xs={2} direction = "column" sx={{margin:theme.spacing(1)  }}>
                     
                     <Grid item  sx={{ display: 'flex', justifyContent: 'center', }}>
                         <Typography variant="h6">
@@ -71,8 +71,8 @@ const EditLevel = (props: Props) => {
                     
                 </Grid>  
 
-                    <Grid item xs={8} sx={{ display: 'flex', justifyContent: 'center', paddingTop:theme.spacing(0) }}>
-                        <Typography variant="body1" sx={{textAlign:"left"}} dangerouslySetInnerHTML={{ __html: description}} />
+                    <Grid item  xs ={8} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
+                        <Typography variant="body1" sx={{textAlign:"left", }} dangerouslySetInnerHTML={{ __html: description}} />
                     </Grid>
 
              

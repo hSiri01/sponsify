@@ -15,30 +15,17 @@ import MenuBar from '../../molecule/MenuBar/App'
 
 interface Props {
     student_org_logo: string,
-    student_org_name: string,
     student_org_short_name: string, 
   
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo, student_org_name, student_org_short_name } = props
+    const { student_org_logo, student_org_short_name } = props
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const handleOpenNewLevel = () => setOpenNewLevel(true);
     const handleCloseNewLevel = () => setOpenNewLevel(false);
 
-    const [levels, setLevels] = React.useState([{}])
-
-    React.useEffect(() => {
-
-        const fetchData = async() => {
-            const data = await fetch("/get-all-levels/" + student_org_name)
-                .then((res) => res.json())
-                .then((data) => setLevels(data))
-        }
-
-        fetchData()
-    }, [])
 
     return (
         <ThemeProvider theme={theme}>
@@ -79,7 +66,7 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 
-                {/*<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
                     <EditLevel level="Diamond" 
                               description="Be recognized and appreciated at our annual banquet along with everything included below"                              
@@ -91,36 +78,23 @@ const EditLevels = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
 
-                    <EditLevel level="Platinum" 
+                <EditLevel level="Platinum" 
                               description="Have the opportunity to be a title company at our first general meeting along with everything included below"
                               lowerbound = "$5000"
                               hexcode = "#ebeaea"/>
                
 
                 </Grid>
-
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
-                    <EditLevel level="Gold" 
-                              description="Have the opportunity to present at some of our most widely attended events along with everything included below"
+                 <EditLevel level="Gold" 
+                              description="Have the opportunity to present at some of our most widely attended events along with everything included below
+                              "
                               lowerbound = "$2500"
                               upperbound = "$3499"
                               hexcode = "#fff2c8"/>
-                </Grid>*/}
-
-                <>
-                    {levels.map((lev: any) =>   
-                    <>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <EditLevel level={lev.name}
-                                description={lev.description}
-                                lowerbound = {lev.minAmount}
-                                upperbound = {lev.maxAmount > 0 ? lev.maxAmount : undefined}
-                                hexcode = {lev.color}/>
-                        </Grid>
-                    </>
-                    )}
-                </>
+                </Grid>
             </Grid>
+
 
             <Modal
                 open={openNewLevel}
