@@ -113,8 +113,6 @@ app.put('/update-level', (req, res) => {
 })
 
 app.post('/create-level', async (req, res, next) => {
-
-    console.log(req.body)
     var level = {
         minAmount: req.body.minAmount,
         maxAmount: req.body.maxAmount,
@@ -140,8 +138,8 @@ app.post('/create-level', async (req, res, next) => {
 
 app.delete('/delete-level', (req, res) => {
     orgs.findOneAndUpdate(
-        { name: "Datathon" },
-        { $pull: { levels: { _id: "6349fd47ba49df21bf7dba68"}} },
+        { name: req.body.orgName },
+        { $pull: { levels: { _id: req.body.levelId}} },
         function (error, success) {
             if (error) {
                 res.send("Error")

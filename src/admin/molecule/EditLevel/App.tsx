@@ -86,6 +86,22 @@ const EditLevel = (props: Props) => {
 
         handleCloseLevel()
     }
+
+    const handleDeleteLevel = async () => {
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                levelId: id,
+                orgName: student_org_name
+            })
+        }
+
+        await fetch("/delete-level", requestOptions)
+            .then((res) => console.log(res)) 
+
+        // handleCloseLevel()
+    }
     
     return (
         <ThemeProvider theme={theme}>
@@ -93,7 +109,7 @@ const EditLevel = (props: Props) => {
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left',  }}>
                        
-                        <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2) }}>
+                        <IconButton onClick={handleDeleteLevel} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2) }}>
                             <DeleteIcon />
                         </IconButton>
 
