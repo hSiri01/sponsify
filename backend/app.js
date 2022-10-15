@@ -88,16 +88,17 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
 })
 
 app.put('/update-level', (req, res) => {
+    console.log(req.body)
     var level = {
-        "levels.$.minAmount" : 80000,
-        "levels.$.maxAmount" : 10003,
-        "levels.$.name" : "test test",
-        "levels.$.color" : "colorsss",
-        "levels.$.description" : "testinggg"
+        "levels.$.minAmount" : req.body.minAmount,
+        "levels.$.maxAmount" : req.body.maxAmount,
+        "levels.$.name" : req.body.name,
+        "levels.$.color" : req.body.color,
+        "levels.$.description" : req.body.description
     }
 
     orgs.findOneAndUpdate(
-        { "levels._id": "6349fd47ba49df21bf7dba68" },
+        { "levels._id": req.body.levelId },
         { $set: level},
         function (error, success) {
             if (error) {

@@ -145,7 +145,9 @@ const EditLevels = (props: Props) => {
                     <>
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
-                                <EditLevel level={level.name}
+                                <EditLevel id={level._id}
+                                        student_org_name={org} 
+                                        level={level.name}
                                         description={level.description}                              
                                         lowerbound = {level.minAmount}
                                         upperbound = {level.maxAmount}
