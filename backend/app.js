@@ -105,23 +105,25 @@ app.put('/update-level', (req, res) => {
                 res.send('Error')
             } else {
                 console.log(success);
-                res.send('Created sponsorship level')
+                res.send('Updated sponsorship level')
             }
         }
     );
 })
 
 app.post('/create-level', async (req, res, next) => {
+
+    console.log(req.body)
     var level = {
-        minAmount: 4000,
-        maxAmount: 5000,
-        name: "testName",
-        color: "testColor",
-        description: "description"
+        minAmount: req.body.minAmount,
+        maxAmount: req.body.maxAmount,
+        name: req.body.name,
+        color: req.body.color,
+        description: req.body.description
     };
 
     orgs.findOneAndUpdate(
-        { name: "Datathon" },
+        { name: req.body.organization },
         { $push: { levels: level }},
         function (error, success) {
             if (error) {
@@ -147,7 +149,6 @@ app.delete('/delete-level', (req, res) => {
             }
         }
     )
-    // res.send('Delete sponsorship level')
 })
 
 app.get('/get-enabled-events/:org', (req, res) => {
