@@ -87,16 +87,67 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     })
 })
 
-app.get('/update-level', (req, res) => {
-    res.send('Update sponsorship level')
+app.put('/update-level', (req, res) => {
+    var level = {
+        "levels.$.minAmount" : 80000,
+        "levels.$.maxAmount" : 10003,
+        "levels.$.name" : "test test",
+        "levels.$.color" : "colorsss",
+        "levels.$.description" : "testinggg"
+    }
+
+    orgs.findOneAndUpdate(
+        { "levels._id": "6349fd47ba49df21bf7dba68" },
+        { $set: level},
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Created sponsorship level')
+            }
+        }
+    );
 })
 
-app.get('/create-level', (req, res) => {
-    res.send('Create sponsorship level')
+app.post('/create-level', async (req, res, next) => {
+    var level = {
+        minAmount: 4000,
+        maxAmount: 5000,
+        name: "testName",
+        color: "testColor",
+        description: "description"
+    };
+
+    orgs.findOneAndUpdate(
+        { name: "Datathon" },
+        { $push: { levels: level }},
+        function (error, success) {
+            if (error) {
+                console.log(error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Created sponsorship level')
+            }
+        }
+    );
 })
 
-app.get('/delete-level', (req, res) => {
-    res.send('Delete sponsorship level')
+app.delete('/delete-level', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: "Datathon" },
+        { $pull: { levels: { _id: "6349fd47ba49df21bf7dba68"}} },
+        function (error, success) {
+            if (error) {
+                res.send("Error")
+            } else {
+                res.send("Deleted level")
+            }
+        }
+    )
+    // res.send('Delete sponsorship level')
 })
 
 app.get('/get-enabled-events/:org', (req, res) => {
