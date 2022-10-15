@@ -32,7 +32,7 @@ interface Props {
     num_sponsored: number,
     occurances: number,
     date_start: Date,
-    date_end?: Date, 
+    date_end: Date, 
     visible: boolean,
 }
 
@@ -49,17 +49,18 @@ const EditEvent = (props: Props) => {
         setChecked(event.target.checked);
     };
 
-
     const startmonth = (date_start.getMonth() < 10) ? ("0" + date_start.getMonth().toString()) : date_start.getMonth() 
     const date_start_format = date_start.getFullYear() +"-" +  startmonth + "-" + date_start.getDate()
 
-   let date_end_format = date_start_format
-   if(date_end)
-   {
-    const endmonth = (date_end.getMonth() < 10) ? ("0" + date_end.getMonth().toString()) : date_end.getMonth()
-    date_end_format = date_end.getFullYear() + "-" + endmonth + "-" + date_end.getDate()
-   }
+    let date_end_format = date_start_format
 
+    if(date_end)
+    {
+        const endmonth = (date_end.getMonth() < 10) ? ("0" + date_end.getMonth().toString()) : date_end.getMonth()
+        date_end_format = date_end.getFullYear() + "-" + endmonth + "-" + date_end.getDate()
+    }
+
+    console.log(date_start.getFullYear())
 
     return (
         <ThemeProvider theme={theme}>
@@ -75,7 +76,7 @@ const EditEvent = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                <Date date_1={date_start} date_2={date_end}/>
+                                <Date date_1={(date_start.getFullYear() > 0) ? date_start : undefined} date_2={date_end.getTime() != date_start.getTime() ? date_end : undefined}/>
                             </Grid>
 
                             <Grid item xs={4}>
@@ -149,7 +150,7 @@ const EditEvent = (props: Props) => {
                                             }}
                                             sx={{ maxWidth: theme.spacing(40) }} />
 
-                                        {date_end ?
+                                        {(date_end) ?
                                             (
 
                                                 <TextField

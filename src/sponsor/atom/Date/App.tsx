@@ -8,7 +8,7 @@ import { Paper } from '@mui/material';
 
 
 interface Props {
-    date_1: Date,
+    date_1?: Date,
     date_2?: Date,
 }
 
@@ -23,7 +23,7 @@ const Level = (props: Props) => {
         <ThemeProvider theme={theme}>
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt:theme.spacing(0) }}>
-                    {date_2? 
+                    {date_1 && date_2? 
                     (
                             <Grid container>
                                 <Grid item xs={5}>
@@ -49,13 +49,16 @@ const Level = (props: Props) => {
                                 </Grid>
 
                             </Grid>
-                    ):(
+                    ) : ( date_1?
+                        (
                         <Paper variant = "outlined" sx = {{ borderColor: "black", borderRadius: 0, maxWidth: theme.spacing(15), minWidth: theme.spacing(15), minHeight: theme.spacing(15) }} >
                             <Paper elevation={0} sx={{ backgroundColor: "#4baa89", borderRadius: 0, maxWidth: theme.spacing(15), minWidth: theme.spacing(15), minHeight: theme.spacing(5) }} >
                                 <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_1.getMonth() - 1]}</Typography>
                             </Paper>
                         <Typography sx={{ mt: theme.spacing(1), textAlign: "center" }} variant="body1">{date_1.getDate()}</Typography>
-                        </Paper>  
+                        </Paper> 
+                        )
+                        : (<></>)
                     )}    
                 </Grid>
             </Grid>    

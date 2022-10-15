@@ -19,11 +19,12 @@ import Checkbox from '@mui/material/Checkbox';
 interface Props {
     student_org_logo: string,
     student_org_name: string, 
+    student_org_short_name: string
 }
 
 const EditEvents = (props: Props) => {
 
-    const { student_org_logo, student_org_name } = props
+    const { student_org_logo, student_org_name, student_org_short_name } = props
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
     const handleCloseNewQuestion = () => setOpenNewQuestion(false);
@@ -33,7 +34,18 @@ const EditEvents = (props: Props) => {
         setChecked(event.target.checked);
     };
 
+    const [events, setEvents] = React.useState([{}]);
 
+    React.useEffect(() => {
+        console.log(student_org_name)
+        const fetchData = async() => {
+            const data = await fetch("/get-all-events/" + student_org_name)
+                .then((res) => res.json())
+                .then((data) => setEvents(data))
+        }
+
+        fetchData()
+    }, [])
 
     return (
 
@@ -79,7 +91,7 @@ const EditEvents = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} Events
+                        {student_org_short_name} Events
                     </Typography>
                 </Grid>
 
@@ -127,8 +139,7 @@ const EditEvents = (props: Props) => {
 
 
                 
-                
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+                {/*<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
 
                     <EditEvent name="Leadership Conference"
                         short_description='Sponsor and Present at Conference'
@@ -174,7 +185,29 @@ const EditEvents = (props: Props) => {
 
                     />
 
-                </Grid>
+                </Grid>*/}
+
+                <>
+                    {events.map((event: any) =>   
+                    <>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+
+                            <EditEvent name={event.name}
+                                short_description={event.briefDesc}
+                                long_description={event.desc}
+                                avg_attendance={event.avgAttendance}
+                                num_sponsored={event.spotsTaken}
+                                occurances={event.totalSpots}
+                                price={event.price}
+                                date_start={new Date(event.date)}
+                                date_end={new Date(event.endDate)}
+                                visible={event.visible}
+                            />
+
+                        </Grid>
+                    </>
+                    )}
+                </>
 
             </Grid>
 
