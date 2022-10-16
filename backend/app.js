@@ -124,23 +124,32 @@ app.get('/get-all-events/:org', (req, res) => {
 app.post('/create-event', async (req, res) => {
     console.log(req.body);
 
-    /*const newEvent = await events.create({
-        name: req.params.name,
-        date: req.params.date,
-        endDate: req.params.endDate,
-        price: req.params.price,
-        description: req.params.desc,
-        briefDescription: req.params.briefDesc,
-        totalSpots: req.params.quantity,
+    var newEvent = new events({
+        name: req.body.name,
+        date: req.body.date,
+        endDate: req.body.endDate,
+        price: req.body.price,
+        description: req.body.desc,
+        briefDescription: req.body.briefDesc,
+        totalSpots: req.body.totalSpots,
         spotsTaken: 0,
-        visible: req.params.visible,
-        org: req.params.org,
+        visible: req.body.visible,
+        org: req.body.org,
         sponsors: []
-    })*/
+    })
 
-    console.log(newEvent);
+    console.log(newEvent)
 
-    res.json({ status: '200' })
+    newEvent.save((err) => {
+        if (err) {
+            console.log('Error on create-event: ' + err)
+            res.json({ status: '500'})
+        }
+        else {
+            console.log('Created new event')
+            res.json({ status: '200' })
+        }
+    })
 })
 
 app.get('/get-org/:code', (req, res) => {
@@ -158,11 +167,11 @@ app.get('/get-org/:code', (req, res) => {
     })
 })
 
-app.get('/update-event', (req,res) => {
+app.put('/update-event', (req,res) => {
     res.send('Update Event')
 })
 
-app.get('/delete-event', (req,res) => {
+app.post('/delete-event', (req,res) => {
     res.send('Delete Event')
 })
 
