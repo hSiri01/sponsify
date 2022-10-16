@@ -9,22 +9,24 @@ import Date from '../../atom/Date/App'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import { useCart } from '../../../contexts/Cart';
 
 
 
 
-interface Props {
+export type OrgEvent = {
     name: string,
     short_description: string, 
     long_description: string, 
-    price:number, 
+    price: number, 
     avg_attendance?: number,
     occurances: number,
     date_start: Date,
     date_end?: Date, 
+    id: number, 
 }
 
-const Event = (props: Props) => {
+const Event = (props: OrgEvent) => {
 
     const {name, short_description, long_description, price, avg_attendance, occurances, date_start, date_end} = props
 
@@ -34,8 +36,52 @@ const Event = (props: Props) => {
 
     const [checked, setChecked] = React.useState(false);
 
+    const { addToCart, removeFromCart, cart } = useCart();
+    
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
+        if (event.target.checked)
+        {
+            addToCart({
+                name: name,
+                short_description: short_description,
+                price: price,
+                quantity: 1,
+                date_start: date_start,
+                date_end: date_end,
+                id: props.id
+            })
+        }
+        else
+        {
+            removeFromCart(props.id)
+        }
+    };
+
+    const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value)
+        {
+            let parsedValue = +event.target.value
+            if (parsedValue > 0)
+            {
+                if (parsedValue > occurances){
+                    parsedValue = occurances
+                }
+                setChecked(true);
+                addToCart({
+                    name: name,
+                    short_description: short_description,
+                    price: price,
+                    quantity: parsedValue,
+                    date_start: date_start,
+                    date_end: date_end,
+                    id: props.id
+                })
+                return;
+            }
+        }
+        setChecked(false);
+        removeFromCart(props.id)
     };
 
 
@@ -136,7 +182,7 @@ const Event = (props: Props) => {
                                 (
                                     <Grid container sx = {{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
                                         <Grid item xs={3}>
-                                            <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(5) }} id="outlined-basic" label="Quantity" variant="outlined" />
+                                            <TextField onChange={handleQuantityChange} sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(5) }} id="outlined-basic" label="Quantity" variant="outlined" defaultValue={cart.filter(e => e.id === props.id)[0]?.quantity} />
                                         </Grid>
 
                                         <Grid item xs={1}>
