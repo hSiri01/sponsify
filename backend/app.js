@@ -9,6 +9,17 @@ const app = express()
 const bodyParser = require('body-parser')
 const port = 3001
 
+app.use(bodyParser.json());
+
+process.once('SIGUSR2', function () {
+    process.kill(process.pid, 'SIGUSR2');
+  });
+  
+  process.on('SIGINT', function () {
+    // this is only called on ctrl+c, not restart
+    process.kill(process.pid, 'SIGINT');
+  });
+
 mongoose.connect(
     process.env.MONGODB_URL,
     {
@@ -20,8 +31,6 @@ mongoose.connect(
 // Access database connection
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error!!\n'))
-
-app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
     res.send('Hello! This is the default route for the backend server.')
@@ -122,15 +131,16 @@ app.get('/get-all-events/:org', (req, res) => {
 })
 
 app.post('/create-event', async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
 
-    var newEvent = new events({
+    const newEvent = new events({
         name: req.body.name,
         date: req.body.date,
         endDate: req.body.endDate,
         price: req.body.price,
         description: req.body.desc,
         briefDescription: req.body.briefDesc,
+        avgAttendance: req.body.avgAttendance,
         totalSpots: req.body.totalSpots,
         spotsTaken: 0,
         visible: req.body.visible,
@@ -138,7 +148,7 @@ app.post('/create-event', async (req, res) => {
         sponsors: []
     })
 
-    console.log(newEvent)
+    // console.log(newEvent)
 
     newEvent.save((err) => {
         if (err) {
@@ -150,6 +160,50 @@ app.post('/create-event', async (req, res) => {
             res.json({ status: '200' })
         }
     })
+})
+
+app.put('/update-event', (req,res) => {
+    // console.log(req.body)
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot update event, no id in request body')
+        res.json({ status: '400'})
+    }
+    else {
+        const eventUpdate = {
+            name: req.body.name,
+            briefDescription: req.body.briefDesc,
+            date: req.body.date,
+            endDate: req.body.endDate,
+            price: req.body.price,
+            totalSpots: req.body.totalSpots,
+            spotsTaken: req.body.spotsTaken,
+            description: req.body.desc,
+            visible: req.body.visible
+        }
+    
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            events.findByIdAndUpdate( id, eventUpdate, (err, event) => {
+                if (err) {
+                    console.log('Error on update-event: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully updated event: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+        }
+        else {
+            console.log('Cannot update event, invalid id in request body')
+            res.json({ status: '400'})
+        }
+    }
+})
+
+app.post('/delete-event', (req,res) => {
+    res.send('Delete Event')
 })
 
 app.get('/get-org/:code', (req, res) => {
@@ -165,14 +219,6 @@ app.get('/get-org/:code', (req, res) => {
             res.json(result[0])
             console.log(result[0])
     })
-})
-
-app.put('/update-event', (req,res) => {
-    res.send('Update Event')
-})
-
-app.post('/delete-event', (req,res) => {
-    res.send('Delete Event')
 })
 
 app.get('/checkout', (req,res) => {
