@@ -202,8 +202,32 @@ app.put('/update-event', (req,res) => {
     }
 })
 
-app.post('/delete-event', (req,res) => {
-    res.send('Delete Event')
+app.delete('/delete-event', (req,res) => {
+    // console.log(req.body)
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot delete event, no id in request body')
+        res.json({ status: '400'})
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            events.findByIdAndRemove( id, (err, event) => {
+                if (err) {
+                    console.log('Error on delete-event: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully deleted event: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+        }
+        else {
+            console.log('Cannot delete event, invalid id in request body')
+            res.json({ status: '400'})
+        }
+    }
 })
 
 app.get('/get-org/:code', (req, res) => {
