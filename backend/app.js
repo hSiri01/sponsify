@@ -6,7 +6,8 @@ const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
 const app = express()
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const sponsor = require('./sponsor');
 const port = 3001
 
 mongoose.connect(
@@ -152,8 +153,19 @@ app.get('/checkout', (req,res) => {
     res.send('Checkout')
 })
 
-app.get('/create-sponsor', (req,res) => {
-    res.send('Create Sponsor')
+app.post('/create-sponsor', (req,res) => {
+    
+    var newSponsor = new sponsor({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        company: req.body.company,
+        email:req.body.email,
+        sponsorLevel: req.body.sponsorLevel
+    });
+    newSponsor.save((err) => {
+        if (err) console.log( "Error on create sponsor, " + err);
+        //else it saved
+    });
 })
 
 app.get('/get-org-info/:org', (req,res) => {
@@ -168,7 +180,38 @@ app.get('/get-org-info/:org', (req,res) => {
 })
 
 app.get('/update-org-info', (req,res) => {
-    res.send('Update org info')
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot update event, no id in request body')
+        res.json({ status: '400'})
+    }
+    else {
+        const updatedOrgInfo = {
+            name: req.body.name,
+            //fundName: req.body.fundName,
+            address: req.body.address,
+        }
+    
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            events.findByIdAndUpdate( id, updatedOrgInfo, (err, event) => {
+                if (err) {
+                    console.log('Error on update-org-info: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully updated org info: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+        }
+        else {
+            console.log('Cannot update org-info, invalid id in request body')
+            res.json({ status: '400'})
+        }
+    }
+    
+    
 })
 
 app.get('/get-valid-admins/:org', (req,res) => {
