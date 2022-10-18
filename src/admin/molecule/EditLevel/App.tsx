@@ -93,14 +93,12 @@ const EditLevel = (props: Props) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 levelId: id,
-                orgName: student_org_name
+                organization: student_org_name
             })
         }
 
         await fetch("/delete-level", requestOptions)
             .then((res) => console.log(res)) 
-
-        // handleCloseLevel()
     }
     
     return (

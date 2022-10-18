@@ -159,34 +159,6 @@ const EditLevels = (props: Props) => {
                     )}
                 </>
 
-                
-                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
-
-                    <EditLevel level="Diamond" 
-                              description="Be recognized and appreciated at our annual banquet along with everything included below"                              
-                              lowerbound = "$5000"
-                              
-                              hexcode = "#ca7171"/>
-                    
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
-
-                <EditLevel level="Platinum" 
-                              description="Have the opportunity to be a title company at our first general meeting along with everything included below"
-                              lowerbound = "$5000"
-                              hexcode = "#ebeaea"/>
-               
-
-                </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
-                 <EditLevel level="Gold" 
-                              description="Have the opportunity to present at some of our most widely attended events along with everything included below
-                              "
-                              lowerbound = "$2500"
-                              upperbound = "$3499"
-                              hexcode = "#fff2c8"/>
-                </Grid>*/}
             </Grid> 
 
 

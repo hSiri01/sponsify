@@ -88,7 +88,6 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
 })
 
 app.put('/update-level', (req, res) => {
-    console.log(req.body)
     var level = {
         "levels.$.minAmount" : req.body.minAmount,
         "levels.$.maxAmount" : req.body.maxAmount,
@@ -112,7 +111,7 @@ app.put('/update-level', (req, res) => {
     );
 })
 
-app.post('/create-level', async (req, res, next) => {
+app.post('/create-level', async (req, res) => {
     var level = {
         minAmount: req.body.minAmount,
         maxAmount: req.body.maxAmount,
@@ -138,7 +137,7 @@ app.post('/create-level', async (req, res, next) => {
 
 app.delete('/delete-level', (req, res) => {
     orgs.findOneAndUpdate(
-        { name: req.body.orgName },
+        { name: req.body.organization },
         { $pull: { levels: { _id: req.body.levelId}} },
         function (error, success) {
             if (error) {
