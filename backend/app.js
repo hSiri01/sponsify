@@ -59,8 +59,8 @@ app.get('/get-all-levels/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-levels, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            res.json(result[0].levels)
+            
     })
 })
 
@@ -109,16 +109,66 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     })
 })
 
-app.get('/update-level', (req, res) => {
-    res.send('Update sponsorship level')
+app.put('/update-level', (req, res) => {
+    var level = {
+        "levels.$.minAmount" : req.body.minAmount,
+        "levels.$.maxAmount" : req.body.maxAmount,
+        "levels.$.name" : req.body.name,
+        "levels.$.color" : req.body.color,
+        "levels.$.description" : req.body.description
+    }
+
+    orgs.findOneAndUpdate(
+        { "levels._id": req.body.levelId },
+        { $set: level},
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Updated sponsorship level')
+            }
+        }
+    );
 })
 
-app.get('/create-level', (req, res) => {
-    res.send('Create sponsorship level')
+app.post('/create-level', async (req, res) => {
+    var level = {
+        minAmount: req.body.minAmount,
+        maxAmount: req.body.maxAmount,
+        name: req.body.name,
+        color: req.body.color,
+        description: req.body.description
+    };
+
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $push: { levels: level }},
+        function (error, success) {
+            if (error) {
+                console.log(error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Created sponsorship level')
+            }
+        }
+    );
 })
 
-app.get('/delete-level', (req, res) => {
-    res.send('Delete sponsorship level')
+app.delete('/delete-level', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $pull: { levels: { _id: req.body.levelId}} },
+        function (error, success) {
+            if (error) {
+                res.send("Error")
+            } else {
+                res.send("Deleted level")
+            }
+        }
+    )
 })
 
 app.get('/get-enabled-events/:org', (req, res) => {
@@ -257,8 +307,13 @@ app.get('/get-org/:code', (req, res) => {
             if (err) {
                 console.log('Error on get-org, ' + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+
+            if (result.length == 0) {
+                res.json({})
+            } else {
+                res.json(result[0])
+                console.log(result[0])
+            }
     })
 })
 
