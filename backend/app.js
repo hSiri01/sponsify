@@ -34,8 +34,9 @@ app.get('/get-all-FAQ/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-FAQ, " + err)
             }
-            res.send(result[0].FAQ)
-            console.log(result[0])
+            else {
+                res.send(result[0].FAQ)
+            }
         }
     )
 })
@@ -59,32 +60,11 @@ app.get('/get-all-levels/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-levels, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
-
-function getLevel(amount, org) {
-    orgs.find({ name: org })
-        .select({ levels: 1 })
-        .exec((err, result) => {
-            if (err) {
-                console.log("Error on get-level-by-amount, " + err)
-            }
-
-            const amount = amount
-            const levels = result[0].levels
-            let currLevel = {}
-
-            for (let i = 0; i < levels.length; i++) {
-                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
-                    currLevel = levels[i]
-                }
-                console.log(levels[i])
-            }
-        })
-
-}
 
 app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     orgs.find({ name: req.params.org })
@@ -93,19 +73,19 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
             if (err) {
                 console.log("Error on get-level-by-amount, " + err)
             }
+            else {
+                const amount = req.params.amount
+                const levels = result[0].levels
+                let currLevel = {}
 
-            const amount = req.params.amount
-            const levels = result[0].levels
-            let currLevel = {}
-
-            for (let i = 0; i < levels.length; i++) {
-                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
-                    currLevel = levels[i]
+                for (let i = 0; i < levels.length; i++) {
+                    if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                        currLevel = levels[i]
+                    }
                 }
-                console.log(levels[i])
-            }
 
-            res.json(currLevel)
+                res.json(currLevel)
+            }
     })
 })
 
@@ -127,7 +107,9 @@ app.get('/get-enabled-events/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-enabled-events, " + err)
             }
-            res.send(result)
+            else {
+                res.send(result)
+            }
         }
     )
 })
@@ -138,14 +120,14 @@ app.get('/get-all-events/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-events, " + err)
             }
-            res.send(result)
+            else {
+                res.send(result)
+            }
         }
     )
 })
 
 app.post('/create-event', async (req, res) => {
-    // console.log(req.body);
-
     const newEvent = new events({
         name: req.body.name,
         date: req.body.date,
@@ -160,8 +142,6 @@ app.post('/create-event', async (req, res) => {
         org: req.body.org,
         sponsors: []
     })
-
-    // console.log(newEvent)
 
     newEvent.save((err) => {
         if (err) {
@@ -195,7 +175,6 @@ function updateEvent(id, eventOptions) {
 }
 
 app.put('/update-event', (req,res) => {
-    // console.log(req.body)
     const id = req.body.id
 
     if (!id) {
@@ -220,7 +199,6 @@ app.put('/update-event', (req,res) => {
 })
 
 app.delete('/delete-event', (req,res) => {
-    // console.log(req.body)
     const id = req.body.id
 
     if (!id) {
@@ -248,7 +226,6 @@ app.delete('/delete-event', (req,res) => {
 })
 
 app.get('/get-org/:code', (req, res) => {
-    console.log(req.params.code)
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
@@ -257,8 +234,9 @@ app.get('/get-org/:code', (req, res) => {
             if (err) {
                 console.log('Error on get-org, ' + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -301,16 +279,23 @@ app.post('/checkout-event', (req,res) => {
         }
     })
 
+    let resStatus = { status: '200' }
+
     for (let i = 0; i < purchase.events.length; i++) {
-        let eventID = purchase.events[i]
-        let eventOptions = {
+        const eventID = purchase.events[i]
+        const eventOptions = {
             $inc: { spotsTaken: 1 },
             $push: { sponsors: newSponsor._id }
         }
 
-        res.json(updateEvent(eventID, eventOptions))
+        const result = updateEvent(eventID, eventOptions)
+        if (result.status != '200') {
+            resStatus = result
+        }
     }
 
+    res.json(resStatus)
+    
     // TODO: generate invoice and send follow-up email
 })
 
@@ -324,8 +309,9 @@ app.get('/get-org-info/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -340,8 +326,9 @@ app.get('/get-valid-admins/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-valid-admins, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -352,8 +339,9 @@ app.get('/get-event-code/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-event-code, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -364,8 +352,9 @@ app.get('/get-logo/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-logo, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
