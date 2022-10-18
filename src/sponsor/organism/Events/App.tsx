@@ -18,6 +18,7 @@ import CartItem from '../../molecule/CartItem/App'
 
 
 interface Props {
+    student_org_name: string,
     student_org_logo: string, 
     level_name: string,
     level_color: string,
@@ -26,7 +27,7 @@ interface Props {
 
 const Events = (props: Props) => {
 
-    const { student_org_logo, level_color,level_name, total } = props
+    const { student_org_name, student_org_logo, level_color,level_name, total } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -36,8 +37,28 @@ const Events = (props: Props) => {
     const handleOpenCart = () => setOpenCart(true);
     const handleCloseCart = () => setOpenCart(false);
 
+    const [events, setEvents] = React.useState([{}]);
 
+    React.useEffect(() => {
+        const fetchData = async() => {
+            const data = await fetch("/get-all-events/" + student_org_name)
+                .then((res) => res.json())
+                .then((data) => {
+                    // console.log(data)
+                    data.sort(
+                        (objA: any, objB: any) => {
+                            const date1 = new Date(objA.date)
+                            const date2 = new Date(objB.date)
+                            return date1.getTime() - date2.getTime()
+                        }
+                    )
+                    setEvents(data)
+                }
+            )
+        }
 
+        fetchData()
+    }, [])
 
     return (
         <ThemeProvider theme={theme}>
@@ -221,8 +242,11 @@ const Events = (props: Props) => {
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',}}>
-                    <GeneralDonation/>
+                {/*<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',}}>
+                    <GeneralDonation 
+                        short_description={event.briefDesc}
+                        long_description={event.desc}
+                    />
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
@@ -246,11 +270,37 @@ const Events = (props: Props) => {
                         date_start={new Date(2022, 10, 14)}
                         date_end={new Date(2022, 10, 16)}
                     />
-                </Grid>
+                </Grid>*/}
 
-               
+                <>
+                    {events.map((event: any) =>   
+                    <>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-               
+                            {(event.name == 'General Donation') ? (
+                                <GeneralDonation 
+                                    id={event._id}
+                                    short_description={event.briefDesc}
+                                    long_description={event.desc}
+                                />
+                            ) : (
+                                <Event 
+                                    name={event.name}
+                                    id={event._id}
+                                    short_description={event.briefDesc}
+                                    long_description={event.desc}
+                                    avg_attendance={event.avgAttendance ? event.avgAttendance : '-'}
+                                    occurances={event.totalSpots - event.spotsTaken}
+                                    price={event.price}
+                                    date_start={new Date(event.date)}
+                                    date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                />
+                            )}
+
+                        </Grid>
+                    </>
+                    )}
+                </>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     

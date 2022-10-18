@@ -37,7 +37,7 @@ const App: React.FC = () => {
             <Route path="/how-it-works" element={<HowItWorks organization={''}/>} />
             <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
             <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo}/>} />
-            <Route path="/events-swe" element={<Events student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/events-swe" element={<Events student_org_name={"Society of Women Engineers"} student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
             <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
             <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
             

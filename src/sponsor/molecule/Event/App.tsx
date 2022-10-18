@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 
 interface Props {
     name: string,
+    id: string,
     short_description: string, 
     long_description: string, 
     price:number, 
