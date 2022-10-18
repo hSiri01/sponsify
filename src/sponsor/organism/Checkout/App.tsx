@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import { theme} from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
@@ -13,22 +13,27 @@ import Box from '@mui/material/Box';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
+import { useCart } from '../../../contexts/Cart';
 
 
 interface Props {
-    student_org_logo: string, 
+    student_org_logo: string,
     level_name: string,
     level_color: string,
-    total: number, 
+    total: number,
 }
 
 const Checkout = (props: Props) => {
 
-    const { student_org_logo, level_color,level_name, total } = props
+    const { student_org_logo, level_color, level_name, total } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
     const handleCloseInfo = () => setOpenInfo(false);
+
+    const { addToCart, removeFromCart, cart } = useCart();
+
+    console.log(cart)
 
     return (
         <ThemeProvider theme={theme}>
@@ -64,7 +69,7 @@ const Checkout = (props: Props) => {
                         <InfoIcon />
                     </IconButton>
                 </Grid>
-        
+
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -92,33 +97,34 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
-                    <TextField sx={{ minWidth: theme.spacing(80), mr:theme.spacing(10) }} id="outlined-basic" label="First Name" variant="outlined" />
+                    <TextField sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} id="outlined-basic" label="First Name" variant="outlined" />
                     <TextField sx={{ minWidth: theme.spacing(80) }} id="outlined-basic" label="Last Name" variant="outlined" />
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10), mb:theme.spacing(5) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10), mb: theme.spacing(5) }}>
                     <TextField sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} id="outlined-basic" label="Email" variant="outlined" />
                     <TextField sx={{ minWidth: theme.spacing(80) }} id="outlined-basic" label="Company" variant="outlined" />
                 </Grid>
-                
+
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                     <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10), mt: theme.spacing(4) }} >
-                        <Typography variant="body1" sx={{pl:theme.spacing(5)}}>
+                        <Typography variant="body1" sx={{ pl: theme.spacing(5) }}>
                             SPONSORED ITEMS
                         </Typography>
                     </Paper>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                    <CartItem name="First General Meeting" date_start={new Date(2022, 9, 12)} short_description="Present at First General Meeting" price={3500} quantity={1} />
-                </Grid>
+                {cart.map(item => {
+                    console.log(item)
+                    return (
+                        <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                            <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
+                        </Grid>
+                    )
+                })}
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                    <CartItem name="Dinner and Develop" date_start={new Date(2022, 10, 24)} short_description="Sponsor a Design Workshop" price={750} quantity={1} />
-                </Grid>
-
-                <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(4), mb:theme.spacing(4), }}>
-                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
+                <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(4), mb: theme.spacing(4), }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
                 </Grid>
 
 
@@ -128,7 +134,7 @@ const Checkout = (props: Props) => {
                     </Paper>
                 </Grid>
 
-                    
+
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button href="/inbox-swe" variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,

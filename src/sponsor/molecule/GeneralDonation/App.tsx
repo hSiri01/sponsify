@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Grid } from '@mui/material';
-import { theme} from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
@@ -8,6 +8,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import { useCart } from '../../../contexts/Cart';
 
 
 
@@ -23,9 +24,76 @@ const GeneralDonation = (props: Props) => {
 
     const [checked, setChecked] = React.useState(false);
 
+    const { addToCart, removeFromCart, cart } = useCart()
+
+    const inputRef = React.useRef<HTMLInputElement>(null)
+    const modalInputRef = React.useRef<HTMLInputElement>(null)
+
+    const [price, setPrice] = React.useState(0);
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setChecked(event.target.checked);
+        if (event.target.checked && price > 0) {
+            setChecked(true);
+            addToCart({
+                name: "General Donation",
+                short_description: "Provide a General Donation",
+                price: price,
+                date_start: new Date(),
+                quantity: 1,
+                id: 0
+            })
+        }
+        else {
+            setChecked(false);
+            removeFromCart(0)
+            setPrice(0);
+        }
     };
+
+    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value) {
+            let parsedValue = +event.target.value
+            if (parsedValue > 0) {
+                setPrice(parsedValue);
+                return;
+            }
+        }
+        setPrice(0)
+    };
+
+    React.useEffect(() => {
+        if (inputRef?.current?.value != null) {
+            if (price !== 0) {
+                inputRef.current.value = `${price}`
+            }
+            else {
+                inputRef.current.value = ''
+            }
+        }
+        if (modalInputRef?.current?.value != null) {
+            if (price !== 0) {
+                modalInputRef.current.value = `${price}`
+            }
+            else {
+                modalInputRef.current.value = ''
+            }
+        }
+        if (price > 0) {
+            setChecked(true);
+            addToCart({
+                name: "General Donation",
+                short_description: "Provide a General Donation",
+                price: price,
+                date_start: new Date(),
+                quantity: 1,
+                id: 0
+            })
+            return;
+        } else {
+            setChecked(false);
+            removeFromCart(0);
+        }
+    }, [price])
 
 
     return (
@@ -33,20 +101,21 @@ const GeneralDonation = (props: Props) => {
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Paper variant="outlined" sx={{
-                        borderColor:"#367c63",borderWidth: theme.spacing(.5), borderRadius: 0, maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
-                        <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
-                            <Grid item xs={1} sx={{marginTop: theme.spacing(2)}}>
+                        borderColor: "#367c63", borderWidth: theme.spacing(.5), borderRadius: 0, maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt: theme.spacing(4)
+                    }} >
+                        <Grid container sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(3) }}>
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(2) }}>
                                 <Checkbox checked={checked}
                                     onChange={handleChange} />
                             </Grid>
 
-                            <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                <Typography sx={{ mt: theme.spacing(3), textAlign:'center', fontWeight: "600" }} variant="h6">-</Typography>
+                            <Grid item xs={2} sx={{ pr: theme.spacing(15) }}>
+                                <Typography sx={{ mt: theme.spacing(3), textAlign: 'center', fontWeight: "600" }} variant="h6">-</Typography>
                             </Grid>
 
                             <Grid item xs={4}>
                                 <Typography sx={{ fontWeight: "600" }} variant="h6">General Donation</Typography>
-                                <Typography sx={{ color:"#979797"}}variant="body1">Provide a General Donation</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body1">Provide a General Donation</Typography>
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
@@ -58,27 +127,27 @@ const GeneralDonation = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={1}>
-                                <Grid container sx={{ display: 'flex', justifyContent: 'center'}}>
-                                    <Grid item xs={2} sx={{pt:theme.spacing(2) }}>
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Grid item xs={2} sx={{ pt: theme.spacing(2) }}>
                                         <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="h6">$</Typography>
-                                </Grid>
-                                <Grid item xs={10}>
-                                        <TextField sx={{ maxWidth: theme.spacing(20) }} id="outlined-basic" label="Price" variant="outlined" />
-                                </Grid>
+                                    </Grid>
+                                    <Grid item xs={10}>
+                                        <TextField onChange={handlePriceChange} inputRef={inputRef} sx={{ maxWidth: theme.spacing(20) }} id="outlined-basic" label="Price" variant="outlined" />
+                                    </Grid>
                                 </Grid>
                             </Grid>
 
-                            <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
-                                <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9) }}>
+                                <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
                                     {'>'}
                                 </Typography>
                             </Grid>
 
                         </Grid>
-                        
-                   </Paper>
+
+                    </Paper>
                 </Grid>
-            </Grid> 
+            </Grid>
 
             <Modal
                 open={openEvent}
@@ -111,14 +180,14 @@ const GeneralDonation = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
-                                    <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-                                        <Grid item xs={7} sx={{ pt: theme.spacing(2) }}>
-                                            <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="h6">$</Typography>
-                                        </Grid>
-                                        <Grid item xs={5}>
-                                            <TextField sx={{ maxWidth: theme.spacing(20) }} id="outlined-basic" label="Price" variant="outlined" />
-                                        </Grid>
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Grid item xs={7} sx={{ pt: theme.spacing(2) }}>
+                                        <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="h6">$</Typography>
                                     </Grid>
+                                    <Grid item xs={5}>
+                                        <TextField sx={{ maxWidth: theme.spacing(20) }} id="outlined-basic" label="Price" variant="outlined" defaultValue={price} onChange={handlePriceChange} inputRef={modalInputRef} />
+                                    </Grid>
+                                </Grid>
                             </Grid>
 
 
@@ -128,12 +197,12 @@ const GeneralDonation = (props: Props) => {
 
                     <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Grid item xs={10}>
-                            <Typography variant="body1">{`Proivde a General Donation which will be used for various different events including outreach, professional development, and team building`} 
+                            <Typography variant="body1">{`Proivde a General Donation which will be used for various different events including outreach, professional development, and team building`}
                             </Typography>
                         </Grid>
                     </Grid>
 
-                   
+
                     <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
 
                         <Grid item xs={1}>
@@ -144,9 +213,9 @@ const GeneralDonation = (props: Props) => {
                                 onChange={handleChange} />
                         </Grid>
                     </Grid>
-    
+
                 </Box>
-            </Modal>   
+            </Modal>
 
         </ThemeProvider>
 

@@ -99,6 +99,8 @@ const EditLevel = (props: Props) => {
 
         await fetch("/delete-level", requestOptions)
             .then((res) => console.log(res)) 
+
+        handleCloseLevel()
     }
     
     return (
@@ -225,7 +227,7 @@ const EditLevel = (props: Props) => {
                     </Grid>
                     <Grid container >
                             <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'left', mt: theme.spacing(20),  }}>
-                                <IconButton color="secondary" aria-label="Edit" size = "large">
+                                <IconButton onClick={handleDeleteLevel} color="secondary" aria-label="Edit" size = "large">
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
