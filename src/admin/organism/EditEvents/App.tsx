@@ -41,7 +41,18 @@ const EditEvents = (props: Props) => {
         const fetchData = async() => {
             const data = await fetch("/get-all-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => setEvents(data))
+                .then((data) => {
+                    // console.log(data)
+                    data.sort(
+                        (objA: any, objB: any) => {
+                            const date1 = new Date(objA.date)
+                            const date2 = new Date(objB.date)
+                            return date1.getTime() - date2.getTime()
+                        }
+                    )
+                    setEvents(data)
+                }
+            )
         }
 
         fetchData()
@@ -200,7 +211,7 @@ const EditEvents = (props: Props) => {
                                 occurances={event.totalSpots}
                                 price={event.price}
                                 date_start={new Date(event.date)}
-                                date_end={new Date(event.endDate)}
+                                date_end={event.endDate ? new Date(event.endDate) : undefined}
                                 visible={event.visible}
                             />
 

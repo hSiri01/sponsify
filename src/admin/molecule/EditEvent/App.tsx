@@ -32,7 +32,7 @@ interface Props {
     num_sponsored: number,
     occurances: number,
     date_start: Date,
-    date_end: Date, 
+    date_end?: Date, 
     visible: boolean,
 }
 
@@ -60,8 +60,6 @@ const EditEvent = (props: Props) => {
         date_end_format = date_end.getFullYear() + "-" + endmonth + "-" + date_end.getDate()
     }
 
-    console.log(date_start.getFullYear())
-
     return (
         <ThemeProvider theme={theme}>
             <Grid container>
@@ -76,7 +74,7 @@ const EditEvent = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                <Date date_1={(date_start.getFullYear() > 0) ? date_start : undefined} date_2={date_end.getTime() != date_start.getTime() ? date_end : undefined}/>
+                                <Date date_1={date_start} date_2={date_end}/*date_2={date_end.getTime() != date_start.getTime() ? date_end : undefined}*//>
                             </Grid>
 
                             <Grid item xs={4}>
