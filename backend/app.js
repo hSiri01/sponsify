@@ -73,6 +73,28 @@ app.get('/get-all-levels/:org', (req, res) => {
     })
 })
 
+function getLevel(amount, org) {
+    orgs.find({ name: org })
+        .select({ levels: 1 })
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-level-by-amount, " + err)
+            }
+
+            const amount = amount
+            const levels = result[0].levels
+            let currLevel = {}
+
+            for (let i = 0; i < levels.length; i++) {
+                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                    currLevel = levels[i]
+                }
+                console.log(levels[i])
+            }
+        })
+
+}
+
 app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ levels: 1 })
@@ -162,6 +184,25 @@ app.post('/create-event', async (req, res) => {
     })
 })
 
+function updateEvent(id, eventOptions) {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+        events.findByIdAndUpdate( id, eventOptions, (err, event) => {
+            if (err) {
+                console.log('Error on update-event: ' + err)
+                return {status: '500'}
+            }
+            else {
+                console.log('Successfully updated event: \n' + event)
+                return { status: '200'}
+            }
+        })
+    }
+    else {
+        console.log('Cannot update event, invalid id in request body')
+        return { status: '400'}
+    }
+}
+
 app.put('/update-event', (req,res) => {
     // console.log(req.body)
     const id = req.body.id
@@ -171,7 +212,7 @@ app.put('/update-event', (req,res) => {
         res.json({ status: '400'})
     }
     else {
-        const eventUpdate = {
+        const eventOptions = {
             name: req.body.name,
             briefDescription: req.body.briefDesc,
             date: req.body.date,
@@ -183,22 +224,7 @@ app.put('/update-event', (req,res) => {
             visible: req.body.visible
         }
     
-        if (mongoose.Types.ObjectId.isValid(id)) {
-            events.findByIdAndUpdate( id, eventUpdate, (err, event) => {
-                if (err) {
-                    console.log('Error on update-event: ' + err)
-                    res.json({ status: '500' })
-                }
-                else {
-                    console.log('Successfully updated event: \n' + event)
-                    res.json({ status: '200' })
-                }
-            })
-        }
-        else {
-            console.log('Cannot update event, invalid id in request body')
-            res.json({ status: '400'})
-        }
+        res.json(updateEvent(id, eventOptions))
     }
 })
 
@@ -238,15 +264,63 @@ app.get('/get-org/:code', (req, res) => {
         .select({ name: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-org, " + err)
+                console.log('Error on get-org, ' + err)
             }
             res.json(result[0])
             console.log(result[0])
     })
 })
 
-app.get('/checkout', (req,res) => {
-    res.send('Checkout')
+app.post('/checkout-event', (req,res) => {
+    // create new sponsor
+    var newSponsor = new sponsors({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        company: req.body.company,
+        email:req.body.email,
+        sponsorLevel: req.body.sponsorLevel
+    })
+
+    newSponsor.save((err) => {
+        if (err) {
+            console.log( 'Error on create sponsor, ' + err)
+            res.json({ status: '500'})
+        }
+        else {
+            console.log('New sponsor created, id: ' + newSponsor._id)
+        }
+    });
+
+    // create a purchase
+    const purchase = new purchases({
+        sponsorID: newSponsor._id,
+        events: req.body.events,
+        totalAmount: req.body.totalAmount,
+        dateSponsored: Date.now(),
+        org: req.body.org
+    })
+
+    purchase.save((err) => {
+        if (err) {
+            console.log('Error on creating a purchase: ' + err)
+            res.json({ status: '500'})
+        }
+        else {
+            console.log('Created new purchase')
+        }
+    })
+
+    for (let i = 0; i < purchase.events.length; i++) {
+        let eventID = purchase.events[i]
+        let eventOptions = {
+            $inc: { spotsTaken: 1 },
+            $push: { sponsors: newSponsor._id }
+        }
+
+        res.json(updateEvent(eventID, eventOptions))
+    }
+
+    // TODO: generate invoice and send follow-up email
 })
 
 app.get('/create-sponsor', (req,res) => {
