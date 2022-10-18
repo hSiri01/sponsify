@@ -4,6 +4,7 @@ import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Date from '../../../sponsor/atom/Date/App'
 import Modal from '@mui/material/Modal';
@@ -19,12 +20,9 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 
 
 
-
-
-
-
 interface Props {
     name: string,
+    id: string,
     short_description: string, 
     long_description: string, 
     price:number, 
@@ -38,7 +36,7 @@ interface Props {
 
 const EditEvent = (props: Props) => {
 
-    const {name, short_description, long_description, price, avg_attendance, num_sponsored, occurances, date_start, date_end, visible} = props
+    const {name, id, short_description, long_description, price, avg_attendance, num_sponsored, occurances, date_start, date_end, visible} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
@@ -49,16 +47,54 @@ const EditEvent = (props: Props) => {
         setChecked(event.target.checked);
     };
 
-    const startmonth = (date_start.getMonth() < 10) ? ("0" + date_start.getMonth().toString()) : date_start.getMonth() 
-    const date_start_format = date_start.getFullYear() +"-" +  startmonth + "-" + date_start.getDate()
+    const [nameInput, setNameInput] = React.useState(props.name);
+    const [descInput, setDescInput] = React.useState(props.long_description);
+    const [briefDescInput, setbriefDescInput] = React.useState(props.short_description);
+    const [priceInput, setPriceInput] = React.useState(props.price);
+    const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
+    const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
+    const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
+
+    const submitEventUpdate = () => {
+        fetch('/update-event', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: nameInput,
+                id: props.id,
+                price: priceInput,
+                date: dateInput,
+                endDate: endDateInput,
+                desc: descInput,
+                briefDesc: briefDescInput,
+                totalSpots: totalSpotsInput,
+                spotsTaken: spotsTakenInput,
+                visible: checked
+            })
+        })
+
+        handleCloseEvent()  // close the modal
+        window.location.reload()  // reload the page
+    };
+
+    const startmonth = (date_start.getMonth()+1 < 10) ? ("0" + (date_start.getMonth()+1).toString()) : date_start.getMonth()+1
+    const startdate = (date_start.getDate() < 10) ? ("0" + date_start.getDate().toString()) : date_start.getDate() 
+    const date_start_format = date_start.getFullYear() +"-" +  startmonth + "-" + startdate
 
     let date_end_format = date_start_format
 
     if(date_end)
     {
-        const endmonth = (date_end.getMonth() < 10) ? ("0" + date_end.getMonth().toString()) : date_end.getMonth()
-        date_end_format = date_end.getFullYear() + "-" + endmonth + "-" + date_end.getDate()
+        const endmonth = (date_end.getMonth()+1 < 10) ? ("0" + (date_end.getMonth()+1).toString()) : date_end.getMonth()+1
+        const enddate = (date_end.getDate() < 10) ? ("0" + date_end.getDate().toString()) : date_end.getDate() 
+        date_end_format = date_end.getFullYear() + "-" + endmonth + "-" + enddate
     }
+
+    const [dateInput, setDateInput] = React.useState(date_start_format)
+    const [endDateInput, setEndDateInput] = React.useState(date_end_format)
 
     return (
         <ThemeProvider theme={theme}>
@@ -143,6 +179,8 @@ const EditEvent = (props: Props) => {
                                             label="Date Start"
                                             type="date"
                                             defaultValue={date_start_format}
+                                            value={dateInput} 
+                                            onChange={ev => setDateInput(ev.target.value)}
                                             InputLabelProps={{
                                                 shrink: true,
                                             }}
@@ -156,6 +194,8 @@ const EditEvent = (props: Props) => {
                                                     label="Date End"
                                                     type="date"
                                                     defaultValue={date_end_format}
+                                                    value={endDateInput} 
+                                                    onChange={ev => setEndDateInput(ev.target.value)}
                                                     InputLabelProps={{
                                                         shrink: true,
                                                     }}
@@ -169,19 +209,68 @@ const EditEvent = (props: Props) => {
                                     </Grid>
 
                                    
-                                        
-                                    
-
                                     <Grid item xs={5}>
-                                        <TextField sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4)}} id="outlined-basic" label="Name" variant="outlined" defaultValue={name} />
-                                        <TextField sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }} id="outlined-basic" label="Short Description" variant="outlined" defaultValue={short_description} />
+                                        <TextField 
+                                            sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4)}} 
+                                            id="outlined-basic" 
+                                            label="Name" 
+                                            variant="outlined" 
+                                            defaultValue={name} 
+                                            value={nameInput} 
+                                            onChange={ev => setNameInput(ev.target.value)}
+                                        />
+                                        <TextField 
+                                            sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }} 
+                                            id="outlined-basic" 
+                                            label="Short Description" 
+                                            variant="outlined" 
+                                            defaultValue={short_description} 
+                                            value={briefDescInput} 
+                                            onChange={ev => setbriefDescInput(ev.target.value)}
+                                        />
                                     </Grid>
 
                                     <Grid item xs={4} sx={{ textAlign: "right" }}>
-                                        <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Price" variant="outlined" defaultValue={price} />
-                                        <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Occurances" variant="outlined" defaultValue={occurances} />
-                                        <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Sponsored" variant="outlined" defaultValue={num_sponsored} />
-                                        <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Avg Attendance" variant="outlined" defaultValue={avg_attendance} />
+                                        <TextField 
+                                            sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                            id="outlined-basic" 
+                                            label="Price" 
+                                            variant="outlined" 
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                            defaultValue={price}
+                                            value={priceInput}
+                                            onChange={ev => setPriceInput(+ev.target.value)}
+                                        />
+                                        <TextField 
+                                            sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                            id="outlined-basic"
+                                            label="Occurances"
+                                            variant="outlined"
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                            defaultValue={occurances}
+                                            value={totalSpotsInput}
+                                            onChange={ev => setTotalSpotsInput(+ev.target.value)}
+                                        />
+                                        <TextField 
+                                            sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                            id="outlined-basic"
+                                            label="Sponsored"
+                                            variant="outlined"
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                            defaultValue={num_sponsored}
+                                            value={spotsTakenInput}
+                                            onChange={ev => setSpotsTakenInput(+ev.target.value)}
+                                        />
+                                        <TextField
+                                            sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                            id="outlined-basic"
+                                            label="Avg Attendance"
+                                            variant="outlined"
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                            defaultValue={avg_attendance}
+                                            value={avgAttendanceInput}
+                                            onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                        />
                                     </Grid>
 
 
@@ -195,6 +284,8 @@ const EditEvent = (props: Props) => {
                                         aria-label="empty textarea"
                                         placeholder="Empty"
                                         defaultValue={long_description}
+                                        value={descInput}
+                                        onChange={ev => {setDescInput(ev.target.value)}}
                                         minRows={8}
                                         style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                                     />
@@ -212,12 +303,18 @@ const EditEvent = (props: Props) => {
                                     <Checkbox checked={checked}
                                         onChange={handleChange} />
                                 </Grid>
-                            </Grid>
-                                
 
-                                
-
-                            
+                                <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
+                                    <Button /*href="/"*/ onClick={submitEventUpdate} variant="contained" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+                                    }}>Update</Button>
+                                </Grid>
+                            </Grid>                           
                         </Box>
                     </Modal>
                 </Grid>

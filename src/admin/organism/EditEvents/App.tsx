@@ -203,7 +203,9 @@ const EditEvents = (props: Props) => {
                     <>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                            <EditEvent name={event.name}
+                            <EditEvent 
+                                name={event.name}
+                                id={event._id}
                                 short_description={event.briefDesc}
                                 long_description={event.desc}
                                 avg_attendance={event.avgAttendance}

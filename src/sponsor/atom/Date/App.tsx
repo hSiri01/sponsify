@@ -6,7 +6,6 @@ import { Paper } from '@mui/material';
 
 
 
-
 interface Props {
     date_1: Date,
     date_2?: Date,
