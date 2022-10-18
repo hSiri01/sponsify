@@ -9,6 +9,8 @@ const app = express()
 const bodyParser = require('body-parser')
 const port = 3001
 
+app.use(bodyParser.json());
+
 mongoose.connect(
     process.env.MONGODB_URL,
     {
@@ -21,8 +23,6 @@ mongoose.connect(
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error!!\n'))
 
-app.use(bodyParser.json());
-
 app.get('/', (req, res) => {
     res.send('Hello! This is the default route for the backend server.')
 })
@@ -34,8 +34,9 @@ app.get('/get-all-FAQ/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-FAQ, " + err)
             }
-            res.send(result[0].FAQ)
-            console.log(result[0])
+            else {
+                res.send(result[0].FAQ)
+            }
         }
     )
 })
@@ -59,8 +60,9 @@ app.get('/get-all-levels/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-levels, " + err)
             }
-            res.json(result[0].levels)
-            
+            else {
+                res.json(result[0].levels)
+            }
     })
 })
 
@@ -71,19 +73,19 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
             if (err) {
                 console.log("Error on get-level-by-amount, " + err)
             }
+            else {
+                const amount = req.params.amount
+                const levels = result[0].levels
+                let currLevel = {}
 
-            const amount = req.params.amount
-            const levels = result[0].levels
-            let currLevel = {}
-
-            for (let i = 0; i < levels.length; i++) {
-                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
-                    currLevel = levels[i]
+                for (let i = 0; i < levels.length; i++) {
+                    if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                        currLevel = levels[i]
+                    }
                 }
-                console.log(levels[i])
-            }
 
-            res.json(currLevel)
+                res.json(currLevel)
+            }
     })
 })
 
@@ -155,7 +157,9 @@ app.get('/get-enabled-events/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-enabled-events, " + err)
             }
-            res.send(result)
+            else {
+                res.send(result)
+            }
         }
     )
 })
@@ -166,26 +170,121 @@ app.get('/get-all-events/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-events, " + err)
             }
-            res.send(result)
+            else {
+                res.send(result)
+            }
         }
     )
 })
 
-app.get('/create-event', (req, res) => {
-    res.send('Create event')
+app.post('/create-event', async (req, res) => {
+    const newEvent = new events({
+        name: req.body.name,
+        date: req.body.date,
+        endDate: req.body.endDate,
+        price: req.body.price,
+        description: req.body.desc,
+        briefDescription: req.body.briefDesc,
+        avgAttendance: req.body.avgAttendance,
+        totalSpots: req.body.totalSpots,
+        spotsTaken: 0,
+        visible: req.body.visible,
+        org: req.body.org,
+        sponsors: []
+    })
+
+    newEvent.save((err) => {
+        if (err) {
+            console.log('Error on create-event: ' + err)
+            res.json({ status: '500'})
+        }
+        else {
+            console.log('Created new event')
+            res.json({ status: '200' })
+        }
+    })
+})
+
+function updateEvent(id, eventOptions) {
+    if (mongoose.Types.ObjectId.isValid(id)) {
+        events.findByIdAndUpdate( id, eventOptions, (err, event) => {
+            if (err) {
+                console.log('Error on update-event: ' + err)
+                return {status: '500'}
+            }
+            else {
+                console.log('Successfully updated event: \n' + event)
+                return { status: '200'}
+            }
+        })
+    }
+    else {
+        console.log('Cannot update event, invalid id in request body')
+        return { status: '400'}
+    }
+}
+
+app.put('/update-event', (req,res) => {
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot update event, no id in request body')
+        res.json({ status: '400'})
+    }
+    else {
+        const eventOptions = {
+            name: req.body.name,
+            briefDescription: req.body.briefDesc,
+            date: req.body.date,
+            endDate: req.body.endDate,
+            price: req.body.price,
+            totalSpots: req.body.totalSpots,
+            spotsTaken: req.body.spotsTaken,
+            description: req.body.desc,
+            visible: req.body.visible
+        }
+    
+        res.json(updateEvent(id, eventOptions))
+    }
+})
+
+app.delete('/delete-event', (req,res) => {
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot delete event, no id in request body')
+        res.json({ status: '400'})
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            events.findByIdAndRemove( id, (err, event) => {
+                if (err) {
+                    console.log('Error on delete-event: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully deleted event: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+        }
+        else {
+            console.log('Cannot delete event, invalid id in request body')
+            res.json({ status: '400'})
+        }
+    }
 })
 
 app.get('/get-org/:code', (req, res) => {
-    console.log(req.params.code)
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
         .select({ name: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-org, " + err)
+                console.log('Error on get-org, ' + err)
             }
-
+            
             if (result.length == 0) {
                 res.json({})
             } else {
@@ -195,16 +294,63 @@ app.get('/get-org/:code', (req, res) => {
     })
 })
 
-app.get('/update-event', (req,res) => {
-    res.send('Update Event')
-})
+app.post('/checkout-event', (req,res) => {
+    // create new sponsor
+    var newSponsor = new sponsors({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        company: req.body.company,
+        email:req.body.email,
+        sponsorLevel: req.body.sponsorLevel
+    })
 
-app.get('/delete-event', (req,res) => {
-    res.send('Delete Event')
-})
+    newSponsor.save((err) => {
+        if (err) {
+            console.log( 'Error on create sponsor, ' + err)
+            res.json({ status: '500'})
+        }
+        else {
+            console.log('New sponsor created, id: ' + newSponsor._id)
+        }
+    });
 
-app.get('/checkout', (req,res) => {
-    res.send('Checkout')
+    // create a purchase
+    const purchase = new purchases({
+        sponsorID: newSponsor._id,
+        events: req.body.events,
+        totalAmount: req.body.totalAmount,
+        dateSponsored: Date.now(),
+        org: req.body.org
+    })
+
+    purchase.save((err) => {
+        if (err) {
+            console.log('Error on creating a purchase: ' + err)
+            res.json({ status: '500'})
+        }
+        else {
+            console.log('Created new purchase')
+        }
+    })
+
+    let resStatus = { status: '200' }
+
+    for (let i = 0; i < purchase.events.length; i++) {
+        const eventID = purchase.events[i]
+        const eventOptions = {
+            $inc: { spotsTaken: 1 },
+            $push: { sponsors: newSponsor._id }
+        }
+
+        const result = updateEvent(eventID, eventOptions)
+        if (result.status != '200') {
+            resStatus = result
+        }
+    }
+
+    res.json(resStatus)
+    
+    // TODO: generate invoice and send follow-up email
 })
 
 app.get('/create-sponsor', (req,res) => {
@@ -217,8 +363,9 @@ app.get('/get-org-info/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -233,8 +380,9 @@ app.get('/get-valid-admins/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-valid-admins, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -245,8 +393,9 @@ app.get('/get-event-code/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-event-code, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 
@@ -257,8 +406,9 @@ app.get('/get-logo/:org', (req,res) => {
             if (err) {
                 console.log("Error on get-logo, " + err)
             }
-            res.json(result[0])
-            console.log(result[0])
+            else {
+                res.json(result[0])
+            }
     })
 })
 

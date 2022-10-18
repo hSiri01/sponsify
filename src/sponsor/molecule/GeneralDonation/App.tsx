@@ -13,10 +13,14 @@ import { useCart } from '../../../contexts/Cart';
 
 
 interface Props {
-
+    id: string,
+    short_description: string, 
+    long_description: string
 }
 
 const GeneralDonation = (props: Props) => {
+
+    const {id, short_description, long_description} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
@@ -115,7 +119,7 @@ const GeneralDonation = (props: Props) => {
 
                             <Grid item xs={4}>
                                 <Typography sx={{ fontWeight: "600" }} variant="h6">General Donation</Typography>
-                                <Typography sx={{ color: "#979797" }} variant="body1">Provide a General Donation</Typography>
+                                <Typography sx={{ color:"#979797"}}variant="body1">{short_description}</Typography>
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
@@ -176,7 +180,7 @@ const GeneralDonation = (props: Props) => {
 
                             <Grid item xs={7}>
                                 <Typography sx={{ fontWeight: "600" }} variant="h6">General Donation</Typography>
-                                <Typography sx={{ color: "#979797" }} variant="body1">Provide a General Donation</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body1">{short_description}</Typography>
                             </Grid>
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
@@ -197,7 +201,7 @@ const GeneralDonation = (props: Props) => {
 
                     <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Grid item xs={10}>
-                            <Typography variant="body1">{`Proivde a General Donation which will be used for various different events including outreach, professional development, and team building`}
+                            <Typography variant="body1">{long_description}
                             </Typography>
                         </Grid>
                     </Grid>
