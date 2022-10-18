@@ -14,13 +14,33 @@ import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
 import { useCart } from '../../../contexts/Cart';
-
+import emailjs from '@emailjs/browser';
+import { useRef, useLayoutEffect } from 'react';
 
 interface Props {
     student_org_logo: string,
     level_name: string,
     level_color: string,
     total: number,
+}
+
+export const ContactUs = () => {
+ 
+
+    var templateParams = {
+        name: 'James',
+        message: 'Check this out!'
+    };
+     
+    emailjs.send('service_6dyo66b', 'template_lws75v9', templateParams,'hp2wOIVitPvUf_BKX')
+        .then(function(response) {
+           console.log('SUCCESS!', response.status, response.text);
+        }, function(error) {
+           console.log('FAILED...', error);
+        });
+        
+      
+    
 }
 
 const Checkout = (props: Props) => {
@@ -136,7 +156,7 @@ const Checkout = (props: Props) => {
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button href="/inbox-swe" variant="contained" size="large" color="primary" sx={{
+                    <Button variant="contained" size="large" onClick={ContactUs} color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
