@@ -155,7 +155,7 @@ app.get('/checkout', (req,res) => {
 
 app.post('/create-sponsor', (req,res) => {
     
-    var newSponsor = new sponsor({
+    var newSponsor = new sponsors({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         company: req.body.company,
@@ -180,34 +180,26 @@ app.get('/get-org-info/:org', (req,res) => {
 })
 
 app.get('/update-org-info', (req,res) => {
+    
     const id = req.body.id
-
     if (!id) {
-        console.log('Cannot update event, no id in request body')
+        console.log('Cannot update org, no id in request body')
         res.json({ status: '400'})
     }
     else {
-        const updatedOrgInfo = {
-            name: req.body.name,
-            //fundName: req.body.fundName,
-            address: req.body.address,
-        }
-    
         if (mongoose.Types.ObjectId.isValid(id)) {
-            events.findByIdAndUpdate( id, updatedOrgInfo, (err, event) => {
+            
+            orgs.findByIdAndUpdate( id, { '$set': { name: req.body.name, fundName : req.body.fundName, address: req.body.address} }, (err, event) => {
                 if (err) {
                     console.log('Error on update-org-info: ' + err)
-                    res.json({ status: '500' })
                 }
                 else {
                     console.log('Successfully updated org info: \n' + event)
-                    res.json({ status: '200' })
                 }
             })
         }
         else {
             console.log('Cannot update org-info, invalid id in request body')
-            res.json({ status: '400'})
         }
     }
     
