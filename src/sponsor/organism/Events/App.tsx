@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import { theme} from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
-import Event from '../../molecule/Event/App'
+import Event, { OrgEvent } from '../../molecule/Event/App'
 import GeneralDonation from '../../molecule/GeneralDonation/App'
 import { Paper } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -15,6 +15,8 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
+import { NavLink } from "react-router-dom";
+import { useCart } from '../../../contexts/Cart';
 
 
 interface Props {
@@ -22,7 +24,7 @@ interface Props {
     student_org_logo: string, 
     level_name: string,
     level_color: string,
-    total: number, 
+    total: number,
 }
 
 const Events = (props: Props) => {
@@ -60,15 +62,17 @@ const Events = (props: Props) => {
         fetchData()
     }, [])
 
+    const { cart } = useCart()
+
     return (
         <ThemeProvider theme={theme}>
 
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <IconButton onClick={handleOpenInfo} color="secondary" aria-label="Info" sx={{mr: theme.spacing(8)}}>
+                    <IconButton onClick={handleOpenInfo} color="secondary" aria-label="Info" sx={{ mr: theme.spacing(8) }}>
                         <InfoIcon />
                     </IconButton>
-                    <Typography variant="body2" sx={{ mt: theme.spacing(2), color:"#979797" }}>
+                    <Typography variant="body2" sx={{ mt: theme.spacing(2), color: "#979797" }}>
                         VIEW ITEMS
                     </Typography>
                     <IconButton onClick={handleOpenCart} color="secondary" aria-label="add to shopping cart">
@@ -90,14 +94,14 @@ const Events = (props: Props) => {
                         transform: 'translate(-50%, -50%)',
                         maxWidth: theme.spacing(200),
                         minWidth: theme.spacing(200),
-                        maxHeight:theme.spacing(100),
-                        minHeight:theme.spacing(100),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
                         bgcolor: 'background.paper',
                         boxShadow: 24,
                         p: 4,
                         overflow: 'scroll',
                     }}>
-                       <HowItWorksContents/>
+                        <HowItWorksContents />
                     </Box>
                 </Modal>
 
@@ -122,32 +126,30 @@ const Events = (props: Props) => {
                         p: 4,
                         overflow: 'scroll',
                     }}>
-                        <Typography variant="h6" sx={{fontWeight:500, }}>
+                        <Typography variant="h6" sx={{ fontWeight: 500, }}>
                             Sponsored Items
                         </Typography>
 
                         <Grid container>
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m:theme.spacing(2) }}>
-                                <CartItem name="First General Meeting" date_start={new Date(2022, 9, 12)} short_description="Present at First General Meeting" price={3500} quantity={1} /> 
+                            {cart.map(item => (
+                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
                             </Grid>
-
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                <CartItem name="Dinner and Develop" date_start={new Date(2022, 10, 24)} short_description="Sponsor a Design Workshop" price={750} quantity={1} />
-                            </Grid>
+                            ))}
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
-                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color:"#367c63" }}>Total:     ${total}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
 
                             </Grid>
 
 
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right',  }}>
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', }}>
                                 <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
                                     <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{level_name} Sponsor</Typography>
                                 </Paper>
                             </Grid>
 
-                            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'left', mt:theme.spacing(5) }}>
+                            <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'left', mt: theme.spacing(5) }}>
                                 <Button onClick={handleCloseCart} variant="contained" size="large" color="secondary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
@@ -166,7 +168,7 @@ const Events = (props: Props) => {
                                     pl: theme.spacing(8),
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
-                                }}>Checkout</Button>
+                                }}><NavLink to="/checkout-swe" style={{ textDecoration: "none", color: 'white' }}>Checkout</NavLink></Button>
                             </Grid>
 
                         </Grid>
@@ -201,28 +203,28 @@ const Events = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
-                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0),maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10)}} >
+                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
                             <Grid item xs={1}>
-                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5)}}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5) }}>
                                     SELECT
                                 </Typography>
                             </Grid>
-                            
+
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797",ml:theme.spacing(16), mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(16), mt: theme.spacing(5) }}>
                                     DATE
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={3}>
-                                <Typography variant="body2" sx={{ color: "#979797",ml:theme.spacing(16), mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(16), mt: theme.spacing(5) }}>
                                     EVENT NAME
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml:theme.spacing(16) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(16) }}>
                                     AVG ATTENDANCE
                                 </Typography>
                             </Grid>
@@ -303,27 +305,28 @@ const Events = (props: Props) => {
                 </>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    
+
 
                     <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15) }} elevation={0}>
-                        <Typography variant="body1" sx={{fontWeight:600, pt: theme.spacing(4), textAlign:'center'}}>{level_name} Sponsor</Typography> 
+                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{level_name} Sponsor</Typography>
                     </Paper>
-                    
-                    <Button href="/checkout-swe" variant="contained" size="large" color="primary" sx={{
+
+                    <Button variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
                         pl: theme.spacing(8),
                         pr: theme.spacing(8),
                         ml: theme.spacing(5),
-                    }}>Checkout</Button>
+                    }}><NavLink to="/checkout-swe" style={{ textDecoration: "none", color:'white' }}>Checkout</NavLink></Button>
+     
 
                 </Grid>
 
 
             </Grid>
 
-        </ThemeProvider>
+        </ThemeProvider >
 
 
     )
