@@ -40,16 +40,16 @@ const GeneralDonation = (props: Props) => {
             setChecked(true);
             addToCart({
                 name: "General Donation",
-                short_description: "Provide a General Donation",
+                short_description: props.short_description,
                 price: price,
                 date_start: new Date(),
                 quantity: 1,
-                id: 0
+                id: props.id
             })
         }
         else {
             setChecked(false);
-            removeFromCart(0)
+            removeFromCart(props.id)
             setPrice(0);
         }
     };
@@ -86,16 +86,16 @@ const GeneralDonation = (props: Props) => {
             setChecked(true);
             addToCart({
                 name: "General Donation",
-                short_description: "Provide a General Donation",
+                short_description: props.short_description,
                 price: price,
                 date_start: new Date(),
                 quantity: 1,
-                id: 0
+                id: props.id
             })
             return;
         } else {
             setChecked(false);
-            removeFromCart(0);
+            removeFromCart(props.id);
         }
     }, [price])
 

@@ -5,7 +5,7 @@ import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
-import Event, { OrgEvent } from '../../molecule/Event/App'
+import Event from '../../molecule/Event/App'
 import GeneralDonation from '../../molecule/GeneralDonation/App'
 import { Paper } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';

@@ -108,7 +108,7 @@ const Levels = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button 
-                        //href="/events-swe"
+                        href="/events-swe"
                         variant="contained"
                         size="large"
                         color="secondary"

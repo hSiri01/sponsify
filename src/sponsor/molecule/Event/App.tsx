@@ -23,8 +23,7 @@ export type OrgEvent = {
     avg_attendance?: number,
     occurances: number,
     date_start: Date,
-    date_end?: Date, 
-    id: number, 
+    date_end?: Date
 }
 
 const Event = (props: OrgEvent) => {
