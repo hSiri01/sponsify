@@ -42,15 +42,62 @@ app.get('/get-all-FAQ/:org', (req, res) => {
 })
 
 app.get('/update-FAQ', (req, res) => {
-    res.send('This route will update an FAQ')
+    // res.send('This route will update an FAQ')
+    var freq = {
+        "FAQ.$.question" : req.body.question,
+        "FAQ.$.answer" : req.body.answer
+    }
+
+    orgs.findOneAndUpdate(
+        { "FAQ._id": req.body.FAQId },
+        { $set: freq},
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Updated FAQ')
+            }
+        }
+    );
 })
 
 app.get('/create-FAQ', (req, res) => {
-    res.send('This route will create a new FAQ')
+    // res.send('This route will create a new FAQ')
+    var freq = {
+        question: req.body.question,
+        answer: req.body.answer
+    };
+
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $push: { FAQ: freq }},
+        function (error, success) {
+            if (error) {
+                console.log(error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Created FAQ')
+            }
+        }
+    );
 })
 
 app.get('/delete-FAQ', (req, res) => {
-    res.send('This route will delete an FAQ')
+    // res.send('This route will delete an FAQ')
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $pull: { FAQ: { _id: req.body.FAQId}} },
+        function (error, success) {
+            if (error) {
+                res.send("Error")
+            } else {
+                res.send("Deleted FAQ")
+            }
+        }
+    )
 })
 
 app.get('/get-all-levels/:org', (req, res) => {
