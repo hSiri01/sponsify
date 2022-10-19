@@ -6,7 +6,8 @@ const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
 const app = express()
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const sponsor = require('./sponsor');
 const port = 3001
 
 app.use(bodyParser.json());
@@ -400,8 +401,19 @@ app.post('/checkout-event', (req,res) => {
     // TODO: generate invoice and send follow-up email
 })
 
-app.get('/create-sponsor', (req,res) => {
-    res.send('Create Sponsor')
+app.post('/create-sponsor', (req,res) => {
+    
+    var newSponsor = new sponsors({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        company: req.body.company,
+        email:req.body.email,
+        sponsorLevel: req.body.sponsorLevel
+    });
+    newSponsor.save((err) => {
+        if (err) console.log( "Error on create sponsor, " + err);
+        //else it saved
+    });
 })
 
 app.get('/get-org-info/:org', (req,res) => {
@@ -417,7 +429,30 @@ app.get('/get-org-info/:org', (req,res) => {
 })
 
 app.get('/update-org-info', (req,res) => {
-    res.send('Update org info')
+    
+    const id = req.body.id
+    if (!id) {
+        console.log('Cannot update org, no id in request body')
+        res.json({ status: '400'})
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            
+            orgs.findByIdAndUpdate( id, { '$set': { name: req.body.name, fundName : req.body.fundName, address: req.body.address} }, (err, event) => {
+                if (err) {
+                    console.log('Error on update-org-info: ' + err)
+                }
+                else {
+                    console.log('Successfully updated org info: \n' + event)
+                }
+            })
+        }
+        else {
+            console.log('Cannot update org-info, invalid id in request body')
+        }
+    }
+    
+    
 })
 
 app.get('/get-valid-admins/:org', (req,res) => {
