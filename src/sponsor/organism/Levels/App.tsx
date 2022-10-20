@@ -1,3 +1,4 @@
+import React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import { theme} from '../../../utils/theme';
@@ -7,12 +8,27 @@ import Button from '@mui/material/Button';
 import Level from '../../molecule/Level/App'
 
 interface Props {
+    student_org_name: string, 
     student_org_logo: string, 
 }
 
 const Levels = (props: Props) => {
 
-    const { student_org_logo } = props
+    const { student_org_name, student_org_logo } = props
+
+    const [levels, setLevels] = React.useState([{}])
+
+    React.useEffect(() => {
+        const fetchData = async() => {
+            const data = await fetch("/get-all-levels/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data) => setLevels(data))
+
+        }
+        fetchData()
+
+    }, [])
+
 
 
     return (
@@ -51,9 +67,19 @@ const Levels = (props: Props) => {
                     </Typography>
                 </Grid>
 
+                <>
+                    {levels.map((level: any) =>   
+                    <>
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(8) }}>
+                                <Level name={level.name} lower_bound={level.minAmount} description={level.description} upper_bound={level.maxAmount} color_level={level.color} />
+                            </Grid>
+                    </>
+                    )}
+                </>
+
                 
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(8) }}>
+                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(8) }}>
                     <Level name="Diamond" lower_bound={5000} description="Be recognized and appreciated at our annual banquet along with everything included below" color_level="efefef"/>
                 </Grid>
 
@@ -75,13 +101,14 @@ const Levels = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
                     <Level name="Maroon" lower_bound={500} upper_bound={999} description="Display your company as a sponsor on our website and sponsor certain events" color_level="ca7171" />
-                </Grid>
+                </Grid> */}
 
 
                 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button href="/events-swe"
+                    <Button 
+                        href="/events-swe"
                         variant="contained"
                         size="large"
                         color="secondary"

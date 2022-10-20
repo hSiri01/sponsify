@@ -16,14 +16,14 @@ import { useCart } from '../../../contexts/Cart';
 
 export type OrgEvent = {
     name: string,
+    id: string,
     short_description: string, 
     long_description: string, 
     price: number, 
     avg_attendance?: number,
     occurances: number,
     date_start: Date,
-    date_end?: Date, 
-    id: number, 
+    date_end?: Date
 }
 
 const Event = (props: OrgEvent) => {

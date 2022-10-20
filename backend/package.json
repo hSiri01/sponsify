@@ -5,7 +5,11 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "kill": "kill -9 $(lsof -i :3000) &>/dev/null | exit 0",
+    "dev-mac": "npm run kill && nodemon --delay 500ms app.js",
+    "dev": "nodemon --delay 500ms app.js",
+    "build-project-mac": "concurrently \"npm run dev-mac\" \" cd .. && npm start\" ",
+    "build-project": "concurrently \"npm run dev\" \" cd .. && npm start\" "
   },
   "author": "",
   "license": "ISC",

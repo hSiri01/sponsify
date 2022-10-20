@@ -16,7 +16,7 @@ export type CartItem = {
     quantity: number,
     date_start: Date,
     date_end?: Date, 
-    id: number
+    id: string
 }
 
 const CartItem = (props: CartItem) => {

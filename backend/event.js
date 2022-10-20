@@ -19,6 +19,10 @@ const eventSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
+    avgAttendance: {
+        type: Number,
+        required: false
+    },
     totalSpots: {
         type: Number,
         required: true

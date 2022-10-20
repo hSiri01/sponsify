@@ -27,6 +27,10 @@ const purchaseSchema = new mongoose.Schema({
         required: true,
         default: () => Date.now()
     },
+    org: {
+        type: String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('purchases', purchaseSchema);
