@@ -22,38 +22,46 @@ interface Props {
     level_name: string,
     level_color: string,
     total: number,
+    student_org_name: string,
 }
 
-export const ContactUs = () => {
- 
 
-    var templateParams = {
-        name: 'James',
-        message: 'Check this out!'
-    };
-     
-    emailjs.send('service_6dyo66b', 'template_lws75v9', templateParams,'hp2wOIVitPvUf_BKX')
-        .then(function(response) {
-           console.log('SUCCESS!', response.status, response.text);
-        }, function(error) {
-           console.log('FAILED...', error);
-        });
-        
-      
-    
-}
 
 const Checkout = (props: Props) => {
 
-    const { student_org_logo, level_color, level_name, total } = props
+    const { student_org_logo, level_color, level_name, total, student_org_name } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
+    const[firstname, setFirstName] = React.useState('');
     const handleOpenInfo = () => setOpenInfo(true);
     const handleCloseInfo = () => setOpenInfo(false);
 
     const { addToCart, removeFromCart, cart } = useCart();
 
+    // const handleNameChange = (event : React.KeyboardEvent<HTMLInputElement>) => {
+    //     setFirstName(event.currentTarget.value);
+    //   };
+
     console.log(cart)
+
+    const ContactUs = () => {
+ 
+        
+        var templateParams = {
+            name: 'Sabrina Pena',
+            orgName : props.student_org_name
+        };
+         
+        emailjs.send('service_6dyo66b', 'template_l2b0y1g', templateParams,'hp2wOIVitPvUf_BKX')
+            .then(function(response) {
+               console.log('SUCCESS!', response.status, response.text);
+            }, function(error) {
+               console.log('FAILED...', error);
+            });
+            
+          
+        
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -156,7 +164,7 @@ const Checkout = (props: Props) => {
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button variant="contained" size="large" onClick={ContactUs} color="primary" sx={{
+                    <Button variant="contained" size="large"onClick={ContactUs} color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
