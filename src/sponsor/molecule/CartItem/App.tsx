@@ -1,25 +1,29 @@
-import { Grid } from '@mui/material';
+import {Grid } from '@mui/material';
 import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
 import Date from '../../atom/Date/App'
+import Button from '@mui/material/Button';
+
+import {useCart} from '../../../contexts/Cart'
 
 
-
-interface Props {
+export type CartItem = {
     name: string,
     short_description: string, 
-    price:number, 
+    price: number, 
     quantity: number,
     date_start: Date,
     date_end?: Date, 
+    id: string
 }
 
-const Event = (props: Props) => {
+const CartItem = (props: CartItem) => {
 
     const {name, short_description, price, quantity, date_start, date_end} = props
+
+    const { removeFromCart } = useCart()
 
     return (
         <ThemeProvider theme={theme}>
@@ -41,13 +45,8 @@ const Event = (props: Props) => {
                             <Grid item xs={4} sx={{textAlign:"right"}}>
                                 <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
                                 <Typography sx={{ fontWeight: "600" }} variant="body1">Qt:{quantity}</Typography>
-                                <Typography sx={{ color:"#979797" }} variant="body2">Remove</Typography>
+                                <Typography onClick={() => removeFromCart(props.id)} sx={{ color:"#979797", cursor:'pointer' }} variant="body2">Remove</Typography>
                             </Grid>
-
-                          
-
-                            
-
                         </Grid>
                         
                    </Paper>
@@ -60,4 +59,4 @@ const Event = (props: Props) => {
     )
 }
 
-export default Event
+export default CartItem

@@ -1,9 +1,8 @@
 import { Grid } from '@mui/material';
-import { theme, darkGreen } from '../../../utils/theme';
+import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
-
 
 
 
@@ -29,33 +28,33 @@ const Level = (props: Props) => {
                                 <Grid item xs={5}>
                                 <Paper variant="outlined" sx={{ borderColor: "black", borderRadius: 0, maxWidth: theme.spacing(12), minWidth: theme.spacing(12), minHeight: theme.spacing(10) }} >
                                     <Paper elevation={0} sx={{ backgroundColor: "#4baa89", borderRadius: 0, maxWidth: theme.spacing(12), minWidth: theme.spacing(12), minHeight: theme.spacing(5) }} >
-                                        <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_1.getMonth() - 1]}</Typography>
+                                        <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_1.getMonth()]}</Typography>
                                     </Paper>
                                     <Typography sx={{ mt: theme.spacing(1), textAlign: "center" }} variant="body1">{date_1.getDate()}</Typography>
                                 </Paper>  
                                 </Grid>
 
-                                <Grid item xs={2} sx={{mt:theme.spacing(4)}}>
+                                <Grid item xs={2} sx={{mt:theme.spacing(4),}}>
                                     <Typography sx={{textAlign: "center" }} variant="body1">-</Typography>
                                 </Grid>
 
                                 <Grid item xs={5}>
                                     <Paper variant="outlined" sx={{ borderColor: "black", borderRadius: 0, maxWidth: theme.spacing(12), minWidth: theme.spacing(12), minHeight: theme.spacing(10) }} >
                                         <Paper elevation={0} sx={{ backgroundColor: "#4baa89", borderRadius: 0, maxWidth: theme.spacing(12), minWidth: theme.spacing(12), minHeight: theme.spacing(5) }} >
-                                            <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_2.getMonth() - 1]}</Typography>
+                                            <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_2.getMonth()]}</Typography>
                                         </Paper>
                                         <Typography sx={{ mt: theme.spacing(1), textAlign: "center" }} variant="body1">{date_2.getDate()}</Typography>
                                     </Paper>
                                 </Grid>
 
                             </Grid>
-                    ):(
+                    ) : (
                         <Paper variant = "outlined" sx = {{ borderColor: "black", borderRadius: 0, maxWidth: theme.spacing(15), minWidth: theme.spacing(15), minHeight: theme.spacing(15) }} >
                             <Paper elevation={0} sx={{ backgroundColor: "#4baa89", borderRadius: 0, maxWidth: theme.spacing(15), minWidth: theme.spacing(15), minHeight: theme.spacing(5) }} >
-                                <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_1.getMonth() - 1]}</Typography>
+                                <Typography sx={{ color: "white", textAlign: "center" }} variant="body1">{monthNames[date_1.getMonth()]}</Typography>
                             </Paper>
                         <Typography sx={{ mt: theme.spacing(1), textAlign: "center" }} variant="body1">{date_1.getDate()}</Typography>
-                        </Paper>  
+                        </Paper> 
                     )}    
                 </Grid>
             </Grid>    
