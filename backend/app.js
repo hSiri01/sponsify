@@ -254,7 +254,7 @@ app.post('/create-event', async (req, res) => {
 })
 
 function updateEvent(id, eventOptions) {
-    const queryStatus = '200'
+    let queryStatus = '200'
 
     if (mongoose.Types.ObjectId.isValid(id)) {
         events.findByIdAndUpdate( id, eventOptions, (err, event) => {

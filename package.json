@@ -38,7 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-project-mac": "concurrently \"npm run dev-mac\" \" cd .. && npm start\" ",
+    "build-project-mac": "concurrently \"cd backend && npm run dev-mac\" \" cd .. && npm start\" ",
     "build-project": "concurrently \"cd backend && npm run dev\" \"npm start\" ",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },
