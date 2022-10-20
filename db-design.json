@@ -413,6 +413,14 @@
                     "additionalItems": true,
                     "GUID": "05ede3e8-c667-459c-afc2-efdc00e797d9",
                     "error": {}
+                },
+                {
+                    "name": "org",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "061ce3ac-7a43-4e95-8c0c-495a87d7c455",
+                    "error": {}
                 }
             ],
             "definitions": {
@@ -506,6 +514,14 @@
                     "type": "date",
                     "primaryKey": false,
                     "GUID": "04447b31-c9a6-4ae5-afe8-c42e2d88a810",
+                    "error": {}
+                },
+                {
+                    "name": "org",
+                    "hackoladeMeta": {},
+                    "isActivated": true,
+                    "type": "string",
+                    "GUID": "d77d60e9-c316-4168-8592-aa73ea229239",
                     "error": {}
                 }
             ],
@@ -830,7 +846,9 @@
         "fd814344-1a7f-4a49-a56c-99a1cfb5fe39": "fk organization.New Field to organization.name",
         "ad51222e-c4ce-42f7-af29-0abc99847ffe": "fund name",
         "f18a5e2a-fcf8-4243-9861-b8fa7723c3cb": "end date",
-        "3a4ad0fe-5423-4638-ad18-a8cf6f9c954e": "brief description"
+        "3a4ad0fe-5423-4638-ad18-a8cf6f9c954e": "brief description",
+        "d77d60e9-c316-4168-8592-aa73ea229239": "org",
+        "061ce3ac-7a43-4e95-8c0c-495a87d7c455": "org"
     },
     "definitions": {
         "type": "definitions",
@@ -860,7 +878,7 @@
             "modelName": false
         }
     },
-    "lastModifTS": "2022-10-12T23:20:39.440Z",
+    "lastModifTS": "2022-10-20T15:56:34.802Z",
     "persistenceSchemaVersion": "6",
     "isCreatedByPlugin": true,
     "pluginInformation": {
@@ -875,7 +893,7 @@
                 "erd": [
                     {
                         "GUID": "c95a3765-a9ab-4263-8dc4-bc086acef818",
-                        "x": 438.6175508510428,
+                        "x": 439.6175508510428,
                         "y": 336.57814314544925,
                         "width": 241,
                         "height": 519,
@@ -885,27 +903,27 @@
                     },
                     {
                         "GUID": "08dcfcc2-c8a2-49ac-b05f-c19641a7c567",
-                        "x": 761.0123338533622,
+                        "x": 762.0123338533622,
                         "y": 606.7061592474959,
                         "width": 240,
-                        "height": 267,
+                        "height": 285,
                         "color": {
                             "hex": "#fc6c85"
                         }
                     },
                     {
                         "GUID": "3887f311-3705-4855-ad36-f36de51d822b",
-                        "x": 1081.4119062438529,
+                        "x": 1082.4119062438529,
                         "y": 483.5049254579897,
                         "width": 216,
-                        "height": 141,
+                        "height": 159,
                         "color": {
                             "hex": "#008a00"
                         }
                     },
                     {
                         "GUID": "787f2610-f5d0-4e3b-8857-dc5b0d7f0341",
-                        "x": 786.6322908499106,
+                        "x": 787.6322908499106,
                         "y": 335.40631390903076,
                         "width": 197,
                         "height": 141,
@@ -916,7 +934,7 @@
                 ],
                 "buckets": [
                     {
-                        "x": 398.6175508510428,
+                        "x": 399.6175508510428,
                         "y": 295.40631390903076,
                         "GUID": "b4c23f86-73a3-43ba-a4b3-c3cfdd2a3a26"
                     }
