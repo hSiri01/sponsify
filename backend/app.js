@@ -254,22 +254,26 @@ app.post('/create-event', async (req, res) => {
 })
 
 function updateEvent(id, eventOptions) {
+    let queryStatus = '200'
+
     if (mongoose.Types.ObjectId.isValid(id)) {
         events.findByIdAndUpdate( id, eventOptions, (err, event) => {
             if (err) {
                 console.log('Error on update-event: ' + err)
-                return {status: '500'}
+                queryStatus = '500'
             }
             else {
                 console.log('Successfully updated event: \n' + event)
-                return { status: '200'}
+                queryStatus = '200'
             }
         })
     }
     else {
         console.log('Cannot update event, invalid id in request body')
-        return { status: '400'}
+        queryStatus = '400'
     }
+
+    return { status: queryStatus }
 }
 
 app.put('/update-event', (req,res) => {
