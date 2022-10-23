@@ -32,27 +32,20 @@ const EditLevels = (props: Props) => {
     const [des, setDes] = React.useState('')
     const [color, setColor] = React.useState('')
 
-    const resetInputs = () => {
-        setLevelName('')
-        setMinAmount('')
-        setMaxAmount('')
-        setDes('')
-        setColor('')
-    }
-
     const handleOpenNewLevel = () => setOpenNewLevel(true);
 
-    const handleCloseNewLevel = () => {
-        resetInputs()
-        setOpenNewLevel(false);
-    }
+    const handleCloseNewLevel = () => setOpenNewLevel(false);
+
 
     React.useEffect(() => {
         const fetchData = async() => {
             // const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
             const data = await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => setLevels(data))
+                .then((data) => {
+                    data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
+                    setLevels(data)
+                })
                 .then(() => setOrg(student_org_name))
 
         }

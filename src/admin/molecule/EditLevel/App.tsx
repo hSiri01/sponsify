@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Button from '@mui/material/Button';
 
 
@@ -58,10 +57,8 @@ const EditLevel = (props: Props) => {
         setMinAmount(lowerbound)
         setDes(description)
         setColor(hexcode)
-        if (upperbound !== undefined) {
-            setMaxAmount(upperbound)
-        }
-        console.log(id)
+        setMaxAmount(upperbound ? upperbound : '')
+    
         setOpenLevel(true)
     };
 
@@ -139,9 +136,11 @@ const EditLevel = (props: Props) => {
                             +
                         </Typography>
                         }
+                        {props.upperbound && 
                         <Typography >
                             ${upperbound}
                         </Typography>
+                        }
                     </Grid>
                     
                 </Grid>  
@@ -210,7 +209,7 @@ const EditLevel = (props: Props) => {
                         }}>
                             <TextField
                                 aria-label="empty textarea"
-                                placeholder="Description of level benefits, details, etc."
+                                label="Description of level benefits, details, etc."
                                 minRows={3}
                                 multiline={true}
                                 value={des}
