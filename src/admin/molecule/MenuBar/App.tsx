@@ -47,7 +47,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
 
                         <IconButton
-                            href={`/basic-info-` + student_org_short_name.toString()}
+                            href={'/basic-info'}
                             size="large"
                             edge="start"
                             aria-label="menu"
