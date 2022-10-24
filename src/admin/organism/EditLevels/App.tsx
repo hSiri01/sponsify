@@ -14,18 +14,16 @@ import MenuBar from '../../molecule/MenuBar/App'
 
 
 interface Props {
-    student_org_logo: string,
-    student_org_short_name: string, 
-    student_org_name: string
+    student_org_logo: string
   
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo, student_org_short_name, student_org_name } = props
+    const { student_org_logo } = props
+    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState([{}])
-    const [org, setOrg] = React.useState('')
     const [levelName, setLevelName] = React.useState('')
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
@@ -39,14 +37,12 @@ const EditLevels = (props: Props) => {
 
     React.useEffect(() => {
         const fetchData = async() => {
-            // const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
-            const data = await fetch("/get-all-levels/" + student_org_name)
+            await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data) => {
                     data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
                     setLevels(data)
                 })
-                .then(() => setOrg(student_org_name))
 
         }
         fetchData()
@@ -84,7 +80,7 @@ const EditLevels = (props: Props) => {
                 name: levelName,
                 color: color,
                 description: des,
-                organization: org
+                organization: student_org_name
             })
         }
 
@@ -139,7 +135,7 @@ const EditLevels = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
                                 <EditLevel id={level._id}
-                                        student_org_name={org} 
+                                        student_org_name={student_org_name} 
                                         level={level.name}
                                         description={level.description}                              
                                         lowerbound = {level.minAmount}

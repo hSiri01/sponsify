@@ -146,6 +146,8 @@ app.put('/update-level', (req, res) => {
         "levels.$.description" : req.body.description
     }
 
+    console.log(req.body)
+
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
         { $set: level},

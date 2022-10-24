@@ -58,6 +58,7 @@ const EditLevel = (props: Props) => {
         setDes(description)
         setColor(hexcode)
         setMaxAmount(upperbound ? upperbound : '')
+        console.log(id)
     
         setOpenLevel(true)
     };
