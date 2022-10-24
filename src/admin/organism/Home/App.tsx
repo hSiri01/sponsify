@@ -19,6 +19,7 @@ interface Props {
  
 const AdminLogin = (props: Props) => {
     const { loginWithRedirect } = useAuth0();
+
     return (
         <ThemeProvider theme={theme}>
 

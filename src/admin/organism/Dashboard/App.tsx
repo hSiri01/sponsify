@@ -19,11 +19,11 @@ import EmailIcon from '@mui/icons-material/Email';
 import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
 import Link from '@mui/material/Link';
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 
 interface Props {
-    student_org_logo: string,
-    student_org_name: string, 
+    // TO DO: Needs to get changed - retrieved from backend (routes)
     student_org_short_name: string, 
     sponsor_code: string,
     valid_until_date: Date,
@@ -37,8 +37,15 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
-    const { student_org_logo, sponsor_code, valid_until_date, student_org_name, street_address, address_2, city, state, zip_code, fund_name, student_org_short_name } = props
+    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name, student_org_short_name } = props
+    // TO DO: Needs to get changed - retrieved from backend (routes)
+    const student_org_name = "Society of Women Engineers"
+    // const student_org_name = "Aggie Women in Computer Science"
+    // const student_org_name = "Datathon"
+    const student_org_logo = SWELogo
 
+    localStorage.setItem('org', JSON.stringify(student_org_name))
+    
     return (
         <ThemeProvider theme={theme}>
 
@@ -71,7 +78,7 @@ const Dashboard = (props: Props) => {
                 </Grid> 
 
                 <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5),}}>
-                    <Link href={`/events-edit-`+ student_org_short_name.toString()} underline='none'>
+                    <Link href={'/events-edit'} underline='none'>
                         <Paper variant="outlined" sx={{border:'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                         <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb:theme.spacing(1) }} >
                             <Grid container>
