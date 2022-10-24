@@ -9,9 +9,8 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
-
+import InputAdornment from '@mui/material/InputAdornment';
 
 interface Props {
     student_org_logo: string
@@ -28,7 +27,7 @@ const EditLevels = (props: Props) => {
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
     const [des, setDes] = React.useState('')
-    const [color, setColor] = React.useState('')
+    const [color, setColor] = React.useState('#909090')
 
     const handleOpenNewLevel = () => setOpenNewLevel(true);
 
@@ -183,13 +182,13 @@ const EditLevels = (props: Props) => {
 
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
                             <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
-                            value={levelName} onChange={handleNameChange()} variant="outlined" />
+                            defaultValue={''} onChange={handleNameChange()} variant="outlined" />
                         </Grid>
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
                             <TextField sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
-                            value={minAmount} onChange={handleMinChange()} variant="outlined" />
+                            defaultValue={''} onChange={handleMinChange()} variant="outlined" />
                             <TextField sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" 
-                            value={maxAmount} onChange={handleMaxChange()} variant="outlined" />
+                            defaultValue={''} onChange={handleMaxChange()} variant="outlined" />
                         </Grid>
 
                         <Grid item xs={3} sx={{
@@ -201,14 +200,19 @@ const EditLevels = (props: Props) => {
                                 label="Description of level benefits, details, etc."
                                 minRows={3}
                                 multiline={true}
-                                value={des} onChange={handleDesChange()}
+                                defaultValue={''} onChange={handleDesChange()}
                                 style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                             />
                         </Grid>
                         <Grid item xs={2 }>
-                        <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" 
-                        value={color} onChange={handleColorChange()} variant="outlined" />
-
+                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" 
+                            value={color} onChange={handleColorChange()} 
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <input style={{ height: '30px', width: '30px', border: '5px'}} type="color" value={color} onChange={e => setColor(e.target.value)} />
+                                </InputAdornment>,
+                              }}
+                            variant="outlined" />
                         </Grid>
 
                         <Grid item xs={12} sx={{

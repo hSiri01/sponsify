@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 interface Props {
@@ -221,7 +222,12 @@ const EditLevel = (props: Props) => {
 
                         <Grid item xs={2}>
                             <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" variant="outlined" 
-                            value={color} onChange={handleColorChange()}/>
+                            value={color} onChange={handleColorChange()} 
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <input style={{ height: '30px', width: '30px', border: '5px'}} type="color" value={color} onChange={e => setColor(e.target.value)} />
+                                </InputAdornment>,
+                              }} />
                         </Grid>
                         
                     </Grid>
