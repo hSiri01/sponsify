@@ -5,22 +5,23 @@ import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
-import Level from '../../molecule/Level/App'
+import Level from '../../molecule/Level/App';
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 interface Props {
-    student_org_name: string, 
-    student_org_logo: string, 
 }
 
 const Levels = (props: Props) => {
 
-    const { student_org_name, student_org_logo } = props
+    // TO DO: Correct logo
+    const student_org_logo = SWELogo
+    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
 
     const [levels, setLevels] = React.useState([{}])
 
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-all-levels/" + student_org_name)
+            await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data) => {
                     data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
@@ -81,7 +82,7 @@ const Levels = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button 
-                        href="/events-swe"
+                        href="/events"
                         variant="contained"
                         size="large"
                         color="secondary"

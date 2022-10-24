@@ -200,7 +200,7 @@ app.delete('/delete-level', (req, res) => {
 })
 
 app.get('/get-enabled-events/:org', (req, res) => {
-    events.find({ visible: true, name: req.params.org })
+    events.find({ visible: true, org: req.params.org })
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-enabled-events, " + err)

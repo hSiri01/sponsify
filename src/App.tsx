@@ -40,11 +40,11 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<SponsorHome />} />
             <Route path="/how-it-works" element={<HowItWorks organization={''} />} />
-            <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
-            <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo} student_org_name="SWE" />} />
-            <Route path="/events-swe" element={<Events student_org_name={"Society of Women Engineers"} student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
-            <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
-            <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/levels" element={<Levels />} />
+            <Route path="/events" element={<Events level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/checkout" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/inbox" element={<Inbox />} />
 
             <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
           
