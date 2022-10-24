@@ -46,13 +46,13 @@ const App: React.FC = () => {
             <Route path="/checkout" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
             <Route path="/inbox" element={<Inbox />} />
 
-            <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
+            <Route path="/faq-edit" element={<EditFAQ student_org_logo={SWELogo} />} />
           
             <Route path="/admin-login" element={<AdminLogin/>} />
             <Route path="/levels-edit" element={<EditLevels student_org_logo={SWELogo} />} />
             <Route path="/dashboard-swe" element={<Dashboard sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} student_org_short_name="swe" street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
             <Route path="/events-edit" element={<EditEvents student_org_logo={SWELogo} />} />
-            <Route path="/summary-swe" element={<PurchaseHistory student_org_logo={SWELogo}  total_sponsored={50000} />} />
+            <Route path="/summary" element={<PurchaseHistory student_org_logo={SWELogo}  total_sponsored={50000} />} />
             <Route path="/basic-info" element={<BasicInfo student_org_logo={SWELogo} student_org_short_name="SWE" street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
 
           </Routes>

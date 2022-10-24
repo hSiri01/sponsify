@@ -19,6 +19,7 @@ interface Props {
 const PurchaseHistory = (props: Props) => {
 
     const { student_org_logo, total_sponsored } = props
+    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
    
     return (
 

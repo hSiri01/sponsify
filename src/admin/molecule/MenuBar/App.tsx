@@ -67,7 +67,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
                         
                         <IconButton
-                            href={`/faq-edit-` + student_org_short_name.toString()}
+                            href={'/faq-edit'}
                             size="large"
                             edge="start"
                             aria-label="menu"
@@ -77,7 +77,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
                         
                         <IconButton
-                            href={`/summary-` + student_org_short_name.toString()}
+                            href={'/summary'}
                             size="large"
                             edge="start"
                             aria-label="menu"
