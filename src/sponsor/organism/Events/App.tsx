@@ -45,7 +45,7 @@ const Events = (props: Props) => {
 
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-all-events/" + student_org_name)
+            const data = await fetch("/get-enabled-events/" + student_org_name)
                 .then((res) => res.json())
                 .then((data) => {
                     // console.log(data)
