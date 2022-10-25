@@ -146,9 +146,9 @@ const Events = (props: Props) => {
 
                         <Grid container>
                             {cart.map(item => (
-                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
-                            </Grid>
+                                <Grid key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                    <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
+                                </Grid>
                             ))}
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
@@ -289,9 +289,9 @@ const Events = (props: Props) => {
                 </Grid>*/}
 
                 <>
-                    {events.map((event: any) =>   
+                    {events.map((event: any) =>
                     <>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             {(event.name == 'General Donation') ? (
                                 <GeneralDonation 
