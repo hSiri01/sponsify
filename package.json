@@ -39,7 +39,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-project-kill": "concurrently \"cd backend && npm run dev-kill\" \" cd .. && npm start\" ",
+    "build-project-kill": "concurrently \"cd backend && npm run dev-kill\" \"npm start\" ",
     "build-project": "concurrently \"cd backend && npm run dev\" \"npm start\" ",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build"
   },

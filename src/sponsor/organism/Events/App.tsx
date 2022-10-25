@@ -29,7 +29,7 @@ interface Props {
 
 const Events = (props: Props) => {
 
-    const { student_org_name, student_org_logo, level_color,level_name, total } = props
+    const { student_org_name, student_org_logo, level_color, level_name } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);

@@ -346,7 +346,7 @@ app.get('/get-org/:code', (req, res) => {
     })
 })
 
-app.post('/checkout-event', (req,res) => {
+app.post('/checkout-events', (req,res) => {
     // create new sponsor
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
