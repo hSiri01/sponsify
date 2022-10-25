@@ -132,13 +132,13 @@ const Events = (props: Props) => {
 
                         <Grid container>
                             {cart.map(item => (
-                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                                 <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
                             </Grid>
                             ))}
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
-                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total: ${cart.reduce((total, item) => total + item.price * item.quantity, 0)}</Typography>
 
                             </Grid>
 
@@ -276,7 +276,7 @@ const Events = (props: Props) => {
 
                 <>
                     {events.map((event: any) =>   
-                    <>
+                    <React.Fragment key={event._id}>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             {(event.name == 'General Donation') ? (
@@ -300,7 +300,7 @@ const Events = (props: Props) => {
                             )}
 
                         </Grid>
-                    </>
+                    </React.Fragment>
                     )}
                 </>
 

@@ -174,7 +174,7 @@ const Event = (props: OrgEvent) => {
 
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Grid item xs={10}>
-                                        <Typography variant="body1">{long_description}</Typography>
+                                        <Typography dangerouslySetInnerHTML={{__html: long_description}} variant="body1" />
                                     </Grid>
                                 </Grid>
 
