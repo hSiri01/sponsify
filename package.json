@@ -35,7 +35,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run start-backend\" \"react-scripts start\" ",
+    "start": "npm run start-backend",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -43,7 +43,7 @@
     "build-project": "concurrently \"npm run build-backend && npm run start-backend\" \"npm start\" ",
     "build-backend": "cd backend && npm install && cd ..",
     "start-backend": "cd backend && npm run dev",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build-backend"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build-backend && npm build"
   },
   "proxy": "http://localhost:3001",
   "license": "ISC",

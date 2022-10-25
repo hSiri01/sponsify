@@ -19,42 +19,41 @@ interface Props {
 }
 
 const SponsorHome = (props: Props) => {
-    const [input, setInput] = React.useState('');
+    const inputRef = React.useRef<HTMLInputElement>(null);
     const [org, setOrg] = React.useState('');
     const [buttonClick, setButtonClick] = React.useState(false);
     const [openAlert, setOpenAlert] = React.useState(false);
 
     const handleCloseAlert = () => {
         // TO DO: Ask if they would prefer to clear after closing alert
-        setInput('')
         setOpenAlert(false)
     }
 
-    const handleOrgChange = async () => {
-        if (input === '') {
+    const handleOrgChange = () => {
+        console.log(inputRef.current?.value)
+        if (inputRef.current?.value === '') {
 
             setOpenAlert(true)
 
         } else {
-
-            let response = await fetch("/get-org/" + input)
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.name === undefined) {
-                  console.log("invalid")
-                  setOpenAlert(true)
-              } else {
-                  setOrg(data.name)
-                  setButtonClick(true)
-              }
-          });
+            
+            let response = fetch("/get-org/" + inputRef.current?.value)
+            .then((res) => res.json().then((data) => {
+                if (data.name === undefined) {
+                    console.log("invalid")
+                    setOpenAlert(true)
+                } else {
+                    setOrg(data.name)
+                    setButtonClick(true)
+                }
+            }));
 
         }
     }
 
     const handleChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(inputRef.current?.value)
         setOpenAlert(false)
-        setInput(event.target.value )
     }
 
     return (
@@ -86,7 +85,7 @@ const SponsorHome = (props: Props) => {
                             aria-label="close"
                             color="inherit"
                             size="small"
-                            onClick={handleCloseAlert}
+                            onClick={() => handleCloseAlert()}
                             >
                             <CloseIcon fontSize="inherit" />
                             </IconButton>
@@ -100,13 +99,13 @@ const SponsorHome = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
-                    <TextField id="outlined-basic" label="Sponsor Code" variant="filled" sx={{width:theme.spacing(70)}} value={input} onChange={handleChange()}/>
+                    <TextField id="outlined-basic" label="Sponsor Code" variant="filled" sx={{width:theme.spacing(70)}} defaultValue={''} inputRef={inputRef} onChange={handleChange()}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <Button 
                     // href="/how-it-works"
-                    variant="contained" size="large" color="secondary" onClick={handleOrgChange}>Get Started</Button>
+                    variant="contained" size="large" color="secondary" onClick={() => handleOrgChange()}>Get Started</Button>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>

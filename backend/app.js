@@ -8,9 +8,17 @@ const purchases = require('./purchase')
 const app = express()
 const bodyParser = require('body-parser');
 const sponsor = require('./sponsor');
+const path = require('path');
 const port = 3001
 
+app.use(express.static(path.join(__dirname, '..', 'build')));
 app.use(bodyParser.json());
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
 
 mongoose.connect(
     process.env.MONGODB_URL,
