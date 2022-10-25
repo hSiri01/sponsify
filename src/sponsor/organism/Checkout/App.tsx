@@ -124,7 +124,7 @@ const Checkout = (props: Props) => {
                 })}
 
                 <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(4), mb: theme.spacing(4), }}>
-                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total: ${cart.reduce((total, item) => total + item.price * item.quantity, 0)}</Typography>
                 </Grid>
 
 
