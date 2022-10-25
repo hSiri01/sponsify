@@ -21,15 +21,12 @@ import { useCart } from '../../../contexts/Cart';
 
 interface Props {
     student_org_name: string,
-    student_org_logo: string, 
-    level_name: string,
-    level_color: string,
-    total: number,
+    student_org_logo: string
 }
 
 const Events = (props: Props) => {
 
-    const { student_org_name, student_org_logo, level_color, level_name } = props
+    const { student_org_name, student_org_logo } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -39,7 +36,12 @@ const Events = (props: Props) => {
     const handleOpenCart = () => setOpenCart(true);
     const handleCloseCart = () => setOpenCart(false);
 
+    const { clearCart, cart } = useCart()
+
+    const [levelName, setLevelName] = React.useState('');
+    const [levelColor, setLevelColor] = React.useState('');
     const [events, setEvents] = React.useState([{}]);
+    const [total, setTotal] = React.useState(0);
 
     React.useEffect(() => {
         const fetchData = async() => {
@@ -60,9 +62,21 @@ const Events = (props: Props) => {
         }
 
         fetchData()
+        clearCart()
     }, [])
 
-    const { cart } = useCart()
+    React.useEffect(() => {
+        setTotal(cart.reduce((total, item) => total + item.price, 0))
+
+        const fetchLevel = async () => {
+            const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + total)
+            const data = await response.json()
+            setLevelName(data.name)
+            setLevelColor(data.color)
+        }
+        
+        fetchLevel()
+    })
 
     return (
         <ThemeProvider theme={theme}>
@@ -138,14 +152,14 @@ const Events = (props: Props) => {
                             ))}
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
-                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
 
                             </Grid>
 
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', }}>
-                                <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
-                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{level_name} Sponsor</Typography>
+                                <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
+                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName} Sponsor</Typography>
                                 </Paper>
                             </Grid>
 
@@ -307,8 +321,8 @@ const Events = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
 
 
-                    <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15) }} elevation={0}>
-                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{level_name} Sponsor</Typography>
+                    <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15) }} elevation={0}>
+                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
                     </Paper>
 
                     <Button variant="contained" size="large" color="primary" sx={{

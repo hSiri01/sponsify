@@ -130,6 +130,9 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
                     if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
                         currLevel = levels[i]
                     }
+                    else if (amount >= levels[i].minAmount && !levels[i].maxAmount) {
+                        currLevel = levels[i]
+                    }
                 }
 
                 res.json(currLevel)

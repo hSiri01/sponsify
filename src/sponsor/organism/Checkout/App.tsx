@@ -20,14 +20,12 @@ import { useCart } from '../../../contexts/Cart';
 
 interface Props {
     student_org_name: string,
-    student_org_logo: string,
-    level_name: string,
-    level_color: string
+    student_org_logo: string
 }
 
 const Checkout = (props: Props) => {
 
-    const { student_org_name, student_org_logo, level_color, level_name } = props
+    const { student_org_name, student_org_logo } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -38,14 +36,25 @@ const Checkout = (props: Props) => {
     const [emailInput, setEmailInput] = React.useState('');
     const [companyInput, setCompanyInput] = React.useState('');
     const checkoutReady = firstNameInput && lastNameInput && emailInput && companyInput;
-
+    
     const [checkedOut, setCheckedOut] = React.useState(false);
+    const [levelName, setLevelName] = React.useState('');
+    const [levelColor, setLevelColor] = React.useState('');
 
-    const { addToCart, removeFromCart, cart } = useCart();
+    const { cart } = useCart();
     const total = cart.reduce((total, item) => total + item.price, 0);
-    // TODO: get level_name and level_color from cart items, not as prop
 
     console.log(cart)
+
+    React.useEffect(() => {
+        fetch('/get-level-by-amount/' + student_org_name + '/' + total)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                setLevelName(data.name)
+                setLevelColor(data.color)
+            })
+    }, [cart])
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
@@ -60,7 +69,7 @@ const Checkout = (props: Props) => {
                     lastName: lastNameInput,
                     company: companyInput,
                     email: emailInput,
-                    sponsorLevel: level_name,
+                    sponsorLevel: levelName,
                     events: cart.map(item => item.id),
                     totalAmount: total,
                     org: student_org_name
@@ -188,8 +197,8 @@ const Checkout = (props: Props) => {
 
 
                 <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', }}>
-                    <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
-                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{level_name} Sponsor</Typography>
+                    <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
+                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
                     </Paper>
                 </Grid>
 

@@ -8,6 +8,7 @@ type Props = {
 type CartContext = {
     addToCart: (item: CartItem) => void
     removeFromCart: (id: string) => void
+    clearCart: () => void
     cart: CartItem[]
 }
 
@@ -25,13 +26,18 @@ const CartProvider = ({ children }: Props) => {
 
     const removeFromCart = (id: string) => setCart(existingCart => existingCart.filter(e => e.id !== id))
 
-    React.useEffect(() => console.log("CartContext", cart), [cart, setCart])
+    const clearCart = () => setCart([])
+
+    React.useEffect(() => {
+        console.log("CartContext", cart)
+    }, [cart, setCart])
 
     return (
         <CartContext.Provider value={{
             addToCart,
             removeFromCart,
-            cart
+            clearCart,
+            cart,
         }}>
             {children}
         </CartContext.Provider>
