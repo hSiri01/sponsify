@@ -35,13 +35,15 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"npm run start-backend\" \"react-scripts start\" ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build-project-kill": "concurrently \"cd backend && npm run dev-kill\" \" cd .. && npm start\" ",
-    "build-project": "concurrently \"cd backend && npm run dev\" \"npm start\" ",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && cd backend && npm install && cd .. && npm run build-project"
+    "build-project": "concurrently \"npm run build-backend && npm run start-backend\" \"npm start\" ",
+    "build-backend": "cd backend && npm install && cd ..",
+    "start-backend": "cd backend && npm run dev",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install && npm run build-backend"
   },
   "proxy": "http://localhost:3001",
   "license": "ISC",
