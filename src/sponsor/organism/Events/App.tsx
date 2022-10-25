@@ -293,7 +293,7 @@ const Events = (props: Props) => {
                     <>
                         <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                            {(event.name == 'General Donation') ? (
+                            {(event.name === 'General Donation') ? (
                                 <GeneralDonation 
                                     id={event._id}
                                     short_description={event.briefDesc}
