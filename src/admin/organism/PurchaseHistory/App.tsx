@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import { theme} from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import MenuBar from '../../molecule/MenuBar/App'
@@ -12,22 +12,47 @@ import LevelSponsors from '../../molecule/LevelSponsors/App';
 
 
 interface Props {
-    student_org_logo: string, 
+    student_org_logo: string,
     total_sponsored: number,
+    student_org_name: string,
 }
 
 const PurchaseHistory = (props: Props) => {
 
-    const { student_org_logo, total_sponsored } = props
-   
+    const { student_org_logo, total_sponsored, student_org_name } = props
+
+
+    const [purchases, setPurchases] = React.useState([{}]);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const data = await fetch("/get-all-purchased-events/" + student_org_name)
+                .then((res) => res.json())
+                .then((data) => {
+                    // console.log(data)
+                    data.sort(
+                        (objA: any, objB: any) => {
+                            const date1 = new Date(objA.date)
+                            const date2 = new Date(objB.date)
+                            return date1.getTime() - date2.getTime()
+                        }
+                    )
+                    setPurchases(data)
+                }
+                )
+        }
+
+        fetchData()
+    }, [])
+
     return (
 
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name="swe"/>
+            <MenuBar student_org_short_name="swe" />
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
+            <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -48,7 +73,7 @@ const PurchaseHistory = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-            
+
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
                         Purchase History
@@ -61,20 +86,20 @@ const PurchaseHistory = (props: Props) => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2),}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2), }}>
                     <Typography variant="h5" sx={{ color: '#4baa89', fontWeight: 600, }}>
                         ${total_sponsored}
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sx={{textAlign: 'center', justifyContent:'center', ml: theme.spacing(15)}}>
+                <Grid item xs={12} sx={{ textAlign: 'center', justifyContent: 'center', ml: theme.spacing(15) }}>
 
-                    <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5)}}>
+                    <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
                         <Grid item xs={1}>
                             <LevelSponsors name="Diamond" color_level="efefef" />
                         </Grid>
 
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20)}}>
+                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
                             <LevelSponsors name="Platinum" color_level="ebeaea" />
                         </Grid>
 
@@ -106,7 +131,7 @@ const PurchaseHistory = (props: Props) => {
                     <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", textAlign:'left', mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", textAlign: 'left', mt: theme.spacing(5) }}>
                                     COMPANY NAME
                                 </Typography>
                             </Grid>
@@ -124,7 +149,7 @@ const PurchaseHistory = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5)}}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5) }}>
                                     EVENT
                                 </Typography>
                             </Grid>
@@ -144,10 +169,10 @@ const PurchaseHistory = (props: Props) => {
                     </Paper>
                 </Grid>
 
-               
-                
-                
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+
+
+
+                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
 
                     <Transaction company_name="Capital One"
                         rep_name="Lauren Kotke"
@@ -174,13 +199,45 @@ const PurchaseHistory = (props: Props) => {
                         date_end={new Date(2022, 10, 16)}
                         />
                     
-                </Grid>
+                </Grid> */}
+
+               
+                <>
+                    {purchases.map((purchase: any) => {
+                        console.log(purchase.events)
+                        console.log(purchases)
+                        let temp = purchase.events
+                        temp.map((event: any) => {
+                            <React.Fragment key={event._id}>
+                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+
+                                    <Transaction company_name={purchase.sponsorID.company}
+                                        rep_name={purchase.sponsorID.firstName + " " + purchase.sponsorID.lastName}
+                                        rep_email={purchase.sponsorID.email}
+                                        event_name={event.name}
+                                        short_description={event.briefDesc}
+                                        purchase_date={new Date(purchase.dateSponsored)}
+                                        price={event.price}
+                                        date_start={new Date(event.date)}
+                                        date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                    />
+
+                                </Grid>
+                            </React.Fragment>
+                           
+                        }
+
+                        )
+                    }
+
+                    )} 
+                </>
 
 
             </Grid>
 
 
-            
+
         </ThemeProvider>
 
 

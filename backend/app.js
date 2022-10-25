@@ -405,6 +405,32 @@ app.post('/checkout-event', (req,res) => {
     // TODO: generate invoice and send follow-up email
 })
 
+app.get('/get-all-purchased-events/:org', (req, res) => {
+
+    // events.find({ spotsTaken: { $gt: 0 }, "sponsors.0": { $exists: true }, org: req.params.org })
+    //     .populate("sponsors")
+    //     .exec((err, result) => {
+    //         if (err) {
+    //             console.log("Error on get-all-purchased-events, " + err)
+    //         }
+    //         res.send(result)
+    //         console.log(result)
+    //     }
+    //     )
+
+    purchases.find({org: req.params.org })
+        .populate("events")
+        .populate("sponsorID")
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-all-purchased-events, " + err)
+            }
+            res.send(result)
+            console.log(result)
+        }
+        )
+})
+
 app.post('/create-sponsor', (req,res) => {
     
     var newSponsor = new sponsors({
