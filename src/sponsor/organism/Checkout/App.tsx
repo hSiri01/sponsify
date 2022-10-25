@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import Inbox from '../Inbox/App'
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
@@ -35,6 +37,9 @@ const Checkout = (props: Props) => {
     const [lastNameInput, setLastNameInput] = React.useState('');
     const [emailInput, setEmailInput] = React.useState('');
     const [companyInput, setCompanyInput] = React.useState('');
+    const checkoutReady = firstNameInput && lastNameInput && emailInput && companyInput;
+
+    const [checkedOut, setCheckedOut] = React.useState(false);
 
     const { addToCart, removeFromCart, cart } = useCart();
     const total = cart.reduce((total, item) => total + item.price, 0);
@@ -43,26 +48,30 @@ const Checkout = (props: Props) => {
     console.log(cart)
 
     const submitCheckout = () => {
-        fetch('/checkout-events', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                firstName: firstNameInput,
-                lastName: lastNameInput,
-                company: companyInput,
-                email: emailInput,
-                sponsorLevel: level_name,
-                events: cart.map(item => item.id),
-                totalAmount: total,
-                org: student_org_name
+        if (cart.at(0) && checkoutReady ) {
+            fetch('/checkout-events', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    firstName: firstNameInput,
+                    lastName: lastNameInput,
+                    company: companyInput,
+                    email: emailInput,
+                    sponsorLevel: level_name,
+                    events: cart.map(item => item.id),
+                    totalAmount: total,
+                    org: student_org_name
+                })
             })
-        })
+            setCheckedOut(true);
+        }
     };
 
     return (
+        checkedOut ? <Inbox student_org_logo={SWELogo} /> : 
         <ThemeProvider theme={theme}>
 
             <Modal
@@ -186,7 +195,7 @@ const Checkout = (props: Props) => {
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button href="/inbox-swe" onClick={submitCheckout} variant="contained" size="large" color="primary" sx={{
+                    <Button onClick={submitCheckout} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
@@ -200,8 +209,6 @@ const Checkout = (props: Props) => {
             </Grid>
 
         </ThemeProvider>
-
-
     )
 }
 
