@@ -75,14 +75,12 @@ const EditEvent = (props: Props) => {
                 visible: checked
             })
         })
-
-        handleCloseEvent()  // close the modal
-        window.location.reload()  // reload the page
+            .then(() => {
+                handleCloseEvent()
+                window.location.reload()})
     };
 
     const deleteEvent = () => {
-        console.log('calling deleteEvent on ' + id)
-
         fetch('/delete-event', {
             method: 'DELETE',
             headers: {
@@ -93,8 +91,7 @@ const EditEvent = (props: Props) => {
                 id: id
             })
         })
-
-        // window.location.reload()  // reload the page
+            .then(() => window.location.reload())
     };
 
     const startmonth = (date_start.getMonth()+1 < 10) ? ("0" + (date_start.getMonth()+1).toString()) : date_start.getMonth()+1

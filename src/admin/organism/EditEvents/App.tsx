@@ -47,7 +47,6 @@ const EditEvents = (props: Props) => {
     const [events, setEvents] = React.useState([{}]);
 
     React.useEffect(() => {
-        console.log(student_org_name)
         const fetchData = async() => {
             const data = await fetch("/get-all-events/" + student_org_name)
                 .then((res) => res.json())
@@ -72,7 +71,7 @@ const EditEvents = (props: Props) => {
     }, [])
 
     const createEvent = () => {
-        if (nameInput && priceInput > -1 && totalSpotsInput > -1) {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
             fetch('/create-event', {
                 method: 'POST',
                 headers: {
@@ -92,8 +91,10 @@ const EditEvents = (props: Props) => {
                     org: student_org_name
                 })
             })
-
-            window.location.reload()  // reload the page
+                .then(() => {
+                    handleCloseNewQuestion()
+                    window.location.reload()
+                })
         }
         else {
             handleOpenNewQuestion()  // keep modal open
