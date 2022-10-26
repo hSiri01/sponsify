@@ -71,7 +71,7 @@ const EditEvents = (props: Props) => {
     }, [])
 
     const createEvent = () => {
-        if (nameInput && priceInput > -1 && totalSpotsInput > -1) {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
             fetch('/create-event', {
                 method: 'POST',
                 headers: {
@@ -91,8 +91,10 @@ const EditEvents = (props: Props) => {
                     org: student_org_name
                 })
             })
-
-            window.location.reload()  // reload the page
+                .then(() => {
+                    handleCloseNewQuestion()
+                    window.location.reload()
+                })
         }
         else {
             handleOpenNewQuestion()  // keep modal open
