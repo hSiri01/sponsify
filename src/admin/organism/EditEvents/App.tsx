@@ -45,9 +45,12 @@ const EditEvents = (props: Props) => {
                     // console.log(data)
                     data.sort(
                         (objA: any, objB: any) => {
-                            const date1 = new Date(objA.date)
-                            const date2 = new Date(objB.date)
-                            return date1.getTime() - date2.getTime()
+                            if (objA.name === "General Donation") {
+                                return -1
+                            }
+                            else {
+                                return objA.name.localeCompare(objB.name)
+                            }
                         }
                     )
                     setEvents(data)
@@ -210,7 +213,7 @@ const EditEvents = (props: Props) => {
                                 long_description={event.desc}
                                 avg_attendance={event.avgAttendance}
                                 num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots}
+                                occurances={event.totalSpots > -1 ? event.totalSpots : undefined}
                                 price={event.price}
                                 date_start={new Date(event.date)}
                                 date_end={event.endDate ? new Date(event.endDate) : undefined}
