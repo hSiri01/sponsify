@@ -21,12 +21,13 @@ import { useCart } from '../../../contexts/Cart';
 
 interface Props {
     student_org_name: string,
+    student_org_short_name: string,
     student_org_logo: string
 }
 
 const Events = (props: Props) => {
 
-    const { student_org_name, student_org_logo } = props
+    const { student_org_name, student_org_logo, student_org_short_name } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -212,7 +213,7 @@ const Events = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        SWE Events
+                        {student_org_short_name ? student_org_short_name + ' ' : ''}Events
                     </Typography>
                 </Grid>
 

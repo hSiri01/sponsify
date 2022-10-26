@@ -334,7 +334,7 @@ app.get('/get-org/:code', (req, res) => {
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
-        .select({ name: 1 })
+        .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
                 console.log('Error on get-org, ' + err)

@@ -39,10 +39,10 @@ const App: React.FC = () => {
 
           <Routes>
             <Route path="/" element={<SponsorHome />} />
-            <Route path="/how-it-works" element={<HowItWorks organization={''} />} />
-            <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
-            <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo} student_org_name="SWE" />} />
-            <Route path="/events-swe" element={<Events student_org_name={"Society of Women Engineers"} student_org_logo={SWELogo} />} />
+            <Route path="/how-it-works" element={<HowItWorks organization={''} organization_short_name={''} organization_logo={SWELogo} />} />
+            <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} student_org_name="Society of Women Engineers" student_org_short_name="SWE" />} />
+            <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo} student_org_name="Society of Women Engineers" student_org_short_name="SWE" />} />
+            <Route path="/events-swe" element={<Events student_org_name={"Society of Women Engineers"} student_org_short_name="SWE" student_org_logo={SWELogo} />} />
             <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} student_org_name="Society of Women Engineers" />} />
             <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
 
