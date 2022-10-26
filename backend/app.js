@@ -10,7 +10,13 @@ const bodyParser = require('body-parser');
 const sponsor = require('./sponsor');
 const port = 3001
 
+//adding routes for image upload
+var fs = require('fs');
+var path = require('path');
+var multer = require('multer');
+app.use("/images", express.static("./images"));
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}))
 
 mongoose.connect(
     process.env.MONGODB_URL,
@@ -19,6 +25,8 @@ mongoose.connect(
         useUnifiedTopology: true
     }
 )
+
+
 
 // Access database connection
 const db = mongoose.connection;
@@ -460,7 +468,7 @@ app.get('/update-org-info', (req,res) => {
 })
 
 app.get('/get-valid-admins/:org', (req,res) => {
-    orgs.find({ name: req.params.org })
+    orgs.find({ name: req.params.org})
         .select({ validAdmins: 1 })
         .exec((err, result) => {
             if (err) {
@@ -485,17 +493,63 @@ app.get('/get-event-code/:org', (req,res) => {
     })
 })
 
+
+//Setting multer for storing uploaded files
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+var upload = multer({ storage: storage, 
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(png|jpg)$/)) { 
+           // upload only png and jpg format
+           return cb(new Error('Please upload a Image'))
+         }
+       cb(undefined, true)
+    } 
+});
+
+
 app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ logoImage: 1 })
+    .select('logoImage')
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-logo, " + err)
+                console.log("Error on get-org-info, " + err)
             }
             else {
                 res.json(result[0])
             }
     })
+})
+app.post('/create-logo',upload.single('image'), (req, res) => {
+    
+    
+        // data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+        // contentType: 'image/jpg',
+        console.log(req.file.filename)
+      var filepath =  "http://localhost:3001/uploads/image-" + req.file.filename
+        
+      
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $set: {logoImage: filepath}},
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                return res.status(201)
+                .json({ url: "http://localhost:3001/uploads/" + req.file.filenameName });
+                console.log(success);
+                res.send('Updated FAQ')
+            }
+        }
+    );
 })
 
 app.get('/verify-sponsor-code', (req,res) => {

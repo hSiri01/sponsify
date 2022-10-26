@@ -11,7 +11,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
-
+import { Buffer } from 'buffer';
+window.Buffer = Buffer;
 
 interface Props {
     student_org_logo: string,
@@ -31,6 +32,7 @@ const EditLevels = (props: Props) => {
     const [maxAmount, setMaxAmount] = React.useState('')
     const [des, setDes] = React.useState('')
     const [color, setColor] = React.useState('')
+    const [logo, setLogo] = React.useState('')
 
     const resetInputs = () => {
         setLevelName('')
@@ -54,11 +56,26 @@ const EditLevels = (props: Props) => {
                 .then((res) => res.json()) 
                 .then((data) => setLevels(data))
                 .then(() => setOrg(student_org_name))
-
         }
         fetchData()
 
     }, [levels])
+
+    React.useEffect(() => {
+        
+        const fetchLogo = async() => {fetch("/get-logo/" + student_org_name)
+        .then((res) => res.json()) 
+        .then((data) => {
+          
+            console.log("this is the data" + data)
+            setLogo(`data:${data.contentType};base64, ${Buffer.from(data.data).toString('base64')}`);
+        })
+        .then(() => setOrg(student_org_name))
+        }
+        
+        fetchLogo() 
+        
+      },[])
 
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )
@@ -104,7 +121,7 @@ const EditLevels = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
-
+            
             <MenuBar student_org_short_name={'swe'}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
@@ -122,7 +139,7 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={''} alt="Sponsify logo" />
+                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Organization Logo" />}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

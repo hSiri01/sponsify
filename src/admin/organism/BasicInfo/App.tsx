@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
-
+import axios from "axios";
 
 interface Props {
     student_org_logo: string,
@@ -24,9 +24,35 @@ interface Props {
 }
 
 const BasicInfo = (props: Props) => {
-
+    const [image, setImage] = React.useState("");
+    const [imageFile, setFile] = React.useState();
     const { student_org_logo, student_org_short_name, student_org_name, street_address, street_address_2, city, state, zipcode} = props
+    const [org, setOrg] = React.useState('')
+    const [logo, setLogo] = React.useState('')
 
+    const getImage = (e) => {
+        setFile(e.target.files[0]); //save chosen image to imageFile
+      }
+    const handleLogoChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+       
+        setLogo(event.target.value)
+        //console.log(logo)
+    }
+    const handleCreateLogo = async () => {
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                organization: student_org_name,
+                logoImage: logo,
+            })
+        }
+        console.log(logo)
+        await fetch("/update-logo", requestOptions)
+            .then((res) => console.log(res)) 
+
+    }
 
 
     return (
@@ -96,45 +122,65 @@ const BasicInfo = (props: Props) => {
 
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
+                <Grid item xs={12} > 
+                    
+                        <iframe name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
+                        <form method="POST" action="/create-logo" target = "dummyframe" encType="multipart/form-data">
+                            <input type="hidden" name="organization" value={student_org_name} />
+                            <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(10)}}>
+                            
+                                <Button
+                                variant="contained"
+                                component="label"
+                                size="large"
+                                sx={{
+                                    backgroundColor: '#434343', 
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                    color:'white', 
+                                }}
+                            >
+                                
+                                Upload Logo
+                                <input
+                                    type="file"
+                                    hidden
+                                    name="image" 
+                                    required
+                                    onChange={getImage}
+                                />
+                                </Button> 
+                                </Grid>
+                            
+                            
+                                
+                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6), }}>
+                                    <Button type="submit" value="Upload" variant="contained" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+                                    }} 
+                                
+                                    >Save</Button>
 
-                    <Button
-                        variant="contained"
-                        component="label"
-                        size="large"
-                        sx={{
-                            backgroundColor: '#434343', 
-                            borderRadius: 0,
-                            pt: theme.spacing(3),
-                            pb: theme.spacing(3),
-                            pl: theme.spacing(8),
-                            pr: theme.spacing(8),
-                            ml: theme.spacing(5),
-                            color:'white'
-}}
+                            </Grid>
+                            
+                       </form>
+                    
+                    
+                    
+
+                </Grid> 
+
+
                 
-                    >
-                        Upload Logo
-                        <input
-                            type="file"
-                            hidden
-                        />
-                    </Button>
-
-                </Grid>
-
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6), }}>
-                    <Button variant="contained" size="large" color="primary" sx={{
-                        borderRadius: 0,
-                        pt: theme.spacing(3),
-                        pb: theme.spacing(3),
-                        pl: theme.spacing(8),
-                        pr: theme.spacing(8),
-                        ml: theme.spacing(5),
-                    }}>Save</Button>
-
-                </Grid>
 
 
             </Grid>

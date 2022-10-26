@@ -51,7 +51,11 @@ const orgSchema = new mongoose.Schema({
     exampleInvoice: {
         type: String,
         default: ""
-    }
+    }, //adding image logo 
+    logoImage: {
+        type: String,
+        default: ""
+    }, 
 })
 
 module.exports = mongoose.model('organizations', orgSchema);
