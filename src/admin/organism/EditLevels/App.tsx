@@ -69,24 +69,25 @@ const EditLevels = (props: Props) => {
     }
 
     const handleCreateLevel = async () => {
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                minAmount: minAmount,
-                maxAmount: maxAmount,
-                name: levelName,
-                color: color,
-                description: des,
-                organization: student_org_name
-            })
+        if (minAmount.length > 0 && levelName.length > 0 && des.length > 0) {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    minAmount: minAmount,
+                    maxAmount: maxAmount,
+                    name: levelName,
+                    color: color,
+                    description: des,
+                    organization: student_org_name
+                })
+            }
+    
+            await fetch("/create-level", requestOptions)
+                .then((res) => console.log(res)) 
+    
+            handleCloseNewLevel()
         }
-
-        await fetch("/create-level", requestOptions)
-            .then((res) => console.log(res)) 
-
-        handleCloseNewLevel()
      
     }
 
