@@ -32,6 +32,16 @@ const EditEvents = (props: Props) => {
         setChecked(event.target.checked);
     };
 
+    const [nameInput, setNameInput] = React.useState('');
+    const [descInput, setDescInput] = React.useState('');
+    const [briefDescInput, setBriefDescInput] = React.useState('');
+    const [priceInput, setPriceInput] = React.useState(-1);
+    const [totalSpotsInput, setTotalSpotsInput] = React.useState(-1);
+    const [spotsTakenInput, setSpotsTakenInput] = React.useState(-1);
+    const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(-1);
+    const [dateInput, setDateInput] = React.useState('');
+    const [endDateInput, setEndDateInput] = React.useState('');
+
     const [events, setEvents] = React.useState([{}]);
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
@@ -60,12 +70,42 @@ const EditEvents = (props: Props) => {
         fetchData()
     }, [])
 
+    const createEvent = () => {
+        if (nameInput && priceInput > -1 && totalSpotsInput > -1) {
+            fetch('/create-event', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: nameInput,
+                    price: priceInput,
+                    date: dateInput ? dateInput : undefined,
+                    endDate: endDateInput ? endDateInput : undefined,
+                    desc: descInput,
+                    briefDesc: briefDescInput,
+                    totalSpots: totalSpotsInput,
+                    spotsTaken: spotsTakenInput > -1 ? spotsTakenInput : 0,
+                    visible: checked,
+                    org: student_org_name
+                })
+            })
+
+            window.location.reload()  // reload the page
+        }
+        else {
+            handleOpenNewQuestion()  // keep modal open
+            // TODO: error handling
+        }
+    };
+
     return (
 
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name={"swe"}/>
+            <MenuBar student_org_short_name={student_org_short_name}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -217,6 +257,8 @@ const EditEvents = (props: Props) => {
                                     id="date"
                                     label="Date Start"
                                     type="date"
+                                    value={dateInput}
+                                    onChange={ev => setDateInput(ev.target.value)}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -226,6 +268,8 @@ const EditEvents = (props: Props) => {
                                     id="date"
                                     label="Date End"
                                     type="date"
+                                    value={endDateInput}
+                                    onChange={ev => setEndDateInput(ev.target.value)}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -234,21 +278,57 @@ const EditEvents = (props: Props) => {
                             </Grid>
 
 
-
-
-
                             <Grid item xs={5}>
-                                <TextField sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }} id="outlined-basic" label="Name" variant="outlined"  />
-                                <TextField sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }} id="outlined-basic" label="Short Description" variant="outlined" />
+                                <TextField 
+                                    sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
+                                    id="outlined-basic"
+                                    label="Name"
+                                    variant="outlined"
+                                    value={nameInput}
+                                    onChange={ev => setNameInput(ev.target.value)}  />
+                                <TextField 
+                                    sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Short Description"
+                                    variant="outlined"
+                                    value={briefDescInput}
+                                    onChange={ev => setBriefDescInput(ev.target.value)} />
                             </Grid>
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Price" variant="outlined" />
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Occurances" variant="outlined" />
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Sponsored" variant="outlined" />
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Avg Attendance" variant="outlined" />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Price"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={priceInput > -1 ? priceInput : ''}
+                                    onChange={ev => setPriceInput(+ev.target.value)} />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Occurances"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={totalSpotsInput > -1 ? totalSpotsInput : ''}
+                                    onChange={ev => setTotalSpotsInput(+ev.target.value)} />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Sponsored"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={spotsTakenInput > -1 ? spotsTakenInput : ''}
+                                    onChange={ev => setSpotsTakenInput(+ev.target.value)} />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Avg Attendance"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={avgAttendanceInput > -1 ? avgAttendanceInput : ''}
+                                    onChange={ev => setAvgAttendanceInput(+ev.target.value)} />
                             </Grid>
-
 
 
                         </Grid>
@@ -278,7 +358,7 @@ const EditEvents = (props: Props) => {
                         </Grid>
 
                         <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
-                            <Button href="/" variant="contained" size="large" color="primary" sx={{
+                            <Button /*href="/"*/ onClick={createEvent} variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
                                 pb: theme.spacing(3),

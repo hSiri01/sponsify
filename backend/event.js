@@ -25,12 +25,19 @@ const eventSchema = new mongoose.Schema({
     },
     totalSpots: {
         type: Number,
-        required: true
+        required: true,
+        validate: {
+            validator: v => v >= eventSchema.spotsTaken,
+            message: props => `${props.value} is less than spotsTaken\n`
+        }
     },
     spotsTaken: {
         type: Number,
         required: true,
-        default: 0
+        validate: {
+            validator: v => (v <= eventSchema.totalSpots) && (v >= 0),
+            message: props => `${props.value} is greater than totalSpots\n`
+        }
     },
     visible: {
         type: Boolean,

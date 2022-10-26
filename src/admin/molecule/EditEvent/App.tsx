@@ -49,7 +49,7 @@ const EditEvent = (props: Props) => {
 
     const [nameInput, setNameInput] = React.useState(props.name);
     const [descInput, setDescInput] = React.useState(props.long_description);
-    const [briefDescInput, setbriefDescInput] = React.useState(props.short_description);
+    const [briefDescInput, setBriefDescInput] = React.useState(props.short_description);
     const [priceInput, setPriceInput] = React.useState(props.price);
     const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
     const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
@@ -64,7 +64,7 @@ const EditEvent = (props: Props) => {
             },
             body: JSON.stringify({
                 name: nameInput,
-                id: props.id,
+                id: id,
                 price: priceInput,
                 date: dateInput,
                 endDate: endDateInput,
@@ -79,6 +79,23 @@ const EditEvent = (props: Props) => {
 
         handleCloseEvent()  // close the modal
         window.location.reload()  // reload the page
+    };
+
+    const deleteEvent = () => {
+        console.log('calling deleteEvent on ' + id)
+
+        fetch('/delete-event', {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id
+            })
+        })
+
+        // window.location.reload()  // reload the page
     };
 
     const startmonth = (date_start.getMonth()+1 < 10) ? ("0" + (date_start.getMonth()+1).toString()) : date_start.getMonth()+1
@@ -105,7 +122,7 @@ const EditEvent = (props: Props) => {
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             
                             <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
-                                <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={deleteEvent} sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
@@ -234,7 +251,7 @@ const EditEvent = (props: Props) => {
                                             variant="outlined" 
                                             defaultValue={short_description} 
                                             value={briefDescInput} 
-                                            onChange={ev => setbriefDescInput(ev.target.value)}
+                                            onChange={ev => setBriefDescInput(ev.target.value)}
                                         />
                                     </Grid>
 
