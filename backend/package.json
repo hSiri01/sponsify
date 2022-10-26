@@ -8,8 +8,8 @@
     "kill": "npx kill-port 5000 | exit 0",
     "dev-kill": "npm run kill && nodemon --delay 500ms app.js",
     "dev": "nodemon --delay 500ms app.js",
-    "build-project-kill": "concurrently \"npm run dev-kill\" \" cd .. && npm start\" ",
-    "build-project": "concurrently \"npm run dev\" \" cd .. && npm start\" "
+    "build-project-kill": "concurrently \"npm run dev-kill\" \" cd .. && npm run dev\" ",
+    "build-project": "concurrently \"npm run dev\" \" cd .. && npm run dev\" "
   },
   "author": "",
   "license": "ISC",

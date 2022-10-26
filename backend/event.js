@@ -25,18 +25,14 @@ const eventSchema = new mongoose.Schema({
     },
     totalSpots: {
         type: Number,
-        required: true,
-        validate: {
-            validator: v => v >= eventSchema.spotsTaken,
-            message: props => `${props.value} is less than spotsTaken\n`
-        }
+        required: true
     },
     spotsTaken: {
         type: Number,
         required: true,
         validate: {
-            validator: v => (v <= eventSchema.totalSpots) && (v >= 0),
-            message: props => `${props.value} is greater than totalSpots\n`
+            validator: v => v >= 0,
+            message: props => `${props.value} is a negative number\n`
         }
     },
     visible: {
@@ -56,5 +52,13 @@ const eventSchema = new mongoose.Schema({
         default: []
     }
 })
+
+eventSchema.pre('validate', (next) => {
+    if (this.spotsTaken > this.totalSpots) {
+        next(new Error('spots taken must be less than or equal to total spots'));
+    } else {
+        next();
+    }
+});
 
 module.exports = mongoose.model('events', eventSchema);
