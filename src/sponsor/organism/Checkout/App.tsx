@@ -10,6 +10,8 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import Inbox from '../Inbox/App'
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
@@ -17,25 +19,68 @@ import { useCart } from '../../../contexts/Cart';
 
 
 interface Props {
-    student_org_logo: string,
-    level_name: string,
-    level_color: string,
-    total: number,
+    student_org_name: string,
+    student_org_logo: string
 }
 
 const Checkout = (props: Props) => {
 
-    const { student_org_logo, level_color, level_name, total } = props
+    const { student_org_name, student_org_logo } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
     const handleCloseInfo = () => setOpenInfo(false);
 
-    const { addToCart, removeFromCart, cart } = useCart();
+    const [firstNameInput, setFirstNameInput] = React.useState('');
+    const [lastNameInput, setLastNameInput] = React.useState('');
+    const [emailInput, setEmailInput] = React.useState('');
+    const [companyInput, setCompanyInput] = React.useState('');
+    const checkoutReady = firstNameInput && lastNameInput && emailInput && companyInput;
+    
+    const [checkedOut, setCheckedOut] = React.useState(false);
+    const [levelName, setLevelName] = React.useState('');
+    const [levelColor, setLevelColor] = React.useState('');
+
+    const { cart } = useCart();
+    const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
     console.log(cart)
 
+    React.useEffect(() => {
+        fetch('/get-level-by-amount/' + student_org_name + '/' + total)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                setLevelName(data.name)
+                setLevelColor(data.color)
+            })
+    }, [cart])
+
+    const submitCheckout = () => {
+        if (cart.at(0) && checkoutReady ) {
+            fetch('/checkout-events', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    firstName: firstNameInput,
+                    lastName: lastNameInput,
+                    company: companyInput,
+                    email: emailInput,
+                    sponsorLevel: levelName,
+                    events: cart.map(item => item.id),
+                    totalAmount: total,
+                    org: student_org_name
+                })
+            })
+            setCheckedOut(true);
+        }
+    };
+
     return (
+        // checkedOut ? <Inbox /> : 
         <ThemeProvider theme={theme}>
 
             <Modal
@@ -97,13 +142,37 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
-                    <TextField sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} id="outlined-basic" label="First Name" variant="outlined" />
-                    <TextField sx={{ minWidth: theme.spacing(80) }} id="outlined-basic" label="Last Name" variant="outlined" />
+                    <TextField 
+                        sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
+                        id="outlined-basic" 
+                        label="First Name" 
+                        variant="outlined"
+                        value={firstNameInput} 
+                        onChange={ev => setFirstNameInput(ev.target.value)} />
+                    <TextField 
+                        sx={{ minWidth: theme.spacing(80) }}
+                        id="outlined-basic"
+                        label="Last Name"
+                        variant="outlined"
+                        value={lastNameInput} 
+                        onChange={ev => setLastNameInput(ev.target.value)} />
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10), mb: theme.spacing(5) }}>
-                    <TextField sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} id="outlined-basic" label="Email" variant="outlined" />
-                    <TextField sx={{ minWidth: theme.spacing(80) }} id="outlined-basic" label="Company" variant="outlined" />
+                    <TextField 
+                        sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
+                        id="outlined-basic" 
+                        label="Email" 
+                        variant="outlined"
+                        value={emailInput} 
+                        onChange={ev => setEmailInput(ev.target.value)} />
+                    <TextField 
+                        sx={{ minWidth: theme.spacing(80) }}
+                        id="outlined-basic"
+                        label="Company"
+                        variant="outlined"
+                        value={companyInput}
+                        onChange={ev => setCompanyInput(ev.target.value)} />
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
@@ -115,7 +184,6 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 {cart.map(item => {
-                    console.log(item)
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
@@ -124,19 +192,19 @@ const Checkout = (props: Props) => {
                 })}
 
                 <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(4), mb: theme.spacing(4), }}>
-                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
+                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
                 </Grid>
 
 
                 <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', }}>
-                    <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
-                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{level_name} Sponsor</Typography>
+                    <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
+                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
                     </Paper>
                 </Grid>
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button href="/inbox" variant="contained" size="large" color="primary" sx={{
+                    <Button onClick={submitCheckout} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
@@ -150,8 +218,6 @@ const Checkout = (props: Props) => {
             </Grid>
 
         </ThemeProvider>
-
-
     )
 }
 

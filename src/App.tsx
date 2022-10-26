@@ -28,6 +28,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+import CheckBackLater from './sponsor/organism/HowItWorksCopy/App';
 
 
 
@@ -43,8 +44,9 @@ const App: React.FC = () => {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/levels" element={<Levels />} />
             <Route path="/events" element={<Events level_color="ebeaea" level_name='Platinum' total={4250}/>} />
-            <Route path="/checkout" element={<Checkout student_org_logo={SWELogo} level_color="ebeaea" level_name='Platinum' total={4250}/>} />
+            <Route path="/checkout" element={<Checkout student_org_name={'Society of Women Engineers'} student_org_logo={SWELogo}/>} />
             <Route path="/inbox" element={<Inbox />} />
+            <Route path="/check-back-later" element={<CheckBackLater />} />
 
             <Route path="/faq-edit" element={<EditFAQ student_org_logo={SWELogo} />} />
           

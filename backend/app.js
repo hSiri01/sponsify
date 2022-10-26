@@ -7,10 +7,13 @@ const sponsors = require('./sponsor')
 const purchases = require('./purchase')
 const app = express()
 const bodyParser = require('body-parser');
+const path = require('path');
 const sponsor = require('./sponsor');
-const port = 3001
+const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
 mongoose.connect(
     process.env.MONGODB_URL,
@@ -39,19 +42,19 @@ app.get('/get-all-FAQ/:org', (req, res) => {
                 res.send(result[0].FAQ)
             }
         }
-    )
+        )
 })
 
 app.get('/update-FAQ', (req, res) => {
     // res.send('This route will update an FAQ')
     var freq = {
-        "FAQ.$.question" : req.body.question,
-        "FAQ.$.answer" : req.body.answer
+        "FAQ.$.question": req.body.question,
+        "FAQ.$.answer": req.body.answer
     }
 
     orgs.findOneAndUpdate(
         { "FAQ._id": req.body.FAQId },
-        { $set: freq},
+        { $set: freq },
         function (error, success) {
             if (error) {
                 console.log("Error", error);
@@ -73,7 +76,7 @@ app.get('/create-FAQ', (req, res) => {
 
     orgs.findOneAndUpdate(
         { name: req.body.organization },
-        { $push: { FAQ: freq }},
+        { $push: { FAQ: freq } },
         function (error, success) {
             if (error) {
                 console.log(error);
@@ -90,7 +93,7 @@ app.get('/delete-FAQ', (req, res) => {
     // res.send('This route will delete an FAQ')
     orgs.findOneAndUpdate(
         { name: req.body.organization },
-        { $pull: { FAQ: { _id: req.body.FAQId}} },
+        { $pull: { FAQ: { _id: req.body.FAQId } } },
         function (error, success) {
             if (error) {
                 res.send("Error")
@@ -111,7 +114,7 @@ app.get('/get-all-levels/:org', (req, res) => {
             else {
                 res.json(result[0].levels)
             }
-    })
+        })
 })
 
 app.get('/get-level-by-amount/:org/:amount', (req, res) => {
@@ -130,27 +133,30 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
                     if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
                         currLevel = levels[i]
                     }
+                    else if (amount >= levels[i].minAmount && !levels[i].maxAmount) {
+                        currLevel = levels[i]
+                    }
                 }
 
                 res.json(currLevel)
             }
-    })
+        })
 })
 
 app.put('/update-level', (req, res) => {
     var level = {
-        "levels.$.minAmount" : req.body.minAmount,
-        "levels.$.maxAmount" : req.body.maxAmount,
-        "levels.$.name" : req.body.name,
-        "levels.$.color" : req.body.color,
-        "levels.$.description" : req.body.description
+        "levels.$.minAmount": req.body.minAmount,
+        "levels.$.maxAmount": req.body.maxAmount,
+        "levels.$.name": req.body.name,
+        "levels.$.color": req.body.color,
+        "levels.$.description": req.body.description
     }
 
     console.log(req.body)
 
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
-        { $set: level},
+        { $set: level },
         function (error, success) {
             if (error) {
                 console.log("Error", error);
@@ -174,7 +180,7 @@ app.post('/create-level', async (req, res) => {
 
     orgs.findOneAndUpdate(
         { name: req.body.organization },
-        { $push: { levels: level }},
+        { $push: { levels: level } },
         function (error, success) {
             if (error) {
                 console.log(error);
@@ -190,7 +196,7 @@ app.post('/create-level', async (req, res) => {
 app.delete('/delete-level', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
-        { $pull: { levels: { _id: req.body.levelId}} },
+        { $pull: { levels: { _id: req.body.levelId } } },
         function (error, success) {
             if (error) {
                 res.send("Error")
@@ -211,7 +217,7 @@ app.get('/get-enabled-events/:org', (req, res) => {
                 res.send(result)
             }
         }
-    )
+        )
 })
 
 app.get('/get-all-events/:org', (req, res) => {
@@ -224,7 +230,7 @@ app.get('/get-all-events/:org', (req, res) => {
                 res.send(result)
             }
         }
-    )
+        )
 })
 
 app.post('/create-event', async (req, res) => {
@@ -246,7 +252,7 @@ app.post('/create-event', async (req, res) => {
     newEvent.save((err) => {
         if (err) {
             console.log('Error on create-event: ' + err)
-            res.json({ status: '500'})
+            res.json({ status: '500' })
         }
         else {
             console.log('Created new event')
@@ -259,7 +265,7 @@ function updateEvent(id, eventOptions) {
     let queryStatus = '200'
 
     if (mongoose.Types.ObjectId.isValid(id)) {
-        events.findByIdAndUpdate( id, eventOptions, (err, event) => {
+        events.findByIdAndUpdate(id, eventOptions, (err, event) => {
             if (err) {
                 console.log('Error on update-event: ' + err)
                 queryStatus = '500'
@@ -278,12 +284,12 @@ function updateEvent(id, eventOptions) {
     return { status: queryStatus }
 }
 
-app.put('/update-event', (req,res) => {
+app.put('/update-event', (req, res) => {
     const id = req.body.id
 
     if (!id) {
         console.log('Cannot update event, no id in request body')
-        res.json({ status: '400'})
+        res.json({ status: '400' })
     }
     else {
         const eventOptions = {
@@ -297,21 +303,21 @@ app.put('/update-event', (req,res) => {
             description: req.body.desc,
             visible: req.body.visible
         }
-    
+
         res.json(updateEvent(id, eventOptions))
     }
 })
 
-app.delete('/delete-event', (req,res) => {
+app.delete('/delete-event', (req, res) => {
     const id = req.body.id
 
     if (!id) {
         console.log('Cannot delete event, no id in request body')
-        res.json({ status: '400'})
+        res.json({ status: '400' })
     }
     else {
         if (mongoose.Types.ObjectId.isValid(id)) {
-            events.findByIdAndRemove( id, (err, event) => {
+            events.findByIdAndRemove(id, (err, event) => {
                 if (err) {
                     console.log('Error on delete-event: ' + err)
                     res.json({ status: '500' })
@@ -324,7 +330,7 @@ app.delete('/delete-event', (req,res) => {
         }
         else {
             console.log('Cannot delete event, invalid id in request body')
-            res.json({ status: '400'})
+            res.json({ status: '400' })
         }
     }
 })
@@ -333,34 +339,34 @@ app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
-        .select({ name: 1 })
+        .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
                 console.log('Error on verify-sponsor-code, ' + err)
             }
-            
+
             if (result.length == 0) {
                 res.json({})
             } else {
                 res.json(result[0])
             }
-    })
+        })
 })
 
-app.post('/checkout-event', (req,res) => {
+app.post('/checkout-events', (req, res) => {
     // create new sponsor
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         company: req.body.company,
-        email:req.body.email,
+        email: req.body.email,
         sponsorLevel: req.body.sponsorLevel
     })
 
     newSponsor.save((err) => {
         if (err) {
-            console.log( 'Error on create sponsor, ' + err)
-            res.json({ status: '500'})
+            console.log('Error on create sponsor, ' + err)
+            res.json({ status: '500' })
         }
         else {
             console.log('New sponsor created, id: ' + newSponsor._id)
@@ -379,7 +385,7 @@ app.post('/checkout-event', (req,res) => {
     purchase.save((err) => {
         if (err) {
             console.log('Error on creating a purchase: ' + err)
-            res.json({ status: '500'})
+            res.json({ status: '500' })
         }
         else {
             console.log('Created new purchase')
@@ -402,26 +408,26 @@ app.post('/checkout-event', (req,res) => {
     }
 
     res.json(resStatus)
-    
+
     // TODO: generate invoice and send follow-up email
 })
 
-app.post('/create-sponsor', (req,res) => {
-    
+app.post('/create-sponsor', (req, res) => {
+
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         company: req.body.company,
-        email:req.body.email,
+        email: req.body.email,
         sponsorLevel: req.body.sponsorLevel
     });
     newSponsor.save((err) => {
-        if (err) console.log( "Error on create sponsor, " + err);
+        if (err) console.log("Error on create sponsor, " + err);
         //else it saved
     });
 })
 
-app.get('/get-org-info/:org', (req,res) => {
+app.get('/get-org-info/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .exec((err, result) => {
             if (err) {
@@ -430,20 +436,20 @@ app.get('/get-org-info/:org', (req,res) => {
             else {
                 res.json(result[0])
             }
-    })
+        })
 })
 
-app.get('/update-org-info', (req,res) => {
-    
+app.get('/update-org-info', (req, res) => {
+
     const id = req.body.id
     if (!id) {
         console.log('Cannot update org, no id in request body')
-        res.json({ status: '400'})
+        res.json({ status: '400' })
     }
     else {
         if (mongoose.Types.ObjectId.isValid(id)) {
-            
-            orgs.findByIdAndUpdate( id, { '$set': { name: req.body.name, fundName : req.body.fundName, address: req.body.address} }, (err, event) => {
+
+            orgs.findByIdAndUpdate(id, { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } }, (err, event) => {
                 if (err) {
                     console.log('Error on update-org-info: ' + err)
                 }
@@ -456,11 +462,11 @@ app.get('/update-org-info', (req,res) => {
             console.log('Cannot update org-info, invalid id in request body')
         }
     }
-    
-    
+
+
 })
 
-app.get('/get-valid-admins/:org', (req,res) => {
+app.get('/get-valid-admins/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ validAdmins: 1 })
         .exec((err, result) => {
@@ -470,10 +476,10 @@ app.get('/get-valid-admins/:org', (req,res) => {
             else {
                 res.json(result[0])
             }
-    })
+        })
 })
 
-app.get('/get-event-code/:org', (req,res) => {
+app.get('/get-event-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ eventCode: 1 })
         .exec((err, result) => {
@@ -483,10 +489,10 @@ app.get('/get-event-code/:org', (req,res) => {
             else {
                 res.json(result[0])
             }
-    })
+        })
 })
 
-app.get('/get-logo/:org', (req,res) => {
+app.get('/get-logo/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ logoImage: 1 })
         .exec((err, result) => {
@@ -496,12 +502,18 @@ app.get('/get-logo/:org', (req,res) => {
             else {
                 res.json(result[0])
             }
-    })
+        })
 })
 
 app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+});
 
 app.listen(port, () => {
     console.log(`App listening on port ${port} :)`)

@@ -102,7 +102,7 @@ const Event = (props: OrgEvent) => {
 
                             <Grid item xs={4}>
                                 <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
-                                <Typography sx={{ color:"#979797"}}variant="body1">{short_description}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
@@ -159,7 +159,7 @@ const Event = (props: OrgEvent) => {
 
                                     <Grid item xs={5}>
                                         <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
-                                        <Typography sx={{ color: "#979797" }} variant="body1">{short_description}</Typography>
+                                        <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
                                     </Grid>
 
                                     <Grid item xs={4} sx={{ textAlign: "right" }}>
@@ -174,7 +174,7 @@ const Event = (props: OrgEvent) => {
 
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Grid item xs={10}>
-                                        <Typography variant="body1">{long_description}</Typography>
+                                        <Typography dangerouslySetInnerHTML={{__html: long_description}} variant="body1" />
                                     </Grid>
                                 </Grid>
 

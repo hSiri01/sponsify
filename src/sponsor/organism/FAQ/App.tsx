@@ -9,10 +9,12 @@ import Button from '@mui/material/Button';
 import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 interface Props {
+    student_org_short_name: string
 }
 
 const FAQ = (props: Props) => {
 
+    const { student_org_short_name } = props
     const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
     const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
 
@@ -32,6 +34,8 @@ const FAQ = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
+
+            {/* {buttonClick ? (<Levels student_org_logo={student_org_logo} student_org_name={student_org_name} student_org_short_name={student_org_short_name} />):( */}
 
             <Grid container>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -56,7 +60,7 @@ const FAQ = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} FAQ
+                        {student_org_short_name} FAQ
                     </Typography>
                 </Grid>
 

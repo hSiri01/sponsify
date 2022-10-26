@@ -21,17 +21,15 @@ import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 
 interface Props {
-    level_name: string,
-    level_color: string,
-    total: number,
+    student_org_short_name: string,
 }
 
 const Events = (props: Props) => {
 
-    const { level_color,level_name, total } = props
     const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
 
     const student_org_logo = SWELogo
+    const { student_org_short_name } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -41,11 +39,16 @@ const Events = (props: Props) => {
     const handleOpenCart = () => setOpenCart(true);
     const handleCloseCart = () => setOpenCart(false);
 
+    const { clearCart, cart } = useCart()
+
+    const [levelName, setLevelName] = React.useState('');
+    const [levelColor, setLevelColor] = React.useState('');
     const [events, setEvents] = React.useState([{}]);
+    const [total, setTotal] = React.useState(0);
 
     React.useEffect(() => {
         const fetchData = async() => {
-            await fetch("/get-enabled-events/" + student_org_name)
+            const data = await fetch("/get-enabled-events/" + student_org_name)
                 .then((res) => res.json())
                 .then((data) => {
                     // console.log(data)
@@ -62,9 +65,21 @@ const Events = (props: Props) => {
         }
 
         fetchData()
+        clearCart()
     }, [])
 
-    const { cart } = useCart()
+    React.useEffect(() => {
+        setTotal(cart.reduce((total, item) => total + item.price * item.quantity, 0))
+
+        const fetchLevel = async () => {
+            const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + total)
+            const data = await response.json()
+            setLevelName(data.name)
+            setLevelColor(data.color)
+        }
+        
+        fetchLevel()
+    })
 
     return (
         <ThemeProvider theme={theme}>
@@ -134,20 +149,19 @@ const Events = (props: Props) => {
 
                         <Grid container>
                             {cart.map(item => (
-                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
-                            </Grid>
+                                <Grid key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                    <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
+                                </Grid>
                             ))}
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
-                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${cart.reduce((total, item) => total + item.price, 0)}</Typography>
-
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
                             </Grid>
 
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', }}>
-                                <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
-                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{level_name} Sponsor</Typography>
+                                <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
+                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName} Sponsor</Typography>
                                 </Paper>
                             </Grid>
 
@@ -200,7 +214,7 @@ const Events = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} Events
+                        {student_org_short_name ? student_org_short_name + ' ' : ''}Events
                     </Typography>
                 </Grid>
 
@@ -248,10 +262,9 @@ const Events = (props: Props) => {
 
                 <>
                     {events.map((event: any) =>   
-                    <>
+                    <React.Fragment key={event._id}>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-
-                            {(event.name == 'General Donation') ? (
+                           {(event.name === 'General Donation') ? (
                                 <GeneralDonation 
                                     id={event._id}
                                     short_description={event.briefDesc}
@@ -272,15 +285,15 @@ const Events = (props: Props) => {
                             )}
 
                         </Grid>
-                    </>
+                    </React.Fragment>
                     )}
                 </>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
 
 
-                    <Paper sx={{ borderRadius: 0, background: `#${level_color}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15) }} elevation={0}>
-                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{level_name} Sponsor</Typography>
+                    <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15) }} elevation={0}>
+                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
                     </Paper>
 
                     <Button variant="contained" size="large" color="primary" sx={{

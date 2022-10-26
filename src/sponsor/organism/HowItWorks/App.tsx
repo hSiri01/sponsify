@@ -7,13 +7,24 @@ import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 
 interface Props {
-    organization: string
+    organization: string,
+    // organization_short_name: string,
+    // organization_logo: string
 }
 
 const HowItWorks = (props: Props) => {
     
     return (
+
+    // const { organization, organization_short_name, organization_logo }  = props
+    // const [buttonClick, setButtonClick] = React.useState(false)
+
+    // console.log(organization)
+
+    // return (
         <ThemeProvider theme={theme}>
+
+            {/* { buttonClick ? <FAQPage student_org_name={organization} student_org_short_name={organization_short_name} student_org_logo={organization_logo} /> :  */}
 
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>

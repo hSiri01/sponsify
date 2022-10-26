@@ -7,8 +7,12 @@ import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 import Level from '../../molecule/Level/App';
 import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
+import Events from '../Events/App';
 
 interface Props {
+    student_org_name: string,
+    student_org_short_name: string,
+    student_org_logo: string, 
 }
 
 const Levels = (props: Props) => {
@@ -16,8 +20,10 @@ const Levels = (props: Props) => {
     // TO DO: Correct logo
     const student_org_logo = SWELogo
     const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
+    const { student_org_short_name } = props
 
     const [levels, setLevels] = React.useState([{}])
+    const [buttonClick, setButtonClick] = React.useState(false)
 
     React.useEffect(() => {
         const fetchData = async() => {
@@ -35,6 +41,8 @@ const Levels = (props: Props) => {
 
 
     return (
+        // buttonClick ? <Events student_org_logo={student_org_logo} student_org_name={student_org_name} student_org_short_name={student_org_short_name} /> :
+
         <ThemeProvider theme={theme}>
 
             <Grid container>
@@ -83,6 +91,8 @@ const Levels = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button 
                         href="/events"
+                        // href="/events-swe"
+                        onClick={() => setButtonClick(true)}
                         variant="contained"
                         size="large"
                         color="secondary"
