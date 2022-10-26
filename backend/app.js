@@ -239,8 +239,8 @@ app.post('/create-event', async (req, res) => {
         date: req.body.date + 'T06:00:00.000+00:00',
         endDate: req.body.endDate + 'T06:00:00.000+00:00',
         price: req.body.price,
-        description: req.body.desc,
-        briefDescription: req.body.briefDesc,
+        desc: req.body.desc,
+        briefDesc: req.body.briefDesc,
         avgAttendance: req.body.avgAttendance,
         totalSpots: req.body.totalSpots,
         spotsTaken: req.body.spotsTaken,
@@ -295,12 +295,11 @@ app.put('/update-event', (req, res) => {
         const eventOptions = {
             name: req.body.name,
             briefDesc: req.body.briefDesc,
-            date: req.body.date + 'T06:00:00.000+00:00',
-            endDate: req.body.endDate + 'T06:00:00.000+00:00',
+            date: req.body.date,
+            endDate: req.body.endDate,
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
-            avgAttendance: req.body.avgAttendance,
             desc: req.body.desc,
             visible: req.body.visible
         }
