@@ -42,7 +42,7 @@ const Checkout = (props: Props) => {
     const [levelColor, setLevelColor] = React.useState('');
 
     const { cart } = useCart();
-    const total = cart.reduce((total, item) => total + item.price, 0);
+    const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
     console.log(cart)
 
