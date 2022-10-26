@@ -9,7 +9,7 @@ const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
 const sponsor = require('./sponsor');
-const port = 3001
+const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 // Serve static files from the React app
