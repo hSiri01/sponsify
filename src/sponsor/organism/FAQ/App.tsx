@@ -12,12 +12,13 @@ import Levels from '../Levels/App'
 
 interface Props {
     student_org_logo: string,
-    student_org_name: string, 
+    student_org_name: string,
+    student_org_short_name: string
 }
 
 const FAQ = (props: Props) => {
 
-    const { student_org_logo, student_org_name } = props
+    const { student_org_logo, student_org_name, student_org_short_name } = props
     const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
     const [buttonClick, setButtonClick] = React.useState(false)
 
@@ -35,7 +36,7 @@ const FAQ = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
-            {buttonClick ? (<Levels student_org_logo={SWELogo} student_org_name={student_org_name} />):(
+            {buttonClick ? (<Levels student_org_logo={student_org_logo} student_org_name={student_org_name} student_org_short_name={student_org_short_name} />):(
 
             <Grid container>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -60,7 +61,7 @@ const FAQ = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} FAQ
+                        {student_org_short_name} FAQ
                     </Typography>
                 </Grid>
 

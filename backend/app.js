@@ -130,6 +130,9 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
                     if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
                         currLevel = levels[i]
                     }
+                    else if (amount >= levels[i].minAmount && !levels[i].maxAmount) {
+                        currLevel = levels[i]
+                    }
                 }
 
                 res.json(currLevel)
@@ -200,7 +203,7 @@ app.delete('/delete-level', (req, res) => {
 })
 
 app.get('/get-enabled-events/:org', (req, res) => {
-    events.find({ visible: true, name: req.params.org })
+    events.find({ visible: true, org: req.params.org })
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-enabled-events, " + err)
@@ -331,7 +334,7 @@ app.get('/get-org/:code', (req, res) => {
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
-        .select({ name: 1 })
+        .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
                 console.log('Error on get-org, ' + err)
@@ -346,7 +349,7 @@ app.get('/get-org/:code', (req, res) => {
     })
 })
 
-app.post('/checkout-event', (req,res) => {
+app.post('/checkout-events', (req,res) => {
     // create new sponsor
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
