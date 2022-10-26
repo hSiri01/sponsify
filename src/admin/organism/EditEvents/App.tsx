@@ -57,8 +57,11 @@ const EditEvents = (props: Props) => {
                             if (objA.name === "General Donation") {
                                 return -1
                             }
+                            else if (objB.name === "General Donation") {
+                                return 1
+                            }
                             else {
-                                return objA.name.localeCompare(objB.name)
+                                return objA.name.toLowerCase().localeCompare(objB.name.toLowerCase())
                             }
                         }
                     )
@@ -87,6 +90,7 @@ const EditEvents = (props: Props) => {
                     briefDesc: briefDescInput,
                     totalSpots: totalSpotsInput,
                     spotsTaken: spotsTakenInput > -1 ? spotsTakenInput : 0,
+                    avgAttendance: avgAttendanceInput,
                     visible: checked,
                     org: student_org_name
                 })
@@ -243,9 +247,10 @@ const EditEvents = (props: Props) => {
                 </Grid>*/}
 
                 <>
-                    {events.map((event: any) =>   
+                    {
+                    events.map((event: any) =>
                     <>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             <EditEvent 
                                 name={event.name}
@@ -391,6 +396,8 @@ const EditEvents = (props: Props) => {
                             <TextareaAutosize
                                 aria-label="empty textarea"
                                 placeholder='Long Description'
+                                value={descInput}
+                                onChange={ev => setDescInput(ev.target.value)}
                                 minRows={8}
                                 style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                             />
