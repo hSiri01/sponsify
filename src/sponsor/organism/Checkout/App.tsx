@@ -10,22 +10,22 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Inbox from '../Inbox/App'
 import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
 import { useCart } from '../../../contexts/Cart';
+import {useNavigate} from "react-router-dom"
 
 
 interface Props {
-    student_org_name: string,
-    student_org_logo: string
 }
 
 const Checkout = (props: Props) => {
 
-    const { student_org_name, student_org_logo } = props
+    const navigate = useNavigate();
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_logo = SWELogo
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -37,14 +37,13 @@ const Checkout = (props: Props) => {
     const [companyInput, setCompanyInput] = React.useState('');
     const checkoutReady = firstNameInput && lastNameInput && emailInput && companyInput;
     
-    const [checkedOut, setCheckedOut] = React.useState(false);
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
 
     const { cart } = useCart();
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-    console.log(cart)
+    // console.log(cart)
 
     React.useEffect(() => {
         fetch('/get-level-by-amount/' + student_org_name + '/' + total)
@@ -75,12 +74,11 @@ const Checkout = (props: Props) => {
                     org: student_org_name
                 })
             })
-            setCheckedOut(true);
+            navigate("/inbox")
         }
     };
 
     return (
-        // checkedOut ? <Inbox /> : 
         <ThemeProvider theme={theme}>
 
             <Modal

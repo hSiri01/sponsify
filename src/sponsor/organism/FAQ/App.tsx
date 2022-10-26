@@ -9,14 +9,13 @@ import Button from '@mui/material/Button';
 import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 interface Props {
-    student_org_short_name: string
 }
 
 const FAQ = (props: Props) => {
 
-    const { student_org_short_name } = props
     const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
-    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
 
     // TO DO: Get correct org logo
     const student_org_logo = SWELogo
@@ -34,8 +33,6 @@ const FAQ = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
-
-            {/* {buttonClick ? (<Levels student_org_logo={student_org_logo} student_org_name={student_org_name} student_org_short_name={student_org_short_name} />):( */}
 
             <Grid container>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -72,13 +69,13 @@ const FAQ = (props: Props) => {
 
                 <>
                     {faq.map((one: any) =>   
-                    <>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
-                        <Question question= {one.question}
-                            answer={one.answer}/>
-                       
-                        </Grid>
-                    </>
+                        <React.Fragment key={one._id}>
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
+                            <Question question= {one.question}
+                                answer={one.answer}/>
+                        
+                            </Grid>
+                        </React.Fragment>
                     )}
                 </>
 

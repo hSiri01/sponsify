@@ -1,14 +1,12 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 import Support from '../../../assets/images/graphics/support.svg';
 import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import HowItWorks from '../HowItWorks/App';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
@@ -21,10 +19,6 @@ interface Props {
 
 const SponsorHome = (props: Props) => {
     const [input, setInput] = React.useState('');
-    const [org, setOrg] = React.useState('');
-    const [orgShortName, setOrgShortName] = React.useState('');
-    const [orgLogo, setOrgLogo] = React.useState('');
-    const [buttonClick, setButtonClick] = React.useState(false);
     const [openAlert, setOpenAlert] = React.useState(false);
     const navigate = useNavigate();
 
@@ -43,17 +37,15 @@ const SponsorHome = (props: Props) => {
             await fetch("/verify-sponsor-code/" + input)
             .then((res) => res.json())
             .then((data) => {
-              if (data.name === undefined) {
-                  console.log("invalid")
-                  setOpenAlert(true)
-              } else {
-                  setOrg(data.name)
-                  setOrgShortName(data.shortName)
-                  setOrgLogo(SWELogo)  // TODO: change this to get logo from org
-                  setButtonClick(true)
-                  localStorage.setItem('org', JSON.stringify(data.name))
-                navigate("/how-it-works")
-              }
+                if (data.name === undefined) {
+                    console.log("invalid")
+                    setOpenAlert(true)
+                } else {
+                    // TODO: Add logo to localstorage or decide if we want to call everytime
+                    localStorage.setItem('org-name', JSON.stringify(data.name))
+                    localStorage.setItem('org-short-name', JSON.stringify(data.shortName))
+                    navigate("/how-it-works")
+                }
           });
 
         }
@@ -66,8 +58,6 @@ const SponsorHome = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
-            {/* { buttonClick ? 
-            <HowItWorks organization={org} organization_short_name={orgShortName} organization_logo={orgLogo} /> :  */}
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />

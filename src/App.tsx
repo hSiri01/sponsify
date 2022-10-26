@@ -40,11 +40,11 @@ const App: React.FC = () => {
 
           <Routes>
             <Route path="/" element={<SponsorHome />} />
-            <Route path="/how-it-works" element={<HowItWorks organization={''} />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/levels" element={<Levels />} />
-            <Route path="/events" element={<Events level_color="ebeaea" level_name='Platinum' total={4250}/>} />
-            <Route path="/checkout" element={<Checkout student_org_name={'Society of Women Engineers'} student_org_logo={SWELogo}/>} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/check-back-later" element={<CheckBackLater />} />
 

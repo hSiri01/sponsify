@@ -21,15 +21,13 @@ import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 
 interface Props {
-    student_org_short_name: string,
 }
 
 const Events = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
-
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
     const student_org_logo = SWELogo
-    const { student_org_short_name } = props
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
