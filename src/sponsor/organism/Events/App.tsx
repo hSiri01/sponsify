@@ -154,7 +154,6 @@ const Events = (props: Props) => {
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
                                 <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
-
                             </Grid>
 
 
@@ -290,11 +289,10 @@ const Events = (props: Props) => {
                 </Grid>*/}
 
                 <>
-                    {events.map((event: any) =>
-                    <>
-                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-
-                            {(event.name === 'General Donation') ? (
+                    {events.map((event: any) =>   
+                    <React.Fragment key={event._id}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                           {(event.name === 'General Donation') ? (
                                 <GeneralDonation 
                                     id={event._id}
                                     short_description={event.briefDesc}
@@ -315,7 +313,7 @@ const Events = (props: Props) => {
                             )}
 
                         </Grid>
-                    </>
+                    </React.Fragment>
                     )}
                 </>
 
