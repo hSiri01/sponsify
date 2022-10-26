@@ -14,13 +14,14 @@ import MenuBar from '../../molecule/MenuBar/App'
 
 
 interface Props {
-    student_org_logo: string,
-    student_org_name: string, 
+    student_org_logo: string
 }
 
 const EditFAQ = (props: Props) => {
 
-    const { student_org_logo, student_org_name } = props
+    const { student_org_logo } = props
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
     const handleCloseNewQuestion = () => setOpenNewQuestion(false);
@@ -68,7 +69,7 @@ const EditFAQ = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} FAQ
+                        {student_org_short_name} FAQ
                     </Typography>
                 </Grid>
 

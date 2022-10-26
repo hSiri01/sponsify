@@ -6,26 +6,28 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 import Level from '../../molecule/Level/App';
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 import Events from '../Events/App';
 
 interface Props {
-    student_org_name: string,
-    student_org_short_name: string,
-    student_org_logo: string, 
 }
 
 const Levels = (props: Props) => {
 
-    const { student_org_name, student_org_short_name, student_org_logo } = props
+    // TO DO: Correct logo
+    const student_org_logo = SWELogo
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
 
     const [levels, setLevels] = React.useState([{}])
-    const [buttonClick, setButtonClick] = React.useState(false)
 
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-all-levels/" + student_org_name)
+            await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => setLevels(data))
+                .then((data) => {
+                    data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
+                    setLevels(data)
+                })
 
         }
         fetchData()
@@ -33,9 +35,7 @@ const Levels = (props: Props) => {
     }, [])
 
 
-
     return (
-        buttonClick ? <Events student_org_logo={student_org_logo} student_org_name={student_org_name} student_org_short_name={student_org_short_name} /> :
 
         <ThemeProvider theme={theme}>
 
@@ -80,41 +80,11 @@ const Levels = (props: Props) => {
                             </Grid>
                     </>
                     )}
-                </>
-
-                
-
-                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(8) }}>
-                    <Level name="Diamond" lower_bound={5000} description="Be recognized and appreciated at our annual banquet along with everything included below" color_level="efefef"/>
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
-                    <Level name="Platinum" lower_bound={3500} upper_bound={4999} description="Have the opportunity to be a title company at our first general meeting along with everything included below" color_level="ebeaea" />
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
-                    <Level name="Gold" lower_bound={2500} upper_bound={3499} description="Have the opportunity to present at some of our most widely attended events along with everything included below" color_level="ffefbe" />
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
-                    <Level name="Silver" lower_bound={1500} upper_bound={2499} description="Have the opportunity to advertise your company to our members along with everything included below" color_level="b7b7b7" />
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
-                    <Level name="Bronze" lower_bound={1000} upper_bound={1499} description="Have your company name on a T-Shirt if applicable to the event along with everything included below" color_level="eb9770" />
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
-                    <Level name="Maroon" lower_bound={500} upper_bound={999} description="Display your company as a sponsor on our website and sponsor certain events" color_level="ca7171" />
-                </Grid> */}
-
-
-                
+                </>            
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button 
-                        // href="/events-swe"
-                        onClick={() => setButtonClick(true)}
+                        href="/events"
                         variant="contained"
                         size="large"
                         color="secondary"
