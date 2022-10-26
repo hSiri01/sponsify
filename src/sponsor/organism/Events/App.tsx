@@ -67,7 +67,7 @@ const Events = (props: Props) => {
     }, [])
 
     React.useEffect(() => {
-        setTotal(cart.reduce((total, item) => total + item.price, 0))
+        setTotal(cart.reduce((total, item) => total + item.price * item.quantity, 0))
 
         const fetchLevel = async () => {
             const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + total)
