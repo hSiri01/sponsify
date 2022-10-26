@@ -40,7 +40,7 @@ const CheckBackLater = (props: Props) => {
                
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
-                    <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(4) }} src={Bug} alt="Giving money" />
+                    <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(4) }} src={Bug} alt="Bug" />
                 </Grid>
 
                 
