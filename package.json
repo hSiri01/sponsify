@@ -41,9 +41,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build-project-kill": "concurrently \"cd backend && npm run dev-kill\" \"npm start\" ",
-    "build-project": "concurrently \"cd backend && npm run dev\" \"npm start\" ",
-    "build-backend": "cd backend && npm run build && cd ..",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run build-backend && npm install && npm run build"
+    "build-project": "concurrently \"cd backend && npm run dev\" \"npm run dev\" ",
+    "install-backend": "cd backend && npm i && cd ..",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run install-backend && npm install && npm run build"
   },
   "proxy": "http://localhost:3001",
   "license": "ISC",
