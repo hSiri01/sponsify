@@ -111,7 +111,7 @@ const EditEvent = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                <Date date_1={date_start} date_2={date_end}/*date_2={date_end.getTime() != date_start.getTime() ? date_end : undefined}*//>
+                                <Date date_1={date_start} date_2={date_end}/>
                             </Grid>
 
                             <Grid item xs={4}>
@@ -120,18 +120,25 @@ const EditEvent = (props: Props) => {
                             </Grid>
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
                             {
-                                occurances === num_sponsored ? (
+                                occurances ? (
+                                    occurances === num_sponsored ? (
                                         <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}/{occurances}</Typography>
 
-                                ):(
-                                            <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}/{occurances}</Typography>
-
+                                    ):(
+                                        <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}/{occurances}</Typography>
+                                    )
+                                ) : (
+                                    num_sponsored > 0 ? (
+                                        <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}</Typography>
+                                    ) : (
+                                        <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}</Typography>
+                                    )
                                 )
                             }
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ color:"#367c63", fontWeight: "600",ml: theme.spacing(8) }} variant="h6">${price}</Typography>
+                                <Typography sx={{ color:"#367c63", fontWeight: "600",ml: theme.spacing(8) }} variant="h6">{price > 0 ? '$' + price : '-'}</Typography>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(2) }}>
