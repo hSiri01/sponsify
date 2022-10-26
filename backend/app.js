@@ -8,16 +8,19 @@ const purchases = require('./purchase')
 const app = express()
 const bodyParser = require('body-parser');
 const sponsor = require('./sponsor');
+var cors = require('cors');
+app.use(cors())
 const port = 3001
 
 //adding routes for image upload
 var fs = require('fs');
 var path = require('path');
 var multer = require('multer');
+const { BedtimeOffRounded } = require('@mui/icons-material');
 app.use("/images", express.static("./images"));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
-
+app.use(express.json());
 mongoose.connect(
     process.env.MONGODB_URL,
     {
@@ -526,31 +529,36 @@ app.get('/get-logo/:org', (req,res) => {
             }
     })
 })
-app.post('/create-logo',upload.single('image'), (req, res) => {
+app.post('api/create-logo/:org',upload.single('image'), (req, res) => {
+    var img = fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename))
+    var encImg = img.toString('base64');
     
-    
-        // data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-        // contentType: 'image/jpg',
-        console.log(req.file.filename)
-      var filepath =  "http://localhost:3001/uploads/image-" + req.file.filename
+    var logoImage = {
+        image : Buffer(encImg, 'base64'),
+        contentType: 'image/jpg',
+    }
+       
+    console.log(req.file.filename)
+      //var filepath =  "http://localhost:3001/uploads/image-" + req.file.filename
         
       
     orgs.findOneAndUpdate(
-        { name: req.body.organization },
-        { $set: {logoImage: filepath}},
+        { name: req.params.organization },
+        { $set: {logoImage: logoImage}},
         function (error, success) {
             if (error) {
                 console.log("Error", error);
                 res.send('Error')
             } else {
                 return res.status(201)
-                .json({ url: "http://localhost:3001/uploads/" + req.file.filenameName });
+                .json({ url: "http://localhost:3001/api/create-logo/:org" + req.file.filenameName });
                 console.log(success);
                 res.send('Updated FAQ')
             }
         }
     );
 })
+
 
 app.get('/verify-sponsor-code', (req,res) => {
     res.send('Verify sponsor code')

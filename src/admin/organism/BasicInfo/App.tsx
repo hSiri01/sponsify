@@ -10,7 +10,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
+import FormData from 'form-data'
 import axios from "axios";
+import { isCompositeComponent } from 'react-dom/test-utils';
+// const axios = require('axios').default;
 
 interface Props {
     student_org_logo: string,
@@ -23,36 +26,71 @@ interface Props {
     zipcode: number, 
 }
 
+axios.create({
+    baseURL: "http://localhost:3001",
+  });
 const BasicInfo = (props: Props) => {
     const [image, setImage] = React.useState("");
     const [imageFile, setFile] = React.useState();
     const { student_org_logo, student_org_short_name, student_org_name, street_address, street_address_2, city, state, zipcode} = props
     const [org, setOrg] = React.useState('')
     const [logo, setLogo] = React.useState('')
-
-    const getImage = (e) => {
-        setFile(e.target.files[0]); //save chosen image to imageFile
-      }
-    const handleLogoChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const [selectedFile, setSelectedFile] = React.useState<any|null>(null);
+    // const getImage = (e) => {
+    //     setFile(e.target.files[0]); //save chosen image to imageFile
+    //   }
+    // const handleLogoChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
        
-        setLogo(event.target.value)
-        //console.log(logo)
-    }
-    const handleCreateLogo = async () => {
+    //     setLogo(event.target.value)
+    //     //console.log(logo)
+    // }
+    // const handleCreateLogo = async () => {
 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                organization: student_org_name,
-                logoImage: logo,
-            })
+    //     const requestOptions = {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'multipart/form-data' },
+    //         body: JSON.stringify({ 
+    //             organization: student_org_name,
+    //             logoImage: logo,
+    //         })
+    //     }
+    //     console.log(logo)
+    //     await fetch("/update-logo", requestOptions)
+    //         .then((res) => console.log(res)) 
+
+    // }
+    const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        console.log("submit clicked")
+        console.log(selectedFile)
+        const formData = new FormData();
+        if(selectedFile){
+            console.log('Selected file is ok')
+            formData.append("selectedFile", selectedFile);
         }
-        console.log(logo)
-        await fetch("/update-logo", requestOptions)
-            .then((res) => console.log(res)) 
+    
+        try {
+            
+          const response = await axios({
+            method: "post",
+            url: "http://localhost:3001/app/create-logo/Society of Women Engineers",
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          console.log(response.data + 'this is data after api call');
+        } catch(error) {
+           
+          console.log(error)
+        }
+        
+          
 
-    }
+      }
+    
+      const handleFileSelect = (event : React.ChangeEvent<HTMLInputElement>) => {
+        console.log("handling file select")
+        setSelectedFile(event.target.value)
+      }
 
 
     return (
@@ -125,7 +163,7 @@ const BasicInfo = (props: Props) => {
                 <Grid item xs={12} > 
                     
                         <iframe name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
-                        <form method="POST" action="/create-logo" target = "dummyframe" encType="multipart/form-data">
+                        <form  onSubmit={handleSubmit} method="POST" action="/create-logo"target = "dummyframe" encType="multipart/form-data">
                             <input type="hidden" name="organization" value={student_org_name} />
                             <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(10)}}>
                             
@@ -151,7 +189,7 @@ const BasicInfo = (props: Props) => {
                                     hidden
                                     name="image" 
                                     required
-                                    onChange={getImage}
+                                    onChange={handleFileSelect}
                                 />
                                 </Button> 
                                 </Grid>
