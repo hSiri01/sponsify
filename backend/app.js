@@ -241,7 +241,7 @@ app.post('/create-event', async (req, res) => {
         briefDescription: req.body.briefDesc,
         avgAttendance: req.body.avgAttendance,
         totalSpots: req.body.totalSpots,
-        spotsTaken: 0,
+        spotsTaken: req.body.spotsTaken,
         visible: req.body.visible,
         org: req.body.org,
         sponsors: []
