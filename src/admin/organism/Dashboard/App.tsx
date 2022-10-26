@@ -24,7 +24,6 @@ import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 interface Props {
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    student_org_short_name: string, 
     sponsor_code: string,
     valid_until_date: Date,
     street_address: string,
@@ -37,14 +36,20 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
-    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name, student_org_short_name } = props
+    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    // const student_org_name = "Society of Women Engineers"
-    const student_org_name = "Aggie Women in Computer Science"
+    const student_org_name = "Society of Women Engineers"
+    const student_org_short_name = "SWE"
+    // const student_org_name = "Aggie Women in Computer Science"
+    // const student_org_short_name = "AWiCS"
     // const student_org_name = "Datathon"
-    const student_org_logo = SWELogo
+    // const student_org_short_name = "Datathon"
 
-    localStorage.setItem('org', JSON.stringify(student_org_name))
+    const student_org_logo = SWELogo
+    
+
+    localStorage.setItem('org-name', JSON.stringify(student_org_name))
+    localStorage.setItem('org-short-name', JSON.stringify(student_org_short_name))
     
     return (
         <ThemeProvider theme={theme}>

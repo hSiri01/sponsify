@@ -20,7 +20,7 @@ interface Props {
 const EditLevels = (props: Props) => {
     
     const { student_org_logo } = props
-    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState([{}])
     const [levelName, setLevelName] = React.useState('')

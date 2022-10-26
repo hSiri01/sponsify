@@ -33,7 +33,8 @@ const EditEvents = (props: Props) => {
     };
 
     const [events, setEvents] = React.useState([{}]);
-    const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
     React.useEffect(() => {
         const fetchData = async() => {
@@ -61,7 +62,7 @@ const EditEvents = (props: Props) => {
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name="swe"/>
+            <MenuBar student_org_short_name={"swe"}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -100,7 +101,7 @@ const EditEvents = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} Events
+                        {student_org_short_name} Events
                     </Typography>
                 </Grid>
 

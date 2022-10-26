@@ -21,16 +21,13 @@ import EditLevels from './admin/organism/EditLevels/App';
 import BasicInfo from './admin/organism/BasicInfo/App';
 
 import AdminLogin from './admin/organism/Home/App';
-
+import CheckBackLater from './sponsor/organism/HowItWorksCopy/App'
 
 import {
   BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
-import CheckBackLater from './sponsor/organism/HowItWorksCopy/App';
-
-
 
 const App: React.FC = () => {
   return (
@@ -52,10 +49,10 @@ const App: React.FC = () => {
           
             <Route path="/admin-login" element={<AdminLogin/>} />
             <Route path="/levels-edit" element={<EditLevels student_org_logo={SWELogo} />} />
-            <Route path="/dashboard-swe" element={<Dashboard sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} student_org_short_name="swe" street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
+            <Route path="/dashboard-swe" element={<Dashboard sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
             <Route path="/events-edit" element={<EditEvents student_org_logo={SWELogo} />} />
             <Route path="/summary" element={<PurchaseHistory student_org_logo={SWELogo}  total_sponsored={50000} />} />
-            <Route path="/basic-info" element={<BasicInfo student_org_logo={SWELogo} student_org_short_name="SWE" street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
+            <Route path="/basic-info" element={<BasicInfo student_org_logo={SWELogo} street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
 
           </Routes>
 
