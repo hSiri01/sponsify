@@ -29,6 +29,7 @@
     "nodemon": "^2.0.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-input-color": "^4.0.1",
     "react-router-dom": "^6.4.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.8.3",
@@ -40,7 +41,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-project-kill": "concurrently \"cd backend && npm run dev-kill\" \"npm start\" ",
+    "build-project-kill": "concurrently \"cd backend && npm run dev-kill\" \"npm run dev\" ",
     "build-project": "concurrently \"cd backend && npm run dev\" \"npm run dev\" ",
     "install-backend": "cd backend && npm i && cd ..",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run install-backend && npm install && npm run build"

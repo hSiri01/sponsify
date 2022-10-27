@@ -17,17 +17,17 @@ import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import { NavLink } from "react-router-dom";
 import { useCart } from '../../../contexts/Cart';
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 
 interface Props {
-    student_org_name: string,
-    student_org_short_name: string,
-    student_org_logo: string
 }
 
 const Events = (props: Props) => {
 
-    const { student_org_name, student_org_logo, student_org_short_name } = props
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
+    const student_org_logo = SWELogo
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -175,14 +175,14 @@ const Events = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(5) }}>
-                                <Button href="/checkout-swe" variant="contained" size="large" color="primary" sx={{
+                                <Button href="/checkout" variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
                                     pl: theme.spacing(8),
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
-                                }}><NavLink to="/checkout-swe" style={{ textDecoration: "none", color: 'white' }}>Checkout</NavLink></Button>
+                                }}><NavLink to="/checkout" style={{ textDecoration: "none", color: 'white' }}>Checkout</NavLink></Button>
                             </Grid>
 
                         </Grid>
@@ -258,36 +258,6 @@ const Events = (props: Props) => {
                     </Paper>
                 </Grid>
 
-                {/*<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',}}>
-                    <GeneralDonation 
-                        short_description={event.briefDesc}
-                        long_description={event.desc}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
-                    <Event name="First General Meeting" 
-                           short_description='Present at First General Meeting'
-                        long_description={`SWE-TAMU holds bi-weekly meetings throughout the school year to provide members insight about opportunities after college and allow companies to interact with students. At meetings, we encourage our speakers to discuss topics that will help members enter and excel in the industry in a 30-minute presentation. Past topics have included resume writing, interview skills, work-life balance, expectations as a new engineer and more. Technical presentations are discouraged due to the variety of engineering disciplines represented by our members. All meetings will be on a Tuesday, running from 7:30 p.m. until 8:30 p.m. with an in-person and hybrid option. The first general meeting will run from 8:30 p.m. to 9:30 p.m. Sponsors will receive a follow up email after the meeting, which includes access to our members resumes and stats for that meeting. The payment for food and beverage is included in the General Meeting fee.`}
-                           avg_attendance={100}
-                           occurances={1}
-                           price={3500}
-                           date_start= {new Date(2022, 9, 12)}
-                           />
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
-                    <Event name="Leadership Conference"
-                        short_description='Sponsor and Present at Conference'
-                        long_description={`The Leadership Conference will be held hybrid as a three day series. This will be the third ever Leadership Conference SWE-TAMU holds! Members will have an opportunity to explore leadership through lectures and interactive learning. The goal is to help members grow and develop their leadership skills to aid them in their personal and professional aspirations. The sponsoring company is invited to present a topic their company values, as part of the Leadership Conference. Some examples include: leadership styles, communication, organization and mental health awareness. The Conference is a multi-day event in Fall 2022.`}
-                        avg_attendance={50}
-                        occurances={1}
-                        price={2000}
-                        date_start={new Date(2022, 10, 14)}
-                        date_end={new Date(2022, 10, 16)}
-                    />
-                </Grid>*/}
-
                 <>
                     {events.map((event: any) =>   
                     <React.Fragment key={event._id}>
@@ -331,7 +301,7 @@ const Events = (props: Props) => {
                         pl: theme.spacing(8),
                         pr: theme.spacing(8),
                         ml: theme.spacing(5),
-                    }}><NavLink to="/checkout-swe" style={{ textDecoration: "none", color:'white' }}>Checkout</NavLink></Button>
+                    }}><NavLink to="/checkout" style={{ textDecoration: "none", color:'white' }}>Checkout</NavLink></Button>
      
 
                 </Grid>

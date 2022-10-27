@@ -152,6 +152,8 @@ app.put('/update-level', (req, res) => {
         "levels.$.description": req.body.description
     }
 
+    console.log(req.body)
+
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
         { $set: level },
@@ -333,21 +335,20 @@ app.delete('/delete-event', (req, res) => {
     }
 })
 
-app.get('/get-org/:code', (req, res) => {
+app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log('Error on get-org, ' + err)
+                console.log('Error on verify-sponsor-code, ' + err)
             }
 
             if (result.length == 0) {
                 res.json({})
             } else {
                 res.json(result[0])
-                console.log(result[0])
             }
         })
 })
@@ -504,8 +505,8 @@ app.get('/get-logo/:org', (req, res) => {
         })
 })
 
-app.get('/verify-sponsor-code', (req, res) => {
-    res.send('Verify sponsor code')
+app.get('/get-org', (req,res) => {
+    res.send('Get org')
 })
 
 // The "catchall" handler: for any request that doesn't
