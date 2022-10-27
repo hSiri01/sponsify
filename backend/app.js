@@ -446,6 +446,26 @@ app.post('/create-sponsor', (req,res) => {
     });
 })
 
+app.get('/get-all-sponsors/:org', (req, res) => {
+    purchases.find({ org: req.params.org })
+        .populate("sponsorID")
+        .select({company:1, sponsorLevel:1, totalAmount:1})
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-all-sponsors, " + err)
+            }
+            
+            let sponsors = []
+            for (let i = 0; i < result.length; i++) 
+            {
+                console.log(result[i])
+                sponsors.push({sponsorLevel:result[i].sponsorID.sponsorLevel, company:result[i].sponsorID.company, totalAmount:result[i].totalAmount, _id:result[i].sponsorID._id})
+            }
+            console.log(sponsors)
+            res.json(sponsors)
+        })
+})
+
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
         .exec((err, result) => {

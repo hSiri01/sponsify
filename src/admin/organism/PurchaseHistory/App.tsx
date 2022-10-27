@@ -23,6 +23,8 @@ const PurchaseHistory = (props: Props) => {
 
 
     const [purchases, setPurchases] = React.useState([{}]);
+    const [sponsors, setSponsors] = React.useState([{}]);
+    const [levels, setLevels] = React.useState([{}]);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -40,6 +42,20 @@ const PurchaseHistory = (props: Props) => {
                     setPurchases(data)
                 }
                 )
+            const data2 = await fetch("/get-all-sponsors/" + student_org_name)
+                .then((res) => res.json())
+                .then((data2) => {
+                    console.log(data2)
+                    setSponsors(data2)
+                }
+                )
+            // const data3 = await fetch("/get-all-levels/" + student_org_name)
+            //     .then((res) => res.json())
+            //     .then((data3) => {
+            //         console.log(data3)
+            //         setLevels(data3)
+            //     }
+            //     )
         }
 
         fetchData()
@@ -96,33 +112,24 @@ const PurchaseHistory = (props: Props) => {
                 <Grid item xs={12} sx={{ textAlign: 'center', justifyContent: 'center', ml: theme.spacing(15) }}>
 
                     <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
-                        <Grid item xs={1}>
-                            <LevelSponsors name="Diamond" color_level="efefef" />
-                        </Grid>
+
+                        {/* {levels.map((level: any) => (
+                            (<Grid item xs={1}>
+                                <LevelSponsors sponsors={sponsors} name={level.name} color_level={level.color} />
+                            </Grid>)
+
+
+                        )
+                        )
+
+                        } */}
+                        
 
                         <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors name="Platinum" color_level="ebeaea" />
+                            <LevelSponsors sponsors={sponsors} name="Platinum" color_level="ebeaea" />
                         </Grid>
 
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors name="Gold" color_level="ffefbe" />
-                        </Grid>
-
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors name="Silver" color_level="b7b7b7" />
-                        </Grid>
-
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors name="Bronze" color_level="eb9770" />
-                        </Grid>
-
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors name="Maroon" color_level="ca7171" />
-                        </Grid>
-
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors name="Other" color_level="ffffff" />
-                        </Grid>
+                      
 
                     </Grid>
 
