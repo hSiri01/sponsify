@@ -33,7 +33,7 @@ const Checkout = (props: Props) => {
 
     const { addToCart, removeFromCart, cart } = useCart();
 
-    console.log(cart)
+    // console.log(cart)
 
     return (
         <ThemeProvider theme={theme}>

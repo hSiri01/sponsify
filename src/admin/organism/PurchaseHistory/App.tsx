@@ -45,6 +45,7 @@ const PurchaseHistory = (props: Props) => {
         fetchData()
     }, [])
 
+    // console.log(purchases)
     return (
 
         <ThemeProvider theme={theme}>
@@ -204,30 +205,32 @@ const PurchaseHistory = (props: Props) => {
                
                 <>
                     {purchases.map((purchase: any) => {
-                        console.log(purchase.events)
-                        console.log(purchases)
-                        let temp = purchase.events
-                        temp.map((event: any) => {
-                            <React.Fragment key={event._id}>
-                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        // console.log(purchase.events)
+                        
+                        if (purchase.events !== undefined) {
+                            return purchase.events.map((event: any) => (
+                               
+                                <React.Fragment key={event._id}>
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                                    <Transaction company_name={purchase.sponsorID.company}
-                                        rep_name={purchase.sponsorID.firstName + " " + purchase.sponsorID.lastName}
-                                        rep_email={purchase.sponsorID.email}
-                                        event_name={event.name}
-                                        short_description={event.briefDesc}
-                                        purchase_date={new Date(purchase.dateSponsored)}
-                                        price={event.price}
-                                        date_start={new Date(event.date)}
-                                        date_end={event.endDate ? new Date(event.endDate) : undefined}
-                                    />
+                                        <Transaction company_name={purchase.sponsorID.company}
+                                            rep_name={purchase.sponsorID.firstName + " " + purchase.sponsorID.lastName}
+                                            rep_email={purchase.sponsorID.email}
+                                            event_name={event.name}
+                                            short_description={event.briefDesc}
+                                            purchase_date={new Date(purchase.dateSponsored)}
+                                            price={event.price}
+                                            date_start={new Date(event.date)}
+                                            date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                        />
 
-                                </Grid>
-                            </React.Fragment>
+                                    </Grid>
+                                </React.Fragment>
                            
-                        }
+                            )
 
                         )
+                        }
                     }
 
                     )} 
