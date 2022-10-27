@@ -55,7 +55,7 @@ const EditEvent = (props: Props) => {
     const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
 
-    const submitEventUpdate = () => {
+    const updateEvent = () => {
         fetch('/update-event', {
             method: 'PUT',
             headers: {
@@ -72,6 +72,7 @@ const EditEvent = (props: Props) => {
                 briefDesc: briefDescInput,
                 totalSpots: totalSpotsInput,
                 spotsTaken: spotsTakenInput,
+                avgAttendance: avgAttendanceInput,
                 visible: checked
             })
         })
@@ -326,7 +327,7 @@ const EditEvent = (props: Props) => {
                                 </Grid>
 
                                 <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
-                                    <Button /*href="/"*/ onClick={submitEventUpdate} variant="contained" size="large" color="primary" sx={{
+                                    <Button /*href="/"*/ onClick={updateEvent} variant="contained" size="large" color="primary" sx={{
                                         borderRadius: 0,
                                         pt: theme.spacing(3),
                                         pb: theme.spacing(3),
