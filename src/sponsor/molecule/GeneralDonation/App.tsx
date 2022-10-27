@@ -30,14 +30,37 @@ const GeneralDonation = (props: Props) => {
 
     const { addToCart, removeFromCart, cart } = useCart()
 
-    const inputRef = React.useRef<HTMLInputElement>(null)
-    const modalInputRef = React.useRef<HTMLInputElement>(null)
-
     const [price, setPrice] = React.useState(0);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.checked && price > 0) {
+         if (price > 0) {
+            setChecked(event.target.checked);
+            if (event.target.checked) {
+                addToCart({
+                    name: "General Donation",
+                    short_description: props.short_description,
+                    price: price,
+                    date_start: new Date(),
+                    quantity: 1,
+                    id: props.id
+                })
+            }
+            else {
+                removeFromCart(props.id)
+            }
+        }
+        else {
+            setChecked(false);
+            removeFromCart(props.id)
+            setPrice(0);
+        }
+    };
+
+    React.useEffect(() => {
+        console.log(price)
+        if (price > 0) {
             setChecked(true);
+            removeFromCart(props.id)
             addToCart({
                 name: "General Donation",
                 short_description: props.short_description,
@@ -48,52 +71,6 @@ const GeneralDonation = (props: Props) => {
             })
         }
         else {
-            setChecked(false);
-            removeFromCart(props.id)
-            setPrice(0);
-        }
-    };
-
-    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.value) {
-            let parsedValue = +event.target.value
-            if (parsedValue > 0) {
-                setPrice(parsedValue);
-                return;
-            }
-        }
-        setPrice(0)
-    };
-
-    React.useEffect(() => {
-        if (inputRef?.current?.value != null) {
-            if (price !== 0) {
-                inputRef.current.value = `${price}`
-            }
-            else {
-                inputRef.current.value = ''
-            }
-        }
-        if (modalInputRef?.current?.value != null) {
-            if (price !== 0) {
-                modalInputRef.current.value = `${price}`
-            }
-            else {
-                modalInputRef.current.value = ''
-            }
-        }
-        if (price > 0) {
-            setChecked(true);
-            addToCart({
-                name: "General Donation",
-                short_description: props.short_description,
-                price: price,
-                date_start: new Date(),
-                quantity: 1,
-                id: props.id
-            })
-            return;
-        } else {
             setChecked(false);
             removeFromCart(props.id);
         }
@@ -136,7 +113,14 @@ const GeneralDonation = (props: Props) => {
                                         <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="h6">$</Typography>
                                     </Grid>
                                     <Grid item xs={10}>
-                                        <TextField onChange={handlePriceChange} inputRef={inputRef} sx={{ maxWidth: theme.spacing(20) }} id="outlined-basic" label="Price" variant="outlined" />
+                                        <TextField
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                            value={price > 0 ? price : ''}
+                                            onChange={ev => setPrice(+ev.target.value)}
+                                            sx={{ maxWidth: theme.spacing(20) }}
+                                            id="outlined-basic"
+                                            label="Price"
+                                            variant="outlined" />
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -189,7 +173,14 @@ const GeneralDonation = (props: Props) => {
                                         <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="h6">$</Typography>
                                     </Grid>
                                     <Grid item xs={5}>
-                                        <TextField sx={{ maxWidth: theme.spacing(20) }} id="outlined-basic" label="Price" variant="outlined" defaultValue={price} onChange={handlePriceChange} inputRef={modalInputRef} />
+                                        <TextField
+                                            sx={{ maxWidth: theme.spacing(20) }}
+                                            id="outlined-basic"
+                                            label="Price"
+                                            variant="outlined"
+                                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                            onChange={ev => setPrice(+ev.target.value)}
+                                            value={price > -1 ? price : ''} />
                                     </Grid>
                                 </Grid>
                             </Grid>

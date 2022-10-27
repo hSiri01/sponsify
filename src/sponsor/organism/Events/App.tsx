@@ -15,7 +15,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 import { useCart } from '../../../contexts/Cart';
 import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
@@ -24,7 +24,8 @@ interface Props {
 }
 
 const Events = (props: Props) => {
-
+    
+    const navigate = useNavigate();
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
     const student_org_logo = SWELogo
@@ -81,6 +82,12 @@ const Events = (props: Props) => {
         
         fetchLevel()
     })
+
+    const checkout = () => {
+        if (cart.at(0)) {
+            navigate("/checkout")
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -178,14 +185,14 @@ const Events = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(5) }}>
-                                <Button href="/checkout" variant="contained" size="large" color="primary" sx={{
+                                <Button /*href="/checkout"*/ onClick={checkout} variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
                                     pl: theme.spacing(8),
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
-                                }}><NavLink to="/checkout" style={{ textDecoration: "none", color: 'white' }}>Checkout</NavLink></Button>
+                                }}>Checkout</Button>
                             </Grid>
 
                         </Grid>
@@ -297,14 +304,14 @@ const Events = (props: Props) => {
                         <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
                     </Paper>
 
-                    <Button variant="contained" size="large" color="primary" sx={{
+                    <Button onClick={checkout} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
                         pl: theme.spacing(8),
                         pr: theme.spacing(8),
                         ml: theme.spacing(5),
-                    }}><NavLink to="/checkout" style={{ textDecoration: "none", color:'white' }}>Checkout</NavLink></Button>
+                    }}>Checkout</Button>
      
 
                 </Grid>
