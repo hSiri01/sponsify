@@ -32,9 +32,7 @@ interface Props {
     zipcode: number, 
 }
 
-axios.create({
-    baseURL: "http://localhost:3001",
-  });
+
 const BasicInfo = (props: Props) => {
     const [image, setImage] = React.useState<any|null>(null);
     const [imageFile, setFile] = React.useState();
@@ -50,28 +48,32 @@ const BasicInfo = (props: Props) => {
     const cloudName = "dmkykmach"
       
     
-    const handleCreateLogo = async () => {
+    
+    const handleCreateLogoUrl = async () => {
 
-        const requestOptions = {
+        if(url){
+            
+            const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                organization: student_org_name,
-                logoImage: url,
+                logoImage : url
             })
         }
-        
-        await fetch("/update-logo", requestOptions)
+        console.log("req opteionf" + requestOptions.body)
+        await fetch(`/create-logo/${student_org_name}`, requestOptions)
             .then((res) => console.log(res)) 
-
     }
-    const uploadImage = () => {
+     
+    }
+    const uploadImage = async () => {
+       
         if(image){
             const data = new FormData()
             data.append("file", image[0])
             data.append('upload_preset', uploadPreset)
             data.append('cloud_name','dmkykmach' ) 
-            fetch("  https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
+            const fetchresp = await fetch("  https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
               method:"post",
               body: data as any
             })
@@ -80,8 +82,10 @@ const BasicInfo = (props: Props) => {
         setUrl(data.url)
         })
         .catch(err => console.log(err))
-        console.log(url)
+        console.log("URL IS " + url)
         }
+        console.log(url)
+        handleCreateLogoUrl()
         
     }
 
