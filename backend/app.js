@@ -236,14 +236,14 @@ app.get('/get-all-events/:org', (req, res) => {
 app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,
-        date: req.body.date,
-        endDate: req.body.endDate,
+        date: req.body.date + 'T06:00:00.000+00:00',
+        endDate: req.body.endDate + 'T06:00:00.000+00:00',
         price: req.body.price,
-        description: req.body.desc,
-        briefDescription: req.body.briefDesc,
+        desc: req.body.desc,
+        briefDesc: req.body.briefDesc,
         avgAttendance: req.body.avgAttendance,
         totalSpots: req.body.totalSpots,
-        spotsTaken: 0,
+        spotsTaken: req.body.spotsTaken,
         visible: req.body.visible,
         org: req.body.org,
         sponsors: []
@@ -294,13 +294,14 @@ app.put('/update-event', (req, res) => {
     else {
         const eventOptions = {
             name: req.body.name,
-            briefDescription: req.body.briefDesc,
-            date: req.body.date,
-            endDate: req.body.endDate,
+            briefDesc: req.body.briefDesc,
+            date: req.body.date + 'T06:00:00.000+00:00',
+            endDate: req.body.endDate + 'T06:00:00.000+00:00',
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
-            description: req.body.desc,
+            avgAttendance: req.body.avgAttendance,
+            desc: req.body.desc,
             visible: req.body.visible
         }
 
