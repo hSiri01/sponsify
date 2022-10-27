@@ -295,11 +295,12 @@ app.put('/update-event', (req, res) => {
         const eventOptions = {
             name: req.body.name,
             briefDesc: req.body.briefDesc,
-            date: req.body.date,
-            endDate: req.body.endDate,
+            date: req.body.date + 'T06:00:00.000+00:00',
+            endDate: req.body.endDate + 'T06:00:00.000+00:00',
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
+            avgAttendance: req.body.avgAttendance,
             desc: req.body.desc,
             visible: req.body.visible
         }
