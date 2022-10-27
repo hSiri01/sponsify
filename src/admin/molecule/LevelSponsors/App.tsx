@@ -26,7 +26,7 @@ const LevelSponsors = (props: Props) => {
                     <Typography variant="h6">{name} Sponsor</Typography>
                 </Grid>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper variant="outlined" sx={{ borderRadius: 0, borderWidth: 1, borderColor: 'black', background: `#${color_level}`, maxWidth: theme.spacing(45), minWidth: theme.spacing(45), minHeight: theme.spacing(20) }} elevation={0}>
+                    <Paper variant="outlined" sx={{ borderRadius: 0, borderWidth: 1, borderColor: 'black', background: `${color_level}`, maxWidth: theme.spacing(45), minWidth: theme.spacing(45), minHeight: theme.spacing(20) }} elevation={0}>
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4) }}>
 
                             {sponsors.map((sponsor: any) => (                                

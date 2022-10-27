@@ -49,17 +49,17 @@ const PurchaseHistory = (props: Props) => {
                     setSponsors(data2)
                 }
                 )
-            // const data3 = await fetch("/get-all-levels/" + student_org_name)
-            //     .then((res) => res.json())
-            //     .then((data3) => {
-            //         console.log(data3)
-            //         setLevels(data3)
-            //     }
-            //     )
+            const data3 = await fetch("/get-all-levels/" + student_org_name)
+                .then((res) => res.json())
+                .then((data3) => {
+                    console.log(data3)
+                    setLevels(data3)
+                }
+                )
         }
 
         fetchData()
-    }, [])
+    }, [sponsors])
 
     // console.log(purchases)
     return (
@@ -113,22 +113,17 @@ const PurchaseHistory = (props: Props) => {
 
                     <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
 
-                        {/* {levels.map((level: any) => (
-                            (<Grid item xs={1}>
-                                <LevelSponsors sponsors={sponsors} name={level.name} color_level={level.color} />
+                        {levels.map((level: any) => (
+                            (<Grid item xs={2}>
+                                <LevelSponsors sponsors={sponsors.filter((sponsor:any) => sponsor.sponsorLevel === level.name)} name={level.name} color_level={level.color} />
                             </Grid>)
 
 
                         )
                         )
 
-                        } */}
+                        }
                         
-
-                        <Grid item xs={1} sx={{ ml: theme.spacing(20) }}>
-                            <LevelSponsors sponsors={sponsors} name="Platinum" color_level="ebeaea" />
-                        </Grid>
-
                       
 
                     </Grid>
