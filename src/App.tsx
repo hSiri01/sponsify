@@ -40,20 +40,20 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/" element={<SponsorHome />} />
             <Route path="/how-it-works" element={<HowItWorks organization={''} organization_short_name={''} organization_logo={SWELogo} />} />
-            <Route path="/faq-swe" element={<FAQ student_org_logo={SWELogo} student_org_name="Society of Women Engineers" student_org_short_name="SWE" />} />
-            <Route path="/levels-swe" element={<Levels student_org_logo={SWELogo} student_org_name="Society of Women Engineers" student_org_short_name="SWE" />} />
-            <Route path="/events-swe" element={<Events student_org_name={"Society of Women Engineers"} student_org_short_name="SWE" student_org_logo={SWELogo} />} />
-            <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} student_org_name="Society of Women Engineers" />} />
-            <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
+            <Route path="/faq" element={<FAQ student_org_logo={SWELogo} student_org_name="Society of Women Engineers" student_org_short_name="SWE" />} />
+            <Route path="/levels" element={<Levels student_org_logo={SWELogo} student_org_name="Society of Women Engineers" student_org_short_name="SWE" />} />
+            <Route path="/events" element={<Events student_org_name={"Society of Women Engineers"} student_org_short_name="SWE" student_org_logo={SWELogo} />} />
+            <Route path="/checkout" element={<Checkout student_org_logo={SWELogo} student_org_name="Society of Women Engineers" />} />
+            <Route path="/inbox" element={<Inbox student_org_logo={SWELogo} />} />
 
-            <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} student_org_name="Society of Women Engineers" />} />
+            <Route path="/faq-edit" element={<EditFAQ student_org_logo={SWELogo} student_org_name="Society of Women Engineers" />} />
           
             <Route path="/admin-login" element={<AdminLogin/>} />
-            <Route path="/levels-edit-swe" element={<EditLevels student_org_logo={SWELogo} student_org_short_name="swe" student_org_name="Datathon" />} />
+            <Route path="/levels-edit" element={<EditLevels student_org_logo={SWELogo} student_org_short_name="swe" student_org_name="Datathon" />} />
             <Route path="/dashboard-swe" element={<Dashboard student_org_logo={SWELogo} sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} student_org_name="Society of Women Engineers" student_org_short_name="swe" street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
-            <Route path="/events-edit-swe" element={<EditEvents student_org_logo={SWELogo} student_org_short_name="SWE" student_org_name="Society of Women Engineers" />} />
-            <Route path="/summary-swe" element={<PurchaseHistory student_org_logo={SWELogo}  total_sponsored={50000} />} />
-            <Route path="/basic-info-swe" element={<BasicInfo student_org_logo={SWELogo} student_org_short_name="SWE" student_org_name="Society of Women Engineers" street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
+            <Route path="/events-edit" element={<EditEvents student_org_logo={SWELogo} student_org_short_name="SWE" student_org_name="Society of Women Engineers" />} />
+            <Route path="/summary" element={<PurchaseHistory student_org_logo={SWELogo}  total_sponsored={50000} />} />
+            <Route path="/basic-info" element={<BasicInfo student_org_logo={SWELogo} student_org_short_name="SWE" student_org_name="Society of Women Engineers" street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
 
           </Routes>
 
