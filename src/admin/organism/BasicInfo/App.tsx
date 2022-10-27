@@ -57,23 +57,24 @@ const BasicInfo = (props: Props) => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-                logoImage : url
+                logoImage : url,
+                organization : student_org_name
             })
         }
         console.log("req opteionf" + requestOptions.body)
-        await fetch(`/create-logo/${student_org_name}`, requestOptions)
-            .then((res) => console.log(res)) 
+        await fetch("/create-logo", requestOptions)
+            .then((res) => console.log("Finished " + res)) 
     }
      
     }
-    const uploadImage = async () => {
+    const uploadImage = () => {
        
         if(image){
             const data = new FormData()
             data.append("file", image[0])
             data.append('upload_preset', uploadPreset)
             data.append('cloud_name','dmkykmach' ) 
-            const fetchresp = await fetch("  https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
+            fetch("  https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
               method:"post",
               body: data as any
             })

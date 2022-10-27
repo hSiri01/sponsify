@@ -550,50 +550,31 @@ var upload = multer({ storage: storage,
 
 app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-    .select('logoImage')
+    .select({logoImage : 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
             }
             else {
+                console.log(result[0])
                 res.json(result[0])
             }
     })
 })
-// app.post('/create-logo/:org', (req, res) => {
-//     var img = fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename))
-//     var encImg = img.toString('base64');
-    
-//     var logoImage = req.body.imageUrl
-      
-//     orgs.findOneAndUpdate(
-//         { name: req.params.organization },
-//         { $set: {logoImage: logoImage}},
-//         function (error, success) {
-//             if (error) {
-//                 console.log("Error in create-logo", error);
-//                 res.send('Error')
-//             } else {
-//                 console.log(success);
-//                 res.json(orgs.imageUrl);      
-//             }
-//         }
-//     );
-// })
-app.post('/create-logo/:org', (req, res) => {
+
+app.post('/create-logo', (req, res) => {
  
     var imageUrl = req.body.logoImage
-      console.log("req body" + req.body.logoImage)
+    console.log("req body" + req.body.logoImage)
     orgs.findOneAndUpdate(
-        { name: req.params.organization },
+        { name: req.body.organization },
         { $set: {logoImage: imageUrl}},
         function (error, success) {
             if (error) {
                 console.log("Error in create-logo", error);
                 res.send('Error')
             } else {
-                console.log(success);
-                res.json(orgs.imageUrl);      
+                res.send("created logo")    
             }
         }
     );

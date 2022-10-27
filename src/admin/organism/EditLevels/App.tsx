@@ -32,7 +32,7 @@ const EditLevels = (props: Props) => {
     const [maxAmount, setMaxAmount] = React.useState('')
     const [des, setDes] = React.useState('')
     const [color, setColor] = React.useState('')
-    const [logo, setLogo] = React.useState('')
+    const [logo, setLogo] = React.useState("")
 
     const resetInputs = () => {
         setLevelName('')
@@ -60,23 +60,24 @@ const EditLevels = (props: Props) => {
         fetchData()
 
     }, [levels])
-
+   
     React.useEffect(() => {
-        
-        const fetchLogo = async() => {fetch("/get-logo/" + student_org_name)
-        .then((res) => res.json()) 
-        .then((data) => {
-          
-            console.log("this is the data" + data)
-            setLogo(`data:${data.contentType};base64, ${Buffer.from(data.data).toString('base64')}`);
-        })
-        .then(() => setOrg(student_org_name))
+        const fetchLogo = async() => {
+           try{
+             const data = await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data) => setLogo(data))
+           }
+           catch(e){
+            console.log(e)
+           }
+               
         }
         
         fetchLogo() 
-        
+        console.log("logo is " + (logo))
       },[])
-
+      
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )
     }
@@ -139,7 +140,7 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Organization Logo" />}
+                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }}  alt="Organization Logo" />}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
