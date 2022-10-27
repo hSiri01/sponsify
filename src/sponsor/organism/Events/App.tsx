@@ -52,12 +52,9 @@ const Events = (props: Props) => {
                     // console.log(data)
                     data.sort(
                         (objA: any, objB: any) => {
-                            if (objA.name === "General Donation") {
-                                return -1
-                            }
-                            else {
-                                return objA.name.localeCompare(objB.name)
-                            }
+                            const date1 = new Date(objA.date)
+                            const date2 = new Date(objB.date)
+                            return date1.getTime() - date2.getTime()
                         }
                     )
                     setEvents(data)
