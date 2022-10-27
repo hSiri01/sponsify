@@ -45,7 +45,7 @@ app.get('/get-all-FAQ/:org', (req, res) => {
         )
 })
 
-app.put('/update-FAQ', (req, res) => {
+app.get('/update-FAQ', (req, res) => {
     // res.send('This route will update an FAQ')
     var freq = {
         "FAQ.$.question": req.body.question,
@@ -67,13 +67,13 @@ app.put('/update-FAQ', (req, res) => {
     );
 })
 
-app.post('/create-FAQ', (req, res) => {
+app.get('/create-FAQ', (req, res) => {
     // res.send('This route will create a new FAQ')
     var freq = {
         question: req.body.question,
         answer: req.body.answer
     };
-    console.log(freq);
+
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $push: { FAQ: freq } },
@@ -89,7 +89,7 @@ app.post('/create-FAQ', (req, res) => {
     );
 })
 
-app.delete('/delete-FAQ', (req, res) => {
+app.get('/delete-FAQ', (req, res) => {
     // res.send('This route will delete an FAQ')
     orgs.findOneAndUpdate(
         { name: req.body.organization },
