@@ -271,7 +271,7 @@ const EditEvent = (props: Props) => {
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             defaultValue={occurances}
                                             value={totalSpotsInput}
-                                            onChange={ev => setTotalSpotsInput(+ev.target.value)}
+                                            onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) }}}
                                         />
                                         <TextField 
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
@@ -281,7 +281,7 @@ const EditEvent = (props: Props) => {
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             defaultValue={num_sponsored}
                                             value={spotsTakenInput}
-                                            onChange={ev => setSpotsTakenInput(+ev.target.value)}
+                                            onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) }}}
                                         />
                                         <TextField
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
