@@ -152,6 +152,8 @@ app.put('/update-level', (req, res) => {
         "levels.$.description": req.body.description
     }
 
+    console.log(req.body)
+
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
         { $set: level },
@@ -234,14 +236,14 @@ app.get('/get-all-events/:org', (req, res) => {
 app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,
-        date: req.body.date + 'T06:00:00.000+00:00',
-        endDate: req.body.endDate + 'T06:00:00.000+00:00',
+        date: req.body.date,
+        endDate: req.body.endDate,
         price: req.body.price,
-        desc: req.body.desc,
-        briefDesc: req.body.briefDesc,
+        description: req.body.desc,
+        briefDescription: req.body.briefDesc,
         avgAttendance: req.body.avgAttendance,
         totalSpots: req.body.totalSpots,
-        spotsTaken: req.body.spotsTaken,
+        spotsTaken: 0,
         visible: req.body.visible,
         org: req.body.org,
         sponsors: []
@@ -292,14 +294,13 @@ app.put('/update-event', (req, res) => {
     else {
         const eventOptions = {
             name: req.body.name,
-            briefDesc: req.body.briefDesc,
-            date: req.body.date + 'T06:00:00.000+00:00',
-            endDate: req.body.endDate + 'T06:00:00.000+00:00',
+            briefDescription: req.body.briefDesc,
+            date: req.body.date,
+            endDate: req.body.endDate,
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
-            avgAttendance: req.body.avgAttendance,
-            desc: req.body.desc,
+            description: req.body.desc,
             visible: req.body.visible
         }
 
@@ -334,21 +335,20 @@ app.delete('/delete-event', (req, res) => {
     }
 })
 
-app.get('/get-org/:code', (req, res) => {
+app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log('Error on get-org, ' + err)
+                console.log('Error on verify-sponsor-code, ' + err)
             }
 
             if (result.length == 0) {
                 res.json({})
             } else {
                 res.json(result[0])
-                console.log(result[0])
             }
         })
 })
@@ -505,8 +505,8 @@ app.get('/get-logo/:org', (req, res) => {
         })
 })
 
-app.get('/verify-sponsor-code', (req, res) => {
-    res.send('Verify sponsor code')
+app.get('/get-org', (req,res) => {
+    res.send('Get org')
 })
 
 // The "catchall" handler: for any request that doesn't

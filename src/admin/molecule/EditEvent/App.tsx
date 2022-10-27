@@ -49,13 +49,13 @@ const EditEvent = (props: Props) => {
 
     const [nameInput, setNameInput] = React.useState(props.name);
     const [descInput, setDescInput] = React.useState(props.long_description);
-    const [briefDescInput, setBriefDescInput] = React.useState(props.short_description);
+    const [briefDescInput, setbriefDescInput] = React.useState(props.short_description);
     const [priceInput, setPriceInput] = React.useState(props.price);
     const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
     const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
 
-    const updateEvent = () => {
+    const submitEventUpdate = () => {
         fetch('/update-event', {
             method: 'PUT',
             headers: {
@@ -64,7 +64,7 @@ const EditEvent = (props: Props) => {
             },
             body: JSON.stringify({
                 name: nameInput,
-                id: id,
+                id: props.id,
                 price: priceInput,
                 date: dateInput,
                 endDate: endDateInput,
@@ -72,27 +72,12 @@ const EditEvent = (props: Props) => {
                 briefDesc: briefDescInput,
                 totalSpots: totalSpotsInput,
                 spotsTaken: spotsTakenInput,
-                avgAttendance: avgAttendanceInput,
                 visible: checked
             })
         })
-            .then(() => {
-                handleCloseEvent()
-                window.location.reload()})
-    };
 
-    const deleteEvent = () => {
-        fetch('/delete-event', {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: id
-            })
-        })
-            .then(() => window.location.reload())
+        handleCloseEvent()  // close the modal
+        window.location.reload()  // reload the page
     };
 
     const startmonth = (date_start.getMonth()+1 < 10) ? ("0" + (date_start.getMonth()+1).toString()) : date_start.getMonth()+1
@@ -119,13 +104,13 @@ const EditEvent = (props: Props) => {
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             
                             <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
-                                <IconButton color="secondary" aria-label="Edit" onClick={deleteEvent} sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
 
                             <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                <Date date_1={date_start} date_2={date_end}/>
+                                <Date date_1={date_start} date_2={date_end}/*date_2={date_end.getTime() != date_start.getTime() ? date_end : undefined}*//>
                             </Grid>
 
                             <Grid item xs={4}>
@@ -134,25 +119,18 @@ const EditEvent = (props: Props) => {
                             </Grid>
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
                             {
-                                occurances ? (
-                                    occurances === num_sponsored ? (
+                                occurances === num_sponsored ? (
                                         <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}/{occurances}</Typography>
 
-                                    ):(
-                                        <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}/{occurances}</Typography>
-                                    )
-                                ) : (
-                                    num_sponsored > 0 ? (
-                                        <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}</Typography>
-                                    ) : (
-                                        <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}</Typography>
-                                    )
+                                ):(
+                                            <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}/{occurances}</Typography>
+
                                 )
                             }
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ color:"#367c63", fontWeight: "600",ml: theme.spacing(8) }} variant="h6">{price > 0 ? '$' + price : '-'}</Typography>
+                                <Typography sx={{ color:"#367c63", fontWeight: "600",ml: theme.spacing(8) }} variant="h6">${price}</Typography>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(2) }}>
@@ -248,7 +226,7 @@ const EditEvent = (props: Props) => {
                                             variant="outlined" 
                                             defaultValue={short_description} 
                                             value={briefDescInput} 
-                                            onChange={ev => setBriefDescInput(ev.target.value)}
+                                            onChange={ev => setbriefDescInput(ev.target.value)}
                                         />
                                     </Grid>
 
@@ -327,7 +305,7 @@ const EditEvent = (props: Props) => {
                                 </Grid>
 
                                 <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
-                                    <Button /*href="/"*/ onClick={updateEvent} variant="contained" size="large" color="primary" sx={{
+                                    <Button /*href="/"*/ onClick={submitEventUpdate} variant="contained" size="large" color="primary" sx={{
                                         borderRadius: 0,
                                         pt: theme.spacing(3),
                                         pb: theme.spacing(3),

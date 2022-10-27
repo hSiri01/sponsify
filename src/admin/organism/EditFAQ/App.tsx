@@ -69,7 +69,7 @@ const EditFAQ = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_name} FAQ
+                        {student_org_short_name} FAQ
                     </Typography>
                 </Grid>
 

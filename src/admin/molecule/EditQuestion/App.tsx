@@ -14,68 +14,17 @@ import Button from '@mui/material/Button';
 
 
 interface Props {
-    id: string,
-    student_org_name: string,
-    ques: string,
-    ans: string,
+    question: string,
+    answer: string,
 }
 
 const EditQuestion = (props: Props) => {
 
-    const {id, student_org_name, ques, ans} = props
+    const {question, answer} = props
 
     const [openQuestion, setOpenQuestion] = React.useState(false);
-    const [question, setQuestion] = React.useState('')
-    const [answer, setAnswer] = React.useState('')
-
-
-    const handleQuestionChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setQuestion(event.target.value )
-    }
-
-    const handleAnswerChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setAnswer(event.target.value )
-    }
-    // const handleOpenQuestion = () => setOpenQuestion(true);
-    const handleOpenQuestion = () => {
-        setQuestion(ques)
-        setAnswer(ans)
-        // console.log(id)
-        setOpenQuestion(true)
-    };
+    const handleOpenQuestion = () => setOpenQuestion(true);
     const handleCloseQuestion = () => setOpenQuestion(false);
-
-    const handleUpdateQuestion = async () => {
-        const requestOptions = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                FAQId: id,
-                question: question,
-                answer: answer
-            })
-        }
-
-        await fetch("/update-FAQ", requestOptions)
-            .then((res) => console.log(res)) 
-
-            handleCloseQuestion()
-    }
-    const handleDeleteQuestion = async () => {
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                FAQId: id,
-                organization: student_org_name
-            })
-        }
-
-        await fetch("/delete-FAQ", requestOptions)
-            .then((res) => console.log(res)) 
-
-        handleCloseQuestion()
-    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -98,7 +47,7 @@ const EditQuestion = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'left' }}>
-                    <IconButton onClick={handleDeleteQuestion} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                    <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                         <DeleteIcon />
                     </IconButton>
                 </Grid>
@@ -137,26 +86,25 @@ const EditQuestion = (props: Props) => {
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
-                            <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" value={question} onChange={handleQuestionChange()}/>
+                            <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" defaultValue={question} />
                         </Grid>
                         
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
-                            <TextField
+                            <TextareaAutosize
                                 aria-label="empty textarea"
                                 placeholder="Empty"
+                                defaultValue={answer} 
                                 minRows={8}
                                 style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4)}}
-                                value={answer} 
-                                onChange={handleAnswerChange()}
                             />
                         </Grid>
 
                         <Grid item xs={6} sx={{
                             display: 'flex', justifyContent: 'left', mt: theme.spacing(10)
                         }}>
-                            <IconButton onClick={handleDeleteQuestion} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                            <IconButton color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                                 <DeleteIcon />
                             </IconButton>
                         </Grid>
@@ -164,7 +112,7 @@ const EditQuestion = (props: Props) => {
                         <Grid item xs={6} sx={{
                             display: 'flex', justifyContent: 'right', mt: theme.spacing(10)
                         }}>
-                            <Button onClick={handleUpdateQuestion} variant="contained" size="large" color="primary" sx={{
+                            <Button href="/" variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
                                 pb: theme.spacing(3),
