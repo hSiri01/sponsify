@@ -46,7 +46,7 @@
     "install-backend": "cd backend && npm i && cd ..",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run install-backend && npm install && npm run build"
   },
-  "proxy": "http://localhost:5000/",
+  "proxy": "http://localhost:5000",
   "license": "ISC",
   "repository": {
     "type": "git",
