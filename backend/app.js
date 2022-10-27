@@ -428,6 +428,18 @@ app.post('/create-sponsor', (req, res) => {
     });
 })
 
+app.get('/get-all-sponsors/:org', (req, res) => {
+    purchases.find({ org: req.params.org })
+        .populate("sponsorID")
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-all-sponsors, " + err)
+            }
+            res.json(result)
+            //console.log(result[0])
+    })
+})
+
 app.get('/get-org-info/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .exec((err, result) => {
