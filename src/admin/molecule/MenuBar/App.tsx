@@ -37,7 +37,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
 
                         <IconButton
-                            href={`/events-edit-` + student_org_short_name.toString()}
+                            href={'/events-edit'}
                             size="large"
                             edge="start"
                             aria-label="menu"
@@ -47,7 +47,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
 
                         <IconButton
-                            href={`/basic-info-` + student_org_short_name.toString()}
+                            href={'/basic-info'}
                             size="large"
                             edge="start"
                             aria-label="menu"
@@ -57,7 +57,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
                         
                         <IconButton
-                            href={`/levels-edit-` + student_org_short_name.toString()}
+                            href={'/levels-edit'}
                             size="large"
                             edge="start"
                             aria-label="menu"
@@ -67,7 +67,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
                         
                         <IconButton
-                            href={`/faq-edit-` + student_org_short_name.toString()}
+                            href={'/faq-edit'}
                             size="large"
                             edge="start"
                             aria-label="menu"
@@ -77,7 +77,7 @@ const MenuBar = (props: Props) => {
                         </IconButton>
                         
                         <IconButton
-                            href={`/summary-` + student_org_short_name.toString()}
+                            href={'/summary'}
                             size="large"
                             edge="start"
                             aria-label="menu"

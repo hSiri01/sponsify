@@ -5,16 +5,15 @@ import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
-
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 
 interface Props {
-    student_org_logo: string,
 }
 
 const Inbox = (props: Props) => {
 
-    const { student_org_logo } = props
+    const student_org_logo = SWELogo
 
     return (
         <ThemeProvider theme={theme}>

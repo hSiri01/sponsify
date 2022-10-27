@@ -14,12 +14,13 @@ import LevelSponsors from '../../molecule/LevelSponsors/App';
 interface Props {
     student_org_logo: string,
     total_sponsored: number,
-    student_org_name: string,
 }
 
 const PurchaseHistory = (props: Props) => {
 
-    const { student_org_logo, total_sponsored, student_org_name } = props
+    const { student_org_logo, total_sponsored } = props
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+
 
 
     const [purchases, setPurchases] = React.useState([{}]);
@@ -62,6 +63,7 @@ const PurchaseHistory = (props: Props) => {
     }, [sponsors])
 
     // console.log(purchases)
+    
     return (
 
         <ThemeProvider theme={theme}>

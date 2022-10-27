@@ -14,8 +14,6 @@ import MenuBar from '../../molecule/MenuBar/App'
 
 interface Props {
     student_org_logo: string,
-    student_org_short_name: string,
-    student_org_name: string, 
     street_address: string, 
     street_address_2?: string, 
     city: string, 
@@ -25,9 +23,9 @@ interface Props {
 
 const BasicInfo = (props: Props) => {
 
-    const { student_org_logo, student_org_short_name, student_org_name, street_address, street_address_2, city, state, zipcode} = props
-
-
+    const { student_org_logo, street_address, street_address_2, city, state, zipcode} = props
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
     return (
         <ThemeProvider theme={theme}>

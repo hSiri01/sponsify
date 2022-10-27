@@ -18,13 +18,11 @@ import Checkbox from '@mui/material/Checkbox';
 
 interface Props {
     student_org_logo: string,
-    student_org_name: string, 
-    student_org_short_name: string
 }
 
 const EditEvents = (props: Props) => {
 
-    const { student_org_logo, student_org_name, student_org_short_name } = props
+    const { student_org_logo} = props
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
     const handleCloseNewQuestion = () => setOpenNewQuestion(false);
@@ -34,10 +32,21 @@ const EditEvents = (props: Props) => {
         setChecked(event.target.checked);
     };
 
+    const [nameInput, setNameInput] = React.useState('');
+    const [descInput, setDescInput] = React.useState('');
+    const [briefDescInput, setBriefDescInput] = React.useState('');
+    const [priceInput, setPriceInput] = React.useState(-1);
+    const [totalSpotsInput, setTotalSpotsInput] = React.useState(-1);
+    const [spotsTakenInput, setSpotsTakenInput] = React.useState(-1);
+    const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(-1);
+    const [dateInput, setDateInput] = React.useState('');
+    const [endDateInput, setEndDateInput] = React.useState('');
+
     const [events, setEvents] = React.useState([{}]);
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
     React.useEffect(() => {
-        console.log(student_org_name)
         const fetchData = async() => {
             const data = await fetch("/get-all-events/" + student_org_name)
                 .then((res) => res.json())
@@ -45,9 +54,15 @@ const EditEvents = (props: Props) => {
                     // console.log(data)
                     data.sort(
                         (objA: any, objB: any) => {
-                            const date1 = new Date(objA.date)
-                            const date2 = new Date(objB.date)
-                            return date1.getTime() - date2.getTime()
+                            if (objA.name === "General Donation") {
+                                return -1
+                            }
+                            else if (objB.name === "General Donation") {
+                                return 1
+                            }
+                            else {
+                                return objA.name.toLowerCase().localeCompare(objB.name.toLowerCase())
+                            }
                         }
                     )
                     setEvents(data)
@@ -58,12 +73,45 @@ const EditEvents = (props: Props) => {
         fetchData()
     }, [])
 
+    const createEvent = () => {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
+            fetch('/create-event', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: nameInput,
+                    price: priceInput,
+                    date: dateInput ? dateInput : undefined,
+                    endDate: endDateInput ? endDateInput : undefined,
+                    desc: descInput,
+                    briefDesc: briefDescInput,
+                    totalSpots: totalSpotsInput,
+                    spotsTaken: spotsTakenInput > -1 ? spotsTakenInput : 0,
+                    avgAttendance: avgAttendanceInput,
+                    visible: checked,
+                    org: student_org_name
+                })
+            })
+                .then(() => {
+                    handleCloseNewQuestion()
+                    window.location.reload()
+                })
+        }
+        else {
+            handleOpenNewQuestion()  // keep modal open
+            // TODO: error handling
+        }
+    };
+
     return (
 
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name="swe"/>
+            <MenuBar student_org_short_name={student_org_short_name}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -148,60 +196,11 @@ const EditEvents = (props: Props) => {
                     </Paper>
                 </Grid>
 
-
-                
-                {/*<Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
-
-                    <EditEvent name="Leadership Conference"
-                        short_description='Sponsor and Present at Conference'
-                        long_description={`The Leadership Conference will be held hybrid as a three day series. This will be the third ever Leadership Conference SWE-TAMU holds! Members will have an opportunity to explore leadership through lectures and interactive learning. The goal is to help members grow and develop their leadership skills to aid them in their personal and professional aspirations. The sponsoring company is invited to present a topic their company values, as part of the Leadership Conference. Some examples include: leadership styles, communication, organization and mental health awareness. The Conference is a multi-day event in Fall 2022.`}
-                        avg_attendance={50}
-                        num_sponsored={0}
-                        occurances={1}
-                        price={2000}
-                        date_start={new Date(2022, 10, 14)}
-                        date_end={new Date(2022, 10, 16)}
-                        visible={true}
-                        />
-                    
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
-
-                    <EditEvent name="First General Meeting"
-                        short_description='Present at First General Meeting'
-                        long_description={`SWE-TAMU holds bi-weekly meetings throughout the school year to provide members insight about opportunities after college and allow companies to interact with students. At meetings, we encourage our speakers to discuss topics that will help members enter and excel in the industry in a 30-minute presentation. Past topics have included resume writing, interview skills, work-life balance, expectations as a new engineer and more. Technical presentations are discouraged due to the variety of engineering disciplines represented by our members. All meetings will be on a Tuesday, running from 7:30 p.m. until 8:30 p.m. with an in-person and hybrid option. The first general meeting will run from 8:30 p.m. to 9:30 p.m. Sponsors will receive a follow up email after the meeting, which includes access to our members resumes and stats for that meeting. The payment for food and beverage is included in the General Meeting fee.`}
-                        avg_attendance={100}
-                        num_sponsored={0}
-                        occurances={1}
-                        price={3500}
-                        date_start={new Date(2022, 9, 12)}
-                        visible={true}
-                        
-                    />
-
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-
-                    <EditEvent name="Second General Meeting"
-                        short_description='Present at First General Meeting'
-                        long_description={`SWE-TAMU holds bi-weekly meetings throughout the school year to provide members insight about opportunities after college and allow companies to interact with students. At meetings, we encourage our speakers to discuss topics that will help members enter and excel in the industry in a 30-minute presentation. Past topics have included resume writing, interview skills, work-life balance, expectations as a new engineer and more. Technical presentations are discouraged due to the variety of engineering disciplines represented by our members. All meetings will be on a Tuesday, running from 7:30 p.m. until 8:30 p.m. with an in-person and hybrid option. The first general meeting will run from 8:30 p.m. to 9:30 p.m. Sponsors will receive a follow up email after the meeting, which includes access to our members resumes and stats for that meeting. The payment for food and beverage is included in the General Meeting fee.`}
-                        avg_attendance={100}
-                        num_sponsored={0}
-                        occurances={1}
-                        price={3500}
-                        date_start={new Date(2022, 10, 12)}
-                        visible={true}
-
-                    />
-
-                </Grid>*/}
-
                 <>
-                    {events.map((event: any) =>   
+                    {
+                    events.map((event: any) =>
                     <>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             <EditEvent 
                                 name={event.name}
@@ -210,7 +209,7 @@ const EditEvents = (props: Props) => {
                                 long_description={event.desc}
                                 avg_attendance={event.avgAttendance}
                                 num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots}
+                                occurances={event.totalSpots > -1 ? event.totalSpots : undefined}
                                 price={event.price}
                                 date_start={new Date(event.date)}
                                 date_end={event.endDate ? new Date(event.endDate) : undefined}
@@ -265,6 +264,8 @@ const EditEvents = (props: Props) => {
                                     id="date"
                                     label="Date Start"
                                     type="date"
+                                    value={dateInput}
+                                    onChange={ev => setDateInput(ev.target.value)}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -274,6 +275,8 @@ const EditEvents = (props: Props) => {
                                     id="date"
                                     label="Date End"
                                     type="date"
+                                    value={endDateInput}
+                                    onChange={ev => setEndDateInput(ev.target.value)}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -282,21 +285,57 @@ const EditEvents = (props: Props) => {
                             </Grid>
 
 
-
-
-
                             <Grid item xs={5}>
-                                <TextField sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }} id="outlined-basic" label="Name" variant="outlined"  />
-                                <TextField sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }} id="outlined-basic" label="Short Description" variant="outlined" />
+                                <TextField 
+                                    sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
+                                    id="outlined-basic"
+                                    label="Name"
+                                    variant="outlined"
+                                    value={nameInput}
+                                    onChange={ev => setNameInput(ev.target.value)}  />
+                                <TextField 
+                                    sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Short Description"
+                                    variant="outlined"
+                                    value={briefDescInput}
+                                    onChange={ev => setBriefDescInput(ev.target.value)} />
                             </Grid>
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Price" variant="outlined" />
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Occurances" variant="outlined" />
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Sponsored" variant="outlined" />
-                                <TextField sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }} id="outlined-basic" label="Avg Attendance" variant="outlined" />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Price"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={priceInput > -1 ? priceInput : ''}
+                                    onChange={ev => setPriceInput(+ev.target.value)} />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Occurances"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={totalSpotsInput > -1 ? totalSpotsInput : ''}
+                                    onChange={ev => setTotalSpotsInput(+ev.target.value)} />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Sponsored"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={spotsTakenInput > -1 ? spotsTakenInput : ''}
+                                    onChange={ev => setSpotsTakenInput(+ev.target.value)} />
+                                <TextField
+                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                    id="outlined-basic"
+                                    label="Avg Attendance"
+                                    variant="outlined"
+                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                    value={avgAttendanceInput > -1 ? avgAttendanceInput : ''}
+                                    onChange={ev => setAvgAttendanceInput(+ev.target.value)} />
                             </Grid>
-
 
 
                         </Grid>
@@ -307,6 +346,8 @@ const EditEvents = (props: Props) => {
                             <TextareaAutosize
                                 aria-label="empty textarea"
                                 placeholder='Long Description'
+                                value={descInput}
+                                onChange={ev => setDescInput(ev.target.value)}
                                 minRows={8}
                                 style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                             />
@@ -326,7 +367,7 @@ const EditEvents = (props: Props) => {
                         </Grid>
 
                         <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
-                            <Button href="/" variant="contained" size="large" color="primary" sx={{
+                            <Button /*href="/"*/ onClick={createEvent} variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
                                 pb: theme.spacing(3),
