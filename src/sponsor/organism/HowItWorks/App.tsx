@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Question from '../../../assets/images/graphics/question.svg';
@@ -6,26 +5,19 @@ import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
-import FAQPage from '../FAQ/App';
 
 interface Props {
-    organization: string,
-    organization_short_name: string,
-    organization_logo: string
 }
 
 const HowItWorks = (props: Props) => {
-    
-    const { organization, organization_short_name, organization_logo }  = props
-    const [buttonClick, setButtonClick] = React.useState(false)
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
-    // console.log(organization)
+    console.log(student_org_name)
+    console.log(student_org_short_name)
 
     return (
         <ThemeProvider theme={theme}>
-
-            { buttonClick ? <FAQPage student_org_name={organization} student_org_short_name={organization_short_name} student_org_logo={organization_logo} /> : 
-
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
@@ -66,11 +58,10 @@ const HowItWorks = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
                     <Button 
-                    // href="/faq-swe" 
+                            href="/faq" 
                             variant="contained" 
                             size="large" 
                             color="secondary" 
-                            onClick={() => setButtonClick(!buttonClick)}
                         sx={{
                             color: 'white',
                             backgroundColor: '#434343',
@@ -88,7 +79,6 @@ const HowItWorks = (props: Props) => {
                 </Grid>
 
             </Grid>
-            }
         </ThemeProvider>    
 
 

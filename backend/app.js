@@ -45,7 +45,7 @@ app.get('/get-all-FAQ/:org', (req, res) => {
         )
 })
 
-app.put('/update-FAQ', (req, res) => {
+app.get('/update-FAQ', (req, res) => {
     // res.send('This route will update an FAQ')
     var freq = {
         "FAQ.$.question": req.body.question,
@@ -67,13 +67,13 @@ app.put('/update-FAQ', (req, res) => {
     );
 })
 
-app.post('/create-FAQ', (req, res) => {
+app.get('/create-FAQ', (req, res) => {
     // res.send('This route will create a new FAQ')
     var freq = {
         question: req.body.question,
         answer: req.body.answer
     };
-    console.log(freq);
+
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $push: { FAQ: freq } },
@@ -89,7 +89,7 @@ app.post('/create-FAQ', (req, res) => {
     );
 })
 
-app.delete('/delete-FAQ', (req, res) => {
+app.get('/delete-FAQ', (req, res) => {
     // res.send('This route will delete an FAQ')
     orgs.findOneAndUpdate(
         { name: req.body.organization },
@@ -151,6 +151,8 @@ app.put('/update-level', (req, res) => {
         "levels.$.color": req.body.color,
         "levels.$.description": req.body.description
     }
+
+    console.log(req.body)
 
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
@@ -234,14 +236,14 @@ app.get('/get-all-events/:org', (req, res) => {
 app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,
-        date: req.body.date,
-        endDate: req.body.endDate,
+        date: req.body.date + 'T06:00:00.000+00:00',
+        endDate: req.body.endDate + 'T06:00:00.000+00:00',
         price: req.body.price,
-        description: req.body.desc,
-        briefDescription: req.body.briefDesc,
+        desc: req.body.desc,
+        briefDesc: req.body.briefDesc,
         avgAttendance: req.body.avgAttendance,
         totalSpots: req.body.totalSpots,
-        spotsTaken: 0,
+        spotsTaken: req.body.spotsTaken,
         visible: req.body.visible,
         org: req.body.org,
         sponsors: []
@@ -292,13 +294,14 @@ app.put('/update-event', (req, res) => {
     else {
         const eventOptions = {
             name: req.body.name,
-            briefDescription: req.body.briefDesc,
-            date: req.body.date,
-            endDate: req.body.endDate,
+            briefDesc: req.body.briefDesc,
+            date: req.body.date + 'T06:00:00.000+00:00',
+            endDate: req.body.endDate + 'T06:00:00.000+00:00',
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
-            description: req.body.desc,
+            avgAttendance: req.body.avgAttendance,
+            desc: req.body.desc,
             visible: req.body.visible
         }
 
@@ -333,21 +336,20 @@ app.delete('/delete-event', (req, res) => {
     }
 })
 
-app.get('/get-org/:code', (req, res) => {
+app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
     orgs.find({ eventCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log('Error on get-org, ' + err)
+                console.log('Error on verify-sponsor-code, ' + err)
             }
 
             if (result.length == 0) {
                 res.json({})
             } else {
                 res.json(result[0])
-                console.log(result[0])
             }
         })
 })
@@ -504,8 +506,8 @@ app.get('/get-logo/:org', (req, res) => {
         })
 })
 
-app.get('/verify-sponsor-code', (req, res) => {
-    res.send('Verify sponsor code')
+app.get('/get-org', (req,res) => {
+    res.send('Get org')
 })
 
 // The "catchall" handler: for any request that doesn't
