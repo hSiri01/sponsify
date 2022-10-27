@@ -28,7 +28,6 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import CheckBackLater from './sponsor/organism/HowItWorks copy/App';
 
 
 
@@ -46,7 +45,6 @@ const App: React.FC = () => {
             <Route path="/events-swe" element={<Events student_org_name={"Society of Women Engineers"} student_org_short_name="SWE" student_org_logo={SWELogo} />} />
             <Route path="/checkout-swe" element={<Checkout student_org_logo={SWELogo} student_org_name="Society of Women Engineers" />} />
             <Route path="/inbox-swe" element={<Inbox student_org_logo={SWELogo} />} />
-            <Route path="/check-back-later" element={<CheckBackLater />} />
 
             <Route path="/faq-edit-swe" element={<EditFAQ student_org_logo={SWELogo} student_org_name="SWE" />} />
           
