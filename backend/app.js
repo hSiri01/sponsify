@@ -550,13 +550,13 @@ var upload = multer({ storage: storage,
 
 app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-    .select({logoImage : 1})
+    .select({logoImage : 1, _id : 0},)
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
             }
             else {
-                console.log(result[0])
+                console.log("result", result[0])
                 res.json(result[0])
             }
     })

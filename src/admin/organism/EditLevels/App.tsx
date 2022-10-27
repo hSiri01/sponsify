@@ -58,24 +58,25 @@ const EditLevels = (props: Props) => {
                 .then(() => setOrg(student_org_name))
         }
         fetchData()
-
+        
     }, [levels])
    
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-             const data = await fetch("/get-logo/" + student_org_name)
+            
+             const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => setLogo(data))
+                .then((data1) => setLogo(data1.logoImage))
            }
            catch(e){
-            console.log(e)
+            console.log("errror found",(e))
            }
                
         }
         
         fetchLogo() 
-        console.log("logo is " + (logo))
+
       },[])
       
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +141,7 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }}  alt="Organization Logo" />}
+                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10), }}  src= {logo} alt="Organization Logo" />}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
