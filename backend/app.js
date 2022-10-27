@@ -517,6 +517,37 @@ var upload = multer({ storage: storage,
 });
 
 
+// app.post('api/create-logo/:org',upload.single('image'), (req, res) => {
+//     var img = fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename))
+//     var encImg = img.toString('base64');
+    
+//     var logoImage = {
+//         image : Buffer(encImg, 'base64'),
+//         contentType: 'image/jpg',
+//     }
+    
+       
+//     // console.log(req.file.filename)
+//       //var filepath =  "http://localhost:3001/uploads/image-" + req.file.filename
+        
+      
+//     orgs.findOneAndUpdate(
+//         { name: req.params.organization },
+//         { $set: {logoImage: logoImage}},
+//         function (error, success) {
+//             if (error) {
+//                 console.log("Error", error);
+//                 res.send('Error')
+//             } else {
+//                 return res.status(201)
+//                 .json({ url: "http://localhost:3001/api/create-logo/:org" + req.file.filenameName });
+//                 console.log(success);
+//                 res.send('Updated FAQ')
+//             }
+//         }
+//     );
+// })
+
 app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
     .select('logoImage')
@@ -529,31 +560,22 @@ app.get('/get-logo/:org', (req,res) => {
             }
     })
 })
-app.post('api/create-logo/:org',upload.single('image'), (req, res) => {
+app.post('/create-logo/:org', (req, res) => {
     var img = fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename))
     var encImg = img.toString('base64');
     
-    var logoImage = {
-        image : Buffer(encImg, 'base64'),
-        contentType: 'image/jpg',
-    }
-       
-    console.log(req.file.filename)
-      //var filepath =  "http://localhost:3001/uploads/image-" + req.file.filename
-        
+    var logoImage = req.body.imageUrl
       
     orgs.findOneAndUpdate(
         { name: req.params.organization },
         { $set: {logoImage: logoImage}},
         function (error, success) {
             if (error) {
-                console.log("Error", error);
+                console.log("Error in create-logo", error);
                 res.send('Error')
             } else {
-                return res.status(201)
-                .json({ url: "http://localhost:3001/api/create-logo/:org" + req.file.filenameName });
                 console.log(success);
-                res.send('Updated FAQ')
+                res.json(orgs.imageUrl);      
             }
         }
     );

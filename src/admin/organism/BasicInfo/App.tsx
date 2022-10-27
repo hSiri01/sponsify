@@ -12,9 +12,15 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
 import axios from "axios";
+import * as dotenv from 'dotenv'
 import { isCompositeComponent } from 'react-dom/test-utils';
+import { convertRoutesToDataRoutes } from '@remix-run/router/dist/utils';
+import { AnyAaaaRecord } from 'dns';
+var sha1 = require('sha1')
+
 // const axios = require('axios').default;
 
+const preset = 'your Upload presets';
 interface Props {
     student_org_logo: string,
     student_org_short_name: string,
@@ -30,67 +36,54 @@ axios.create({
     baseURL: "http://localhost:3001",
   });
 const BasicInfo = (props: Props) => {
-    const [image, setImage] = React.useState("");
+    const [image, setImage] = React.useState<any|null>(null);
     const [imageFile, setFile] = React.useState();
     const { student_org_logo, student_org_short_name, student_org_name, street_address, street_address_2, city, state, zipcode} = props
     const [org, setOrg] = React.useState('')
+    const [url, setUrl] = React.useState('')
     const [logo, setLogo] = React.useState('')
     const [selectedFile, setSelectedFile] = React.useState<any|null>(null);
-    // const getImage = (e) => {
-    //     setFile(e.target.files[0]); //save chosen image to imageFile
-    //   }
-    // const handleLogoChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
-       
-    //     setLogo(event.target.value)
-    //     //console.log(logo)
-    // }
-    // const handleCreateLogo = async () => {
-
-    //     const requestOptions = {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'multipart/form-data' },
-    //         body: JSON.stringify({ 
-    //             organization: student_org_name,
-    //             logoImage: logo,
-    //         })
-    //     }
-    //     console.log(logo)
-    //     await fetch("/update-logo", requestOptions)
-    //         .then((res) => console.log(res)) 
-
-    // }
-    const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        console.log("submit clicked")
-        console.log(selectedFile)
-        const formData = new FormData();
-        if(selectedFile){
-            console.log('Selected file is ok')
-            formData.append("selectedFile", selectedFile);
-        }
     
-        try {
-            
-          const response = await axios({
-            method: "post",
-            url: "http://localhost:3001/app/create-logo/Society of Women Engineers",
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          console.log(response.data + 'this is data after api call');
-        } catch(error) {
-           
-          console.log(error)
+    const uploadPreset = 'fuckcloudinary'
+   
+    
+    const cloudName = "dmkykmach"
+      
+    
+    const handleCreateLogo = async () => {
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            body: JSON.stringify({ 
+                organization: student_org_name,
+                logoImage: url,
+            })
         }
         
-          
+        await fetch("/update-logo", requestOptions)
+            .then((res) => console.log(res)) 
 
-      }
-    
-      const handleFileSelect = (event : React.ChangeEvent<HTMLInputElement>) => {
-        console.log("handling file select")
-        setSelectedFile(event.target.value)
-      }
+    }
+    const uploadImage = () => {
+        if(image){
+            const data = new FormData()
+            data.append("file", image[0])
+            data.append('upload_preset', uploadPreset)
+            data.append('cloud_name','dmkykmach' ) 
+            fetch("  https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
+              method:"post",
+              body: data as any
+            })
+        .then(resp => resp.json())
+        .then(data => {
+        setUrl(data.url)
+        })
+        .catch(err => console.log(err))
+        console.log(url)
+        }
+        
+    }
 
 
     return (
@@ -159,11 +152,10 @@ const BasicInfo = (props: Props) => {
                     <TextField sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2), mb: theme.spacing(4) }} id="outlined-basic" label="Zipcode" variant="outlined" defaultValue={zipcode} />
 
                 </Grid>
-
                 <Grid item xs={12} > 
                     
                         <iframe name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
-                        <form  onSubmit={handleSubmit} method="POST" action="/create-logo"target = "dummyframe" encType="multipart/form-data">
+                        <form  onSubmit={uploadImage} action ="#" /*method="POST" action="/create-logo"*/ target = "dummyframe" encType="multipart/form-data">
                             <input type="hidden" name="organization" value={student_org_name} />
                             <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(10)}}>
                             
@@ -189,7 +181,7 @@ const BasicInfo = (props: Props) => {
                                     hidden
                                     name="image" 
                                     required
-                                    onChange={handleFileSelect}
+                                    onChange= {(e)=> setImage(e.target.files)}
                                 />
                                 </Button> 
                                 </Grid>
