@@ -29,7 +29,7 @@ const PurchaseHistory = (props: Props) => {
                 .then((data1) => setLogo(data1.logoImage))
            }
            catch(e){
-            console.log("errror found",(e))
+            console.log("Error fetching logo ",(e))
            }
                
         }

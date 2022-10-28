@@ -29,13 +29,13 @@ const EditFAQ = (props: Props) => {
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-            console.log("Org ", student_org_name)
+            //console.log("Org ", student_org_name)
              const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
            catch(e){
-            console.log("Error found with logo",(e))
+            console.log("Error found with logo ",(e))
            }
                
         }

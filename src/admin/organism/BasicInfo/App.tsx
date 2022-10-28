@@ -16,11 +16,8 @@ import * as dotenv from 'dotenv'
 import { isCompositeComponent } from 'react-dom/test-utils';
 import { convertRoutesToDataRoutes } from '@remix-run/router/dist/utils';
 import { AnyAaaaRecord } from 'dns';
-var sha1 = require('sha1')
 
-// const axios = require('axios').default;
 
-const preset = 'your Upload presets';
 interface Props {
     student_org_logo: string,
     student_org_short_name: string,
@@ -54,7 +51,7 @@ const BasicInfo = (props: Props) => {
                 .then((data1) => setLogo(data1.logoImage))
            }
            catch(e){
-            console.log("errror found",(e))
+            console.log("Error fetching logo ",(e))
            }
                
         }

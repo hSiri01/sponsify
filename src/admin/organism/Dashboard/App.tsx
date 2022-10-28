@@ -42,13 +42,13 @@ const Dashboard = (props: Props) => {
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-            console.log(student_org_name)
+            //console.log(student_org_name)
              const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
            catch(e){
-            console.log("errror found",(e))
+            console.log("Error fetching logo ",(e))
            }
                
         }

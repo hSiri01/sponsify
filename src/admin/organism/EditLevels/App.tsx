@@ -11,8 +11,6 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
-import { Buffer } from 'buffer';
-window.Buffer = Buffer;
 
 interface Props {
     student_org_logo: string,
@@ -64,13 +62,13 @@ const EditLevels = (props: Props) => {
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-            console.log(student_org_name)
+            //console.log(student_org_name)
              const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
            catch(e){
-            console.log("errror found",(e))
+            console.log("Error fetching logo ",(e))
            }
                
         }
