@@ -13,11 +13,9 @@ const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
 var cors = require('cors');
 app.use(cors())
-const nodemailer = require('nodemailer')
-const sendGridTransport = require('nodemailer-sendgrid-transport');
+
 //adding routes for image upload
 var fs = require('fs');
-
 var multer = require('multer');
 const { sub } = require('date-fns');
 
