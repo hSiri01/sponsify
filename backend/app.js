@@ -565,50 +565,39 @@ app.get('/get-logo/:org', (req, res) => {
 app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
-const transporter = nodemailer.createTransport(sendGridTransport({
-    auth:{
-        api_key: process.env.SENDGRID_API
-        }
-    }))
 
-    function sendGridEmail(toInput, fromInput, subjectInput, messageInput){
-        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-        const msg = {
-            to: toInput, // Change to your recipient
-            from: fromInput, // Change to your verified sender
-            subject: subjectInput,
-            text: messageInput,
-            //html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-          }
-          sgMail
-            .send(msg)
-            .then((response) => {
-                console.log("Email sent")
-                console.log(response[0].statusCode)
-                console.log(response[0].headers)
-            })
-            .catch((error) => {
-                console.error(error)
-            })
-    }
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress){
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        text: messageInput,
+        
+        templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
+        dynamicTemplateData: {
+            orgName : orgName,
+            shortOrgName : shortorgName,
+            orgAddress : orgAddress,
+            items : messageInput
+            },
+        }
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
 app.post("/send-checkout-email", (req, res) => {
-    const { firstNameInput, lastNameInput, emailInput, message, subject, } = req.body
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name,student_org_short_name,orgAddress } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    // transporter.sendMail({
-    //     to:"sabrinapena@tamu.edu", //will be recipeient
-    //     from: "sabrinapena@tamu.edu",//need to change this to domain after it is set up
-    //     subject: "Sponsorship Information ",
-    //     text: message
-    //     // html:`<h3>${firstNameInput}</h3>
-    //     // <p>${message}</p>`
-    // }).then(resp => {
-    //     res.json({resp})
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    // })
-        sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,message);
-    })
+    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,student_org_short_name,orgAddress);
+})
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
