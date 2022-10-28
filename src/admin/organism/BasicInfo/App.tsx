@@ -35,7 +35,6 @@ const BasicInfo = (props: Props) => {
     const [imageFile, setFile] = React.useState();
     const { student_org_logo, student_org_short_name, student_org_name, street_address, street_address_2, city, state, zipcode} = props
     const [org, setOrg] = React.useState('')
-    const [url, setUrl] = React.useState('')
     const [logo, setLogo] = React.useState('')
     const [selectedFile, setSelectedFile] = React.useState<any|null>(null);
     
@@ -55,11 +54,11 @@ const BasicInfo = (props: Props) => {
            }
                
         }
-        
         fetchLogo() 
 
       },[])
-    const handleCreateLogoUrl = async () => {
+
+    const handleCreateLogoUrl =  (url : string) => {
 
         if(url){
             const requestOptions = {
@@ -70,13 +69,15 @@ const BasicInfo = (props: Props) => {
                 organization : student_org_name
             })
         }
-        await fetch("/create-logo", requestOptions)
-            .then((res) => console.log("Finished " + res)) 
+        fetch("/create-logo", requestOptions)
+            .then((res) => console.log("Finished ", res)) 
+            .then ((data) => setLogo(url))
+            console.log("handdle create set logo ", logo)
+            
     }
      
     }
-    const uploadImage = () => {
-       
+    const uploadImage =  () => {
         if(image){
             const data = new FormData()
             data.append("file", image[0])
@@ -88,14 +89,11 @@ const BasicInfo = (props: Props) => {
             })
         .then(resp => resp.json())
         .then(data => {
-        setUrl(data.url)
+        handleCreateLogoUrl(data.url)
+        //setLogo(data.url)
         })
         .catch(err => console.log(err))
-        
         }
-       
-        handleCreateLogoUrl()
-        
     }
 
 
@@ -119,7 +117,7 @@ const BasicInfo = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} key={Date.now()} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
