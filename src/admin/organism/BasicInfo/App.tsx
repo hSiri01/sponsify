@@ -42,17 +42,29 @@ const BasicInfo = (props: Props) => {
     const [logo, setLogo] = React.useState('')
     const [selectedFile, setSelectedFile] = React.useState<any|null>(null);
     
-    const uploadPreset = 'fuckcloudinary'
-   
-    
+    const uploadPreset = 'db6q2mz0'
     const cloudName = "dmkykmach"
       
     
-    
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+             const data1 = await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("errror found",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
+
+      },[])
     const handleCreateLogoUrl = async () => {
 
         if(url){
-            
             const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -61,7 +73,6 @@ const BasicInfo = (props: Props) => {
                 organization : student_org_name
             })
         }
-        console.log("req opteionf" + requestOptions.body)
         await fetch("/create-logo", requestOptions)
             .then((res) => console.log("Finished " + res)) 
     }
@@ -74,7 +85,7 @@ const BasicInfo = (props: Props) => {
             data.append("file", image[0])
             data.append('upload_preset', uploadPreset)
             data.append('cloud_name','dmkykmach' ) 
-            fetch("  https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
+            fetch("https://api.cloudinary.com/v1_1/dmkykmach/image/upload",{
               method:"post",
               body: data as any
             })
@@ -83,9 +94,9 @@ const BasicInfo = (props: Props) => {
         setUrl(data.url)
         })
         .catch(err => console.log(err))
-        console.log("URL IS " + url)
+        
         }
-        console.log(url)
+       
         handleCreateLogoUrl()
         
     }
@@ -111,7 +122,7 @@ const BasicInfo = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

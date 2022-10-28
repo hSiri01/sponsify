@@ -61,7 +61,24 @@ const Events = (props: Props) => {
 
         fetchData()
     }, [])
+    const [logo, setLogo] = React.useState("")
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+            console.log(student_org_name)
+             const data1 = await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("errror found",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
 
+      },[])
     const { cart } = useCart()
 
     return (
@@ -190,7 +207,7 @@ const Events = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

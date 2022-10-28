@@ -56,6 +56,10 @@ const orgSchema = new mongoose.Schema({
         type: String,
         default: ""
     }, 
+    shortName: {
+        type: String,
+        default: ""
+    }
 })
 
 module.exports = mongoose.model('organizations', orgSchema);

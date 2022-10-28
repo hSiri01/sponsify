@@ -21,6 +21,7 @@ interface Props {
 const SponsorHome = (props: Props) => {
     const [input, setInput] = React.useState('');
     const [org, setOrg] = React.useState('');
+    const [orgShortName, setOrgShortName] = React.useState('');
     const [buttonClick, setButtonClick] = React.useState(false);
     const [openAlert, setOpenAlert] = React.useState(false);
 
@@ -45,6 +46,7 @@ const SponsorHome = (props: Props) => {
                   setOpenAlert(true)
               } else {
                   setOrg(data.name)
+                  setOrgShortName(data.shortName)
                   setButtonClick(true)
               }
           });
@@ -60,7 +62,7 @@ const SponsorHome = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
             { buttonClick ? 
-            <HowItWorks organization={org} /> : 
+            <HowItWorks organization={org} student_org_short_name={orgShortName} /> : 
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />

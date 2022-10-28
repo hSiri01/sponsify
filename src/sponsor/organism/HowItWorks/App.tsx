@@ -9,12 +9,13 @@ import Button from '@mui/material/Button';
 import FAQPage from '../FAQ/App';
 
 interface Props {
-    organization: string
+    organization: string,
+    student_org_short_name : string
 }
 
 const HowItWorks = (props: Props) => {
     
-    const { organization }  = props
+    const { organization, student_org_short_name }  = props
     const [buttonClick, setButtonClick] = React.useState(false)
 
     // console.log(organization)
@@ -22,7 +23,7 @@ const HowItWorks = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
-            { buttonClick ? <FAQPage student_org_logo='' student_org_name={organization} /> : 
+            { buttonClick ? <FAQPage student_org_logo='' student_org_name={organization} student_org_short_name={student_org_short_name} /> : 
 
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>

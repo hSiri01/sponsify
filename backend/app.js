@@ -18,9 +18,8 @@ var path = require('path');
 var multer = require('multer');
 const { BedtimeOffRounded } = require('@mui/icons-material');
 app.use("/images", express.static("./images"));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
-app.use(express.json());
 mongoose.connect(
     process.env.MONGODB_URL,
     {
@@ -517,64 +516,31 @@ var upload = multer({ storage: storage,
 });
 
 
-// app.post('api/create-logo/:org',upload.single('image'), (req, res) => {
-//     var img = fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename))
-//     var encImg = img.toString('base64');
-    
-//     var logoImage = {
-//         image : Buffer(encImg, 'base64'),
-//         contentType: 'image/jpg',
-//     }
-    
-       
-//     // console.log(req.file.filename)
-//       //var filepath =  "http://localhost:3001/uploads/image-" + req.file.filename
-        
-      
-//     orgs.findOneAndUpdate(
-//         { name: req.params.organization },
-//         { $set: {logoImage: logoImage}},
-//         function (error, success) {
-//             if (error) {
-//                 console.log("Error", error);
-//                 res.send('Error')
-//             } else {
-//                 return res.status(201)
-//                 .json({ url: "http://localhost:3001/api/create-logo/:org" + req.file.filenameName });
-//                 console.log(success);
-//                 res.send('Updated FAQ')
-//             }
-//         }
-//     );
-// })
-
 app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
     .select({logoImage : 1, _id : 0},)
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-org-info, " + err)
+                //console.log("Error on get-org-info, " + err)
+                res.send('Error on create-logo')
             }
             else {
-                console.log("result", result[0])
+                //console.log("Logo url recevied", result[0])
                 res.json(result[0])
             }
     })
 })
 
 app.post('/create-logo', (req, res) => {
- 
-    var imageUrl = req.body.logoImage
-    console.log("req body" + req.body.logoImage)
     orgs.findOneAndUpdate(
         { name: req.body.organization },
-        { $set: {logoImage: imageUrl}},
+        { $set: {logoImage: req.body.logoImage}},
         function (error, success) {
             if (error) {
-                console.log("Error in create-logo", error);
-                res.send('Error')
+                //console.log("Error in create-logo", error);
+                res.send('Error on create-logo')
             } else {
-                res.send("created logo")    
+                res.send("Created logo successfully")    
             }
         }
     );
