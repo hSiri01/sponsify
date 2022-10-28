@@ -20,11 +20,11 @@ import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
 import Link from '@mui/material/Link';
 import * as React from 'react';
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
+
 
 interface Props {
-    student_org_logo: string,
-    student_org_name: string, 
-    student_org_short_name: string, 
+    // TO DO: Needs to get changed - retrieved from backend (routes)
     sponsor_code: string,
     valid_until_date: Date,
     street_address: string,
@@ -37,7 +37,7 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
-    const { student_org_logo, sponsor_code, valid_until_date, student_org_name, street_address, address_2, city, state, zip_code, fund_name, student_org_short_name } = props
+
     const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
         const fetchLogo = async() => {
@@ -56,6 +56,21 @@ const Dashboard = (props: Props) => {
         fetchLogo() 
 
       },[])
+    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
+    // TO DO: Needs to get changed - retrieved from backend (routes)
+    const student_org_name = "Society of Women Engineers"
+    const student_org_short_name = "SWE"
+    // const student_org_name = "Aggie Women in Computer Science"
+    // const student_org_short_name = "AWiCS"
+    // const student_org_name = "Datathon"
+    // const student_org_short_name = "Datathon"
+
+    const student_org_logo = SWELogo
+    
+
+    localStorage.setItem('org-name', JSON.stringify(student_org_name))
+    localStorage.setItem('org-short-name', JSON.stringify(student_org_short_name))
+    
     return (
         <ThemeProvider theme={theme}>
 
@@ -88,7 +103,7 @@ const Dashboard = (props: Props) => {
                 </Grid> 
 
                 <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5),}}>
-                    <Link href={`/events-edit-`+ student_org_short_name.toString()} underline='none'>
+                    <Link href={'/events-edit'} underline='none'>
                         <Paper variant="outlined" sx={{border:'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                         <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb:theme.spacing(1) }} >
                             <Grid container>
@@ -168,7 +183,7 @@ const Dashboard = (props: Props) => {
                     </Link>
 
 
-                    <Link href={`/levels-edit-` + student_org_short_name.toString()} underline='none'>
+                    <Link href={'/levels-edit'} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>
@@ -301,7 +316,7 @@ const Dashboard = (props: Props) => {
 
 
                 <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr:theme.spacing(15) }}>
-                    <Link href={`/basic-info-` + student_org_short_name.toString()} underline='none'>
+                    <Link href={'/basic-info'} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>
@@ -380,7 +395,7 @@ const Dashboard = (props: Props) => {
                         </Paper>
                     </Link>
 
-                    <Link href={`/faq-edit-` + student_org_short_name.toString()} underline='none'>
+                    <Link href={'/faq-edit'} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>
@@ -459,7 +474,7 @@ const Dashboard = (props: Props) => {
                         </Paper>
                     </Link>
 
-                    <Link href={`/summary-` + student_org_short_name.toString()} underline='none'>
+                    <Link href={'/summary'} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                                 <Grid container>

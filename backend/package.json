@@ -5,11 +5,11 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "kill": "kill -9 $(lsof -i :3000) &>/dev/null | exit 0",
-    "dev-mac": "npm run kill && nodemon --delay 500ms app.js",
+    "kill": "npx kill-port 5000 | exit 0",
+    "dev-kill": "npm run kill && nodemon --delay 500ms app.js",
     "dev": "nodemon --delay 500ms app.js",
-    "build-project-mac": "concurrently \"npm run dev-mac\" \" cd .. && npm start\" ",
-    "build-project": "concurrently \"npm run dev\" \" cd .. && npm start\" "
+    "build-project-kill": "concurrently \"npm run dev-kill\" \" cd .. && npm run dev\" ",
+    "build-project": "concurrently \"npm run dev\" \" cd .. && npm run dev\" "
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
+    "kill-port": "^2.0.1",
     "mongoose": "^6.6.1",
     "nodemon": "^2.0.20"
   }

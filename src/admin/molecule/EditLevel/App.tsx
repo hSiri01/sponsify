@@ -9,8 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 interface Props {
@@ -58,10 +58,9 @@ const EditLevel = (props: Props) => {
         setMinAmount(lowerbound)
         setDes(description)
         setColor(hexcode)
-        if (upperbound !== undefined) {
-            setMaxAmount(upperbound)
-        }
+        setMaxAmount(upperbound ? upperbound : '')
         console.log(id)
+    
         setOpenLevel(true)
     };
 
@@ -105,7 +104,7 @@ const EditLevel = (props: Props) => {
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275),height: '60%',width: '80%', backgroundColor: props.hexcode,  margin: "auto" }}>
+            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  margin: "auto" }}>
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', margin: "auto" }}>
                        
@@ -139,9 +138,11 @@ const EditLevel = (props: Props) => {
                             +
                         </Typography>
                         }
+                        {props.upperbound && 
                         <Typography >
                             ${upperbound}
                         </Typography>
+                        }
                     </Grid>
                     
                 </Grid>  
@@ -210,7 +211,7 @@ const EditLevel = (props: Props) => {
                         }}>
                             <TextField
                                 aria-label="empty textarea"
-                                placeholder="Description of level benefits, details, etc."
+                                label="Description of level benefits, details, etc."
                                 minRows={3}
                                 multiline={true}
                                 value={des}
@@ -221,7 +222,12 @@ const EditLevel = (props: Props) => {
 
                         <Grid item xs={2}>
                             <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" variant="outlined" 
-                            value={color} onChange={handleColorChange()}/>
+                            value={color} onChange={handleColorChange()} 
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <input style={{ height: '30px', width: '30px', border: '5px'}} type="color" value={color} onChange={e => setColor(e.target.value)} />
+                                </InputAdornment>,
+                              }} />
                         </Grid>
                         
                     </Grid>

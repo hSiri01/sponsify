@@ -7,15 +7,17 @@ import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 import React from 'react';
 
+import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
+
+
 interface Props {
-    student_org_logo: string,
-    student_org_name : string,
 }
 
 const Inbox = (props: Props) => {
 
-    const { student_org_logo, student_org_name } = props
-    const [logo, setLogo] = React.useState("")
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const [logo, setLogo] = React.useState("") 
+    const student_org_logo = SWELogo
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
@@ -31,6 +33,7 @@ const Inbox = (props: Props) => {
         }
         
         fetchLogo() 
+   
 
       },[])
     return (

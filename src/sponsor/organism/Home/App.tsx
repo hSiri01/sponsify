@@ -7,12 +7,11 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import HowItWorks from '../HowItWorks/App';
 import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
-
+import {useNavigate} from "react-router-dom"
 
 
 interface Props {
@@ -20,35 +19,33 @@ interface Props {
 
 const SponsorHome = (props: Props) => {
     const [input, setInput] = React.useState('');
-    const [org, setOrg] = React.useState('');
-    const [orgShortName, setOrgShortName] = React.useState('');
-    const [buttonClick, setButtonClick] = React.useState(false);
     const [openAlert, setOpenAlert] = React.useState(false);
+    const navigate = useNavigate();
 
     const handleCloseAlert = () => {
-        // TO DO: Ask if they would prefer to clear after closing alert
         setInput('')
         setOpenAlert(false)
     }
 
-    const handleOrgChange = async () => {
+    const handleVerifyCode = async () => {
         if (input === '') {
 
             setOpenAlert(true)
 
         } else {
 
-            let response = await fetch("/get-org/" + input)
+            await fetch("/verify-sponsor-code/" + input)
             .then((res) => res.json())
             .then((data) => {
-              if (data.name === undefined) {
-                  console.log("invalid")
-                  setOpenAlert(true)
-              } else {
-                  setOrg(data.name)
-                  setOrgShortName(data.shortName)
-                  setButtonClick(true)
-              }
+                if (data.name === undefined) {
+                    console.log("invalid")
+                    setOpenAlert(true)
+                } else {
+                    // TODO: Add logo to localstorage or decide if we want to call everytime
+                    localStorage.setItem('org-name', JSON.stringify(data.name))
+                    localStorage.setItem('org-short-name', JSON.stringify(data.shortName))
+                    navigate("/how-it-works")
+                }
           });
 
         }
@@ -61,8 +58,6 @@ const SponsorHome = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
-            { buttonClick ? 
-            <HowItWorks organization={org} student_org_short_name={orgShortName} /> : 
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
@@ -107,15 +102,13 @@ const SponsorHome = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <Button 
-                    // href="/how-it-works"
-                    variant="contained" size="large" color="secondary" onClick={handleOrgChange}>Get Started</Button>
+                    variant="contained" size="large" color="secondary" onClick={handleVerifyCode}>Get Started</Button>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Support} alt="Giving money" />
                 </Grid>
             </Grid>
-        }
             
         </ThemeProvider>    
 

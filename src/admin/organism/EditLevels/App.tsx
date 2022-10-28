@@ -9,51 +9,42 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
+import InputAdornment from '@mui/material/InputAdornment';
 
 interface Props {
-    student_org_logo: string,
-    student_org_short_name: string, 
-    student_org_name: string
+    student_org_logo: string
   
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo, student_org_short_name, student_org_name } = props
+    const { student_org_logo } = props
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState([{}])
-    const [org, setOrg] = React.useState('')
     const [levelName, setLevelName] = React.useState('')
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
     const [des, setDes] = React.useState('')
-    const [color, setColor] = React.useState('')
+    
     const [logo, setLogo] = React.useState("")
-
-    const resetInputs = () => {
-        setLevelName('')
-        setMinAmount('')
-        setMaxAmount('')
-        setDes('')
-        setColor('')
-    }
+    const [color, setColor] = React.useState('#909090')
 
     const handleOpenNewLevel = () => setOpenNewLevel(true);
 
-    const handleCloseNewLevel = () => {
-        resetInputs()
-        setOpenNewLevel(false);
-    }
+    const handleCloseNewLevel = () => setOpenNewLevel(false);
+
 
     React.useEffect(() => {
         const fetchData = async() => {
-            // const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
-            const data = await fetch("/get-all-levels/" + student_org_name)
+            await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => setLevels(data))
-                .then(() => setOrg(student_org_name))
+                .then((data) => {
+                    data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
+                    setLevels(data)
+                })
+
         }
         fetchData()
         
@@ -98,24 +89,25 @@ const EditLevels = (props: Props) => {
     }
 
     const handleCreateLevel = async () => {
-
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                minAmount: minAmount,
-                maxAmount: maxAmount,
-                name: levelName,
-                color: color,
-                description: des,
-                organization: org
-            })
+        if (minAmount.length > 0 && levelName.length > 0 && des.length > 0) {
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    minAmount: minAmount,
+                    maxAmount: maxAmount,
+                    name: levelName,
+                    color: color,
+                    description: des,
+                    organization: student_org_name
+                })
+            }
+    
+            await fetch("/create-level", requestOptions)
+                .then((res) => console.log(res)) 
+    
+            handleCloseNewLevel()
         }
-
-        await fetch("/create-level", requestOptions)
-            .then((res) => console.log(res)) 
-
-        handleCloseNewLevel()
      
     }
 
@@ -163,7 +155,7 @@ const EditLevels = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
                                 <EditLevel id={level._id}
-                                        student_org_name={org} 
+                                        student_org_name={student_org_name} 
                                         level={level.name}
                                         description={level.description}                              
                                         lowerbound = {level.minAmount}
@@ -211,13 +203,13 @@ const EditLevels = (props: Props) => {
 
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
                             <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
-                            value={levelName} onChange={handleNameChange()} variant="outlined" />
+                            defaultValue={''} onChange={handleNameChange()} variant="outlined" />
                         </Grid>
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
                             <TextField sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
-                            value={minAmount} onChange={handleMinChange()} variant="outlined" />
+                            defaultValue={''} onChange={handleMinChange()} variant="outlined" />
                             <TextField sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" 
-                            value={maxAmount} onChange={handleMaxChange()} variant="outlined" />
+                            defaultValue={''} onChange={handleMaxChange()} variant="outlined" />
                         </Grid>
 
                         <Grid item xs={3} sx={{
@@ -229,14 +221,19 @@ const EditLevels = (props: Props) => {
                                 label="Description of level benefits, details, etc."
                                 minRows={3}
                                 multiline={true}
-                                value={des} onChange={handleDesChange()}
+                                defaultValue={''} onChange={handleDesChange()}
                                 style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                             />
                         </Grid>
                         <Grid item xs={2 }>
-                        <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" 
-                        value={color} onChange={handleColorChange()} variant="outlined" />
-
+                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" 
+                            value={color} onChange={handleColorChange()} 
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <input style={{ height: '30px', width: '30px', border: '5px'}} type="color" value={color} onChange={e => setColor(e.target.value)} />
+                                </InputAdornment>,
+                              }}
+                            variant="outlined" />
                         </Grid>
 
                         <Grid item xs={12} sx={{

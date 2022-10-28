@@ -20,8 +20,6 @@ import { AnyAaaaRecord } from 'dns';
 
 interface Props {
     student_org_logo: string,
-    student_org_short_name: string,
-    student_org_name: string, 
     street_address: string, 
     street_address_2?: string, 
     city: string, 
@@ -33,7 +31,6 @@ interface Props {
 const BasicInfo = (props: Props) => {
     const [image, setImage] = React.useState<any|null>(null);
     const [imageFile, setFile] = React.useState();
-    const { student_org_logo, student_org_short_name, student_org_name, street_address, street_address_2, city, state, zipcode} = props
     const [org, setOrg] = React.useState('')
     const [logo, setLogo] = React.useState('')
     const [selectedFile, setSelectedFile] = React.useState<any|null>(null);
@@ -96,6 +93,10 @@ const BasicInfo = (props: Props) => {
         }
     }
 
+
+    const { student_org_logo, street_address, street_address_2, city, state, zipcode} = props
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
     return (
         <ThemeProvider theme={theme}>
