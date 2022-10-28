@@ -43,8 +43,11 @@ const Checkout = (props: Props) => {
     const { cart } = useCart();
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-    // console.log(cart)
 
+    const [message,setMessage] = React.useState('')
+    const [subject,setSubject] = React.useState('')
+        // console.log(cart)
+    
     React.useEffect(() => {
         fetch('/get-level-by-amount/' + student_org_name + '/' + total)
             .then((response) => response.json())
@@ -77,7 +80,33 @@ const Checkout = (props: Props) => {
             navigate("/inbox")
         }
     };
-
+    const sendEmail = ()=>{
+        setMessage(`Your total is: ${total}`)
+        setSubject('Sponsor Information')
+        console.log("Sending email", message, " ", subject)
+        fetch("/send-checkout-email",{
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            firstNameInput,
+            lastNameInput,
+            emailInput,
+            subject,
+            message
+        })
+        // }).then(res=>res.json())
+        // .then(data=>{
+        //     console.log(data.message)
+        //     // setMessage('')
+        //     // setName(')
+        //     // setSubject('')
+        //     // setEmail('')
+        }).catch(err=>{
+            console.log("Error found",err)
+        })
+    }
     return (
         <ThemeProvider theme={theme}>
 
@@ -183,6 +212,7 @@ const Checkout = (props: Props) => {
 
                 {cart.map(item => {
                     return (
+                       
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
                         </Grid>
@@ -202,7 +232,7 @@ const Checkout = (props: Props) => {
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button onClick={submitCheckout} variant="contained" size="large" color="primary" sx={{
+                    <Button onClick={(event) => { submitCheckout(); sendEmail();}} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),

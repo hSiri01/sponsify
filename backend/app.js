@@ -10,6 +10,16 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const sponsor = require('./sponsor');
 const port = process.env.PORT || 5000;
+const sgMail = require('@sendgrid/mail')
+var cors = require('cors');
+app.use(cors())
+const nodemailer = require('nodemailer')
+const sendGridTransport = require('nodemailer-sendgrid-transport');
+//adding routes for image upload
+var fs = require('fs');
+
+var multer = require('multer');
+const { sub } = require('date-fns');
 
 app.use(bodyParser.json());
 // Serve static files from the React app
@@ -555,6 +565,50 @@ app.get('/get-logo/:org', (req, res) => {
 app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
+const transporter = nodemailer.createTransport(sendGridTransport({
+    auth:{
+        api_key: process.env.SENDGRID_API
+        }
+    }))
+
+    function sendGridEmail(toInput, fromInput, subjectInput, messageInput){
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+        const msg = {
+            to: toInput, // Change to your recipient
+            from: fromInput, // Change to your verified sender
+            subject: subjectInput,
+            text: messageInput,
+            //html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+          }
+          sgMail
+            .send(msg)
+            .then((response) => {
+                console.log("Email sent")
+                console.log(response[0].statusCode)
+                console.log(response[0].headers)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }
+app.post("/send-checkout-email", (req, res) => {
+    const { firstNameInput, lastNameInput, emailInput, message, subject, } = req.body
+    const name = firstNameInput + " " + lastNameInput;
+    // transporter.sendMail({
+    //     to:"sabrinapena@tamu.edu", //will be recipeient
+    //     from: "sabrinapena@tamu.edu",//need to change this to domain after it is set up
+    //     subject: "Sponsorship Information ",
+    //     text: message
+    //     // html:`<h3>${firstNameInput}</h3>
+    //     // <p>${message}</p>`
+    // }).then(resp => {
+    //     res.json({resp})
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    // })
+        sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,message);
+    })
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
