@@ -51,7 +51,7 @@ const App: React.FC = () => {
             <Route path="/levels-edit" element={<EditLevels />} />
             <Route path="/dashboard-swe" element={<Dashboard sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"/>} />
             <Route path="/events-edit" element={<EditEvents />} />
-            <Route path="/summary" element={<PurchaseHistory total_sponsored={50000} />} />
+            <Route path="/summary" element={<PurchaseHistory />} />
             <Route path="/basic-info" element={<BasicInfo street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
 
           </Routes>

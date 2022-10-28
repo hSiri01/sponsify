@@ -37,10 +37,10 @@ const Dashboard = (props: Props) => {
 
     const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    // const student_org_name = "Society of Women Engineers"
-    // const student_org_short_name = "SWE"
-    const student_org_name = "Aggie Women in Computer Science"
-    const student_org_short_name = "AWiCS"
+    const student_org_name = "Society of Women Engineers"
+    const student_org_short_name = "SWE"
+    // const student_org_name = "Aggie Women in Computer Science"
+    // const student_org_short_name = "AWiCS"
     // const student_org_name = "Datathon"
     // const student_org_short_name = "Datathon"
     localStorage.setItem('org-name', JSON.stringify(student_org_name))
