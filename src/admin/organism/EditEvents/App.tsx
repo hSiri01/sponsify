@@ -43,9 +43,27 @@ const EditEvents = (props: Props) => {
     const [endDateInput, setEndDateInput] = React.useState('');
 
     const [events, setEvents] = React.useState([{}]);
+    const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+            //console.log(student_org_name)
+             const data1 = await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("Error fetching logo",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
+   
 
+      },[])
     React.useEffect(() => {
         const fetchData = async() => {
             const data = await fetch("/get-all-events/" + student_org_name)
@@ -128,7 +146,7 @@ const EditEvents = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

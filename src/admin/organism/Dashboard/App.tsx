@@ -19,6 +19,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
 import Link from '@mui/material/Link';
+import * as React from 'react';
 import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 
@@ -36,6 +37,25 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
+
+    const [logo, setLogo] = React.useState("")
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+            //console.log(student_org_name)
+             const data1 = await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("Error fetching logo ",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
+
+      },[])
     const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
     // TO DO: Needs to get changed - retrieved from backend (routes)
     const student_org_name = "Society of Women Engineers"
@@ -71,7 +91,7 @@ const Dashboard = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

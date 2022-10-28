@@ -9,6 +9,9 @@ const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
 const sponsor = require('./sponsor');
+var cors = require('cors');
+app.use(cors())
+
 const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
 var cors = require('cors');
@@ -19,7 +22,13 @@ var fs = require('fs');
 var multer = require('multer');
 const { sub } = require('date-fns');
 
+//adding routes for image upload
+var fs = require('fs');
+var multer = require('multer');
+const { BedtimeOffRounded } = require('@mui/icons-material');
+app.use("/images", express.static("./images"));
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}))
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
@@ -30,6 +39,8 @@ mongoose.connect(
         useUnifiedTopology: true
     }
 )
+
+
 
 // Access database connection
 const db = mongoose.connection;
@@ -547,18 +558,57 @@ app.get('/get-event-code/:org', (req, res) => {
         })
 })
 
-app.get('/get-logo/:org', (req, res) => {
+
+//Setting multer for storing uploaded files
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+var upload = multer({ storage: storage, 
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(png|jpg)$/)) { 
+           // upload only png and jpg format
+           return cb(new Error('Please upload a Image'))
+         }
+       cb(undefined, true)
+    } 
+});
+
+
+app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ logoImage: 1 })
+    .select({logoImage : 1, _id : 0},)
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-logo, " + err)
+                //console.log("Error on get-org-info, " + err)
+                res.send('Error on create-logo')
             }
             else {
+                //console.log("Logo url recevied", result[0])
                 res.json(result[0])
             }
         })
 })
+
+app.post('/create-logo', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $set: {logoImage: req.body.logoImage}},
+        function (error, success) {
+            if (error) {
+                //console.log("Error in create-logo", error);
+                res.send('Error on create-logo')
+            } else {
+                res.send("Created logo successfully")    
+            }
+        }
+    );
+})
+
 
 app.get('/get-org', (req,res) => {
     res.send('Get org')

@@ -27,6 +27,8 @@ const EditLevels = (props: Props) => {
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
     const [des, setDes] = React.useState('')
+    
+    const [logo, setLogo] = React.useState("")
     const [color, setColor] = React.useState('#909090')
 
     const handleOpenNewLevel = () => setOpenNewLevel(true);
@@ -45,9 +47,27 @@ const EditLevels = (props: Props) => {
 
         }
         fetchData()
-
+        
     }, [levels])
+   
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+            //console.log(student_org_name)
+             const data1 = await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("Error fetching logo ",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
 
+      },[])
+      
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )
     }
@@ -93,7 +113,7 @@ const EditLevels = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
-
+            
             <MenuBar student_org_short_name={'swe'}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
@@ -111,7 +131,7 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={''} alt="Sponsify logo" />
+                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10), }}  src= {logo} alt="Organization Logo" />}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
