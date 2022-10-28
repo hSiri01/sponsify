@@ -15,14 +15,11 @@ import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 
 
-
 interface Props {
-    student_org_logo: string,
 }
 
 const EditEvents = (props: Props) => {
 
-    const { student_org_logo} = props
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
     const handleCloseNewQuestion = () => setOpenNewQuestion(false);
@@ -46,6 +43,7 @@ const EditEvents = (props: Props) => {
     const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
@@ -129,7 +127,7 @@ const EditEvents = (props: Props) => {
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name={student_org_short_name}/>
+            <MenuBar student_org_short_name={"swe"}/>
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

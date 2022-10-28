@@ -12,8 +12,6 @@ import LevelSponsors from '../../molecule/LevelSponsors/App';
 
 
 interface Props {
-    student_org_logo: string,
-    total_sponsored: number,
 }
 
 const PurchaseHistory = (props: Props) => {
@@ -35,14 +33,12 @@ const PurchaseHistory = (props: Props) => {
         fetchLogo() 
 
       },[])
-    const { student_org_logo, total_sponsored } = props
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-
-
 
     const [purchases, setPurchases] = React.useState([{}]);
     const [sponsors, setSponsors] = React.useState([{}]);
     const [levels, setLevels] = React.useState([{}]);
+    const [total, setTotal] = React.useState(0);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -65,6 +61,14 @@ const PurchaseHistory = (props: Props) => {
                 .then((data2) => {
                     console.log(data2)
                     setSponsors(data2)
+
+                    let total_sponsored = 0
+                    data2.map((sponsor:any) => {
+                        total_sponsored += sponsor.totalAmount
+                    })
+                    
+                    setTotal(total_sponsored)
+
                 }
                 )
             const data3 = await fetch("/get-all-levels/" + student_org_name)
@@ -124,7 +128,7 @@ const PurchaseHistory = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2), }}>
                     <Typography variant="h5" sx={{ color: '#4baa89', fontWeight: 600, }}>
-                        ${total_sponsored}
+                        ${total}
                     </Typography>
                 </Grid>
 

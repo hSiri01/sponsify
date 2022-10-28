@@ -10,7 +10,6 @@ import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
@@ -26,7 +25,6 @@ const Checkout = (props: Props) => {
     const navigate = useNavigate();
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
-    const student_org_logo = SWELogo
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
