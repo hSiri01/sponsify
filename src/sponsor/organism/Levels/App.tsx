@@ -6,18 +6,14 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 import Level from '../../molecule/Level/App';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
-import Events from '../Events/App';
 
 interface Props {
 }
 
 const Levels = (props: Props) => {
 
-    // TO DO: Correct logo
-    const student_org_logo = SWELogo
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-
+    const [logo, setLogo] = React.useState("")
     const [levels, setLevels] = React.useState([{}])
 
     React.useEffect(() => {
@@ -34,7 +30,6 @@ const Levels = (props: Props) => {
 
     }, [])
 
-    const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{

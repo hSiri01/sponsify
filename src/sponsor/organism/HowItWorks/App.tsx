@@ -13,9 +13,6 @@ const HowItWorks = (props: Props) => {
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
-    console.log(student_org_name)
-    console.log(student_org_short_name)
-
     return (
         <ThemeProvider theme={theme}>
             <Grid container>

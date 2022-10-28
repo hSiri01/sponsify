@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Question from '../../molecule/Question/App';
 import Button from '@mui/material/Button';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
 
 interface Props {
 }
@@ -16,9 +15,7 @@ const FAQ = (props: Props) => {
     const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
-
-    // TO DO: Get correct org logo
-    const student_org_logo = SWELogo
+    const [logo, setLogo] = React.useState("")
 
     React.useEffect(() => {
 
@@ -30,11 +27,10 @@ const FAQ = (props: Props) => {
 
         fetchData()
     }, [])
-    const [logo, setLogo] = React.useState("")
+
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-            //console.log(student_org_name)
              const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))

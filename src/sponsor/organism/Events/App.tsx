@@ -17,8 +17,6 @@ import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import { useNavigate } from "react-router-dom"
 import { useCart } from '../../../contexts/Cart';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
-
 
 interface Props {
 }
@@ -28,7 +26,6 @@ const Events = (props: Props) => {
     const navigate = useNavigate();
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
-    const student_org_logo = SWELogo
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -44,6 +41,7 @@ const Events = (props: Props) => {
     const [levelColor, setLevelColor] = React.useState('');
     const [events, setEvents] = React.useState([{}]);
     const [total, setTotal] = React.useState(0);
+    const [logo, setLogo] = React.useState("")
 
     React.useEffect(() => {
         const fetchData = async() => {
@@ -69,7 +67,7 @@ const Events = (props: Props) => {
         fetchData()
         clearCart()
     }, [])
-    const [logo, setLogo] = React.useState("")
+    
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
