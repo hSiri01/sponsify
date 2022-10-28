@@ -25,6 +25,7 @@ const Checkout = (props: Props) => {
 
     const navigate = useNavigate();
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const student_org_logo = SWELogo
 
     const [openInfo, setOpenInfo] = React.useState(false);
@@ -42,9 +43,11 @@ const Checkout = (props: Props) => {
 
     const { cart } = useCart();
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-
-    // console.log(cart)
-
+    var cartMessage : string = ""
+    const [orgAddress, setOrgAddress] = React.useState('');
+    const [message,setMessage] = React.useState('')
+    const [subject,setSubject] = React.useState('')
+    
     React.useEffect(() => {
         fetch('/get-level-by-amount/' + student_org_name + '/' + total)
             .then((response) => response.json())
@@ -54,6 +57,16 @@ const Checkout = (props: Props) => {
                 setLevelColor(data.color)
             })
     }, [cart])
+
+    React.useEffect(() => {
+        fetch('/get-org-info/' + student_org_name )
+            .then((response) => response.json())
+            .then((data) => {
+                
+               setOrgAddress(`${data.address.streetAddress} /n ${data.address.city}, ${data.address.state} ${data.address.zip}` )
+               console.log(orgAddress)
+            })
+    }, [])
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
@@ -77,7 +90,31 @@ const Checkout = (props: Props) => {
             navigate("/inbox")
         }
     };
-
+    const sendEmail = ()=>{
+        
+        cartMessage += "\n \n  Total Cost: $" + total
+        
+        setMessage(cartMessage)
+        setSubject('Sponsor Information')
+        fetch("/send-checkout-email",{
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            firstNameInput,
+            lastNameInput,
+            emailInput,
+            subject,
+            cartMessage,
+            student_org_name,
+            student_org_short_name,
+            orgAddress,
+        })
+        }).catch(err=>{
+            console.log("Error found",err)
+        })
+    }
     return (
         <ThemeProvider theme={theme}>
 
@@ -182,13 +219,13 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 {cart.map(item => {
+                    cartMessage += "Item:" + item.name +  "    Price: $" + item.price +   "    Quanitity:" +  item.quantity + "\n"
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
                         </Grid>
                     )
                 })}
-
                 <Grid item xs={9} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(4), mb: theme.spacing(4), }}>
                     <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
                 </Grid>
@@ -202,7 +239,7 @@ const Checkout = (props: Props) => {
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button onClick={submitCheckout} variant="contained" size="large" color="primary" sx={{
+                    <Button onClick={(event) => { submitCheckout(); sendEmail();}} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
