@@ -14,12 +14,10 @@ import MenuBar from '../../molecule/MenuBar/App'
 
 
 interface Props {
-    student_org_logo: string
 }
 
 const EditFAQ = (props: Props) => {
 
-    const { student_org_logo } = props
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);

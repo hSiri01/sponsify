@@ -12,14 +12,11 @@ import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import InputAdornment from '@mui/material/InputAdornment';
 
-interface Props {
-    student_org_logo: string
-  
+interface Props {  
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo } = props
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState([{}])
