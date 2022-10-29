@@ -23,7 +23,6 @@ import * as React from 'react';
 
 interface Props {
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    sponsor_code: string,
     valid_until_date: Date,
     street_address: string,
     address_2?: string, 
@@ -35,18 +34,21 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
-    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
+    const { valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    const student_org_name = "Society of Women Engineers"
-    const student_org_short_name = "SWE"
-    // const student_org_name = "Aggie Women in Computer Science"
-    // const student_org_short_name = "AWiCS"
+    // const student_org_name = "Society of Women Engineers"
+    // const student_org_short_name = "SWE"
+    const student_org_name = "Aggie Women in Computer Science"
+    const student_org_short_name = "AWiCS"
     // const student_org_name = "Datathon"
     // const student_org_short_name = "Datathon"
     localStorage.setItem('org-name', JSON.stringify(student_org_name))
     localStorage.setItem('org-short-name', JSON.stringify(student_org_short_name))
+    let min = new Date().getMinutes()
 
     const [logo, setLogo] = React.useState("")
+    const [sponsorCode, setSponsorCode] = React.useState("")
+    const [validDate, setValidDate] = React.useState(new Date(2022, 10, 14))
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
@@ -60,10 +62,29 @@ const Dashboard = (props: Props) => {
            }
                
         }
+
+        const fetchSponsorCode = async() => {
+            await fetch ("/get-event-code/" + student_org_name)
+                .then((res) => res.json())
+                .then((res) => {
+                    console.log(res)
+                    setSponsorCode(res.eventCode)
+                    // min = new Date().getMinutes(); //To get the Current Minutes
+                    // console.log(min)
+                    if ( min % 2 == 0) {
+                        setValidDate(new Date(2022, 11, 14))
+                    } else {
+                        setValidDate(new Date(2022, 12, 14))
+                    }
+                }
+               
+                )
+        }
         
         fetchLogo() 
+        fetchSponsorCode()
 
-      },[])
+      },[logo, sponsorCode])
     
     return (
         <ThemeProvider theme={theme}>
@@ -281,7 +302,7 @@ const Dashboard = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
 
                                 <Typography variant="h6" sx={{ border: 1, borderColor: '#367c63', borderWidth: theme.spacing(1), p: theme.spacing(3), mt: theme.spacing(5) }}>
-                                    {sponsor_code}
+                                    {sponsorCode}
                                 </Typography>
 
                             </Grid>

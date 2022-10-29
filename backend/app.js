@@ -545,6 +545,35 @@ app.get('/get-valid-admins/:org', (req, res) => {
         })
 })
 
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+function generateRandom() {
+    // console.log("Hello")
+    let result = '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 12; i++ ) {
+        result += characters.charAt(Math.floor(Math.random()  * charactersLength));
+    }
+
+    console.log(result)
+    return result
+}
+
+var async = require('async');
+
+function newEventCodes() {
+    orgs.find(function(err, results) {
+        async.each(results, function (result, callback) {
+            // console.log(result._id)
+            // console.log(result.eventCode)
+            result.eventCode = generateRandom()
+            result.save()
+        });
+    });
+}
+
+// myInterval = setInterval( newEventCodes, 1000); 
+// myInterval = setInterval( newEventCodes, 60000 )
+
 app.get('/get-event-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ eventCode: 1 })
