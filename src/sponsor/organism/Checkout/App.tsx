@@ -35,7 +35,7 @@ const Checkout = (props: Props) => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -47,7 +47,7 @@ const Checkout = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
   
     const [firstNameInput, setFirstNameInput] = React.useState('');
     const [lastNameInput, setLastNameInput] = React.useState('');
@@ -62,7 +62,6 @@ const Checkout = (props: Props) => {
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     var cartMessage : string = ""
     const [orgAddress, setOrgAddress] = React.useState('');
-    const [message,setMessage] = React.useState('')
     const [subject,setSubject] = React.useState('')
     
     React.useEffect(() => {
@@ -73,7 +72,7 @@ const Checkout = (props: Props) => {
                 setLevelName(data.name)
                 setLevelColor(data.color)
             })
-    }, [cart])
+    }, [student_org_name, total, cart])
 
     React.useEffect(() => {
         fetch('/get-org-info/' + student_org_name )
@@ -81,9 +80,9 @@ const Checkout = (props: Props) => {
             .then((data) => {
                 
                setOrgAddress(`${data.address.streetAddress} /n ${data.address.city}, ${data.address.state} ${data.address.zip}` )
-               console.log(orgAddress)
+               console.log(orgAddress) // FIXME: State changes are not immediate
             })
-    }, [])
+    }, [orgAddress, student_org_name])
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
@@ -111,7 +110,6 @@ const Checkout = (props: Props) => {
         
         cartMessage += "\n \n  Total Cost: $" + total
         
-        setMessage(cartMessage)
         setSubject('Sponsor Information')
         fetch("/send-checkout-email",{
             method:'POST',

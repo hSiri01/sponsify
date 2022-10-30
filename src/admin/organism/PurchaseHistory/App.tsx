@@ -17,10 +17,11 @@ interface Props {
 const PurchaseHistory = (props: Props) => {
 
     const [logo, setLogo] = React.useState("")
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -32,8 +33,7 @@ const PurchaseHistory = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+      },[student_org_name])
 
     const [purchases, setPurchases] = React.useState([{}]);
     const [sponsors, setSponsors] = React.useState([{}]);
@@ -42,7 +42,7 @@ const PurchaseHistory = (props: Props) => {
 
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await fetch("/get-all-purchased-events/" + student_org_name)
+            await fetch("/get-all-purchased-events/" + student_org_name)
                 .then((res) => res.json())
                 .then((data) => {
                     // console.log(data)
@@ -56,22 +56,19 @@ const PurchaseHistory = (props: Props) => {
                     setPurchases(data)
                 }
                 )
-            const data2 = await fetch("/get-all-sponsors/" + student_org_name)
+            await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
-                .then((data2) => {
+                .then((data2: {totalAmount: number}[]) => {
                     console.log(data2)
                     setSponsors(data2)
 
-                    let total_sponsored = 0
-                    data2.map((sponsor:any) => {
-                        total_sponsored += sponsor.totalAmount
-                    })
+                    let total_sponsored = data2.reduce((accumulator, current) => accumulator + current.totalAmount, 0)
                     
                     setTotal(total_sponsored)
 
                 }
                 )
-            const data3 = await fetch("/get-all-levels/" + student_org_name)
+            await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
                 .then((data3) => {
                     console.log(data3)
@@ -81,7 +78,7 @@ const PurchaseHistory = (props: Props) => {
         }
 
         fetchData()
-    }, [sponsors])
+    }, [student_org_name, sponsors])
 
     // console.log(purchases)
     
@@ -230,10 +227,11 @@ const PurchaseHistory = (props: Props) => {
                
                 <>
                     {purchases.map((purchase: any) => {
-                        // console.log(purchase.events)
-                        
-                        if (purchase.events !== undefined) {
-                            return purchase.events.map((event: any) => (
+                        // FIXME: Change keying for outer purchase fragment
+                        console.log(purchase)
+                        return <React.Fragment key={purchase._id}>
+                        {purchase.events && 
+                            purchase.events.map((event: any) => (
                                
                                 <React.Fragment key={event._id}>
                                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -253,9 +251,9 @@ const PurchaseHistory = (props: Props) => {
                                 </React.Fragment>
                            
                             )
-
-                        )
+                            )
                         }
+                        </React.Fragment>
                     }
 
                     )} 

@@ -45,13 +45,13 @@ const EditLevels = (props: Props) => {
         }
         fetchData()
         
-    }, [levels])
+    }, [student_org_name, levels])
    
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -63,7 +63,7 @@ const EditLevels = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
       
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )

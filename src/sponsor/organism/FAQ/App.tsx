@@ -20,18 +20,18 @@ const FAQ = (props: Props) => {
     React.useEffect(() => {
 
         const fetchData = async() => {
-            const data = await fetch("/get-all-FAQ/" + student_org_name)
+            await fetch("/get-all-FAQ/" + student_org_name)
                 .then((res) => res.json())
                 .then((data) => setFAQ(data))
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name])
 
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -43,7 +43,7 @@ const FAQ = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
 
     return (
         <ThemeProvider theme={theme}>

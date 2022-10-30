@@ -45,7 +45,7 @@ const Events = (props: Props) => {
 
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-enabled-events/" + student_org_name)
+            await fetch("/get-enabled-events/" + student_org_name)
                 .then((res) => res.json())
                 .then((data) => {
                     // console.log(data)
@@ -66,13 +66,13 @@ const Events = (props: Props) => {
 
         fetchData()
         clearCart()
-    }, [])
+    }, [student_org_name, clearCart])
     
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -84,7 +84,7 @@ const Events = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
     
     React.useEffect(() => {
         setTotal(cart.reduce((total, item) => total + item.price * item.quantity, 0))
@@ -97,7 +97,7 @@ const Events = (props: Props) => {
         }
         
         fetchLevel()
-    })
+    }, [cart, student_org_name, total])
 
     const checkout = () => {
         if (cart.at(0)) {

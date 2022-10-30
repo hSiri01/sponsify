@@ -51,7 +51,7 @@ const Dashboard = (props: Props) => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -573,7 +573,7 @@ const Dashboard = (props: Props) => {
                                             {address_2}<br />
                                             {city}, {state} {zip_code}<br /></b> <br />
                                         <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                         - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                         - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
                                         - It'll show a box that says "enter name or number of fund" - type in <b>{fund_name}</b> for that box<br />
@@ -596,7 +596,7 @@ const Dashboard = (props: Props) => {
                                                 {street_address}<br />
                                                 {city}, {state} {zip_code}<br /></b> <br />
                                             <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                             - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                             - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
                                             - It'll show a box that says "enter name or number of fund" - type in <b>{fund_name}</b> for that box<br />
