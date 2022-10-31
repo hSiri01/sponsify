@@ -8,6 +8,8 @@ import MenuBar from '../../molecule/MenuBar/App'
 import Transaction from '../../molecule/Transaction/App';
 import { Paper } from '@mui/material';
 import LevelSponsors from '../../molecule/LevelSponsors/App';
+import { Event, Sponsor } from '../../../utils/mongodb-types';
+import { GetAllLevels, GetAllPurchasedEvents, GetAllSponsors } from '../../../utils/api-types';
 
 
 
@@ -35,16 +37,16 @@ const PurchaseHistory = (props: Props) => {
 
       },[student_org_name])
 
-    const [purchases, setPurchases] = React.useState([{}]);
-    const [sponsors, setSponsors] = React.useState([{}]);
-    const [levels, setLevels] = React.useState([{}]);
+    const [purchases, setPurchases] = React.useState<GetAllPurchasedEvents>([]);
+    const [sponsors, setSponsors] = React.useState<GetAllSponsors>([]);
+    const [levels, setLevels] = React.useState<GetAllLevels>([]);
     const [total, setTotal] = React.useState(0);
 
     React.useEffect(() => {
         const fetchData = async () => {
             await fetch("/get-all-purchased-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetAllPurchasedEvents) => {
                     // console.log(data)
                     data.sort(
                         (objA: any, objB: any) => {
@@ -58,7 +60,7 @@ const PurchaseHistory = (props: Props) => {
                 )
             await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
-                .then((data2: {totalAmount: number}[]) => {
+                .then((data2: GetAllSponsors) => {
                     console.log(data2)
                     setSponsors(data2)
 
@@ -70,7 +72,7 @@ const PurchaseHistory = (props: Props) => {
                 )
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
-                .then((data3) => {
+                .then((data3: GetAllLevels) => {
                     console.log(data3)
                     setLevels(data3)
                 }
@@ -226,19 +228,22 @@ const PurchaseHistory = (props: Props) => {
 
                
                 <>
-                    {purchases.map((purchase: any) => {
+                    {purchases.map((purchase) => {
                         // FIXME: Change keying for outer purchase fragment
+                        let sponsor = purchase.sponsorID as Sponsor
                         console.log(purchase)
                         return <React.Fragment key={purchase._id}>
                         {purchase.events && 
-                            purchase.events.map((event: any) => (
+                            purchase.events.map((e) => {
+                                let event = e as Event
+                                return (
                                
                                 <React.Fragment key={event._id}>
                                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                                        <Transaction company_name={purchase.sponsorID.company}
-                                            rep_name={purchase.sponsorID.firstName + " " + purchase.sponsorID.lastName}
-                                            rep_email={purchase.sponsorID.email}
+                                        <Transaction company_name={sponsor.company}
+                                            rep_name={sponsor.firstName + " " + sponsor.lastName}
+                                            rep_email={sponsor.email}
                                             event_name={event.name}
                                             short_description={event.briefDesc}
                                             purchase_date={new Date(purchase.dateSponsored)}
@@ -251,6 +256,7 @@ const PurchaseHistory = (props: Props) => {
                                 </React.Fragment>
                            
                             )
+                                }
                             )
                         }
                         </React.Fragment>
