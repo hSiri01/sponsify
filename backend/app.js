@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: `${__dirname}/../.env` });
 const express = require('express')
 const mongoose = require('mongoose')
 const events = require('./event');
@@ -39,7 +39,6 @@ mongoose.connect(
         useUnifiedTopology: true
     }
 )
-
 
 
 // Access database connection
@@ -500,7 +499,7 @@ app.get('/get-org-info/:org', (req,res) => {
                 console.log("Error on get-org-info, " + err)
             }
             else {
-                res.json(result[0])
+                res.json(result)
             }
         })
 })
@@ -532,16 +531,30 @@ app.get('/update-org-info', (req, res) => {
 
 })
 
-app.get('/get-valid-admins/:org', (req, res) => {
-    orgs.find({ name: req.params.org })
-        .select({ validAdmins: 1 })
-        .exec((err, result) => {
-            if (err) {
-                console.log("Error on get-valid-admins, " + err)
-            }
-            else {
-                res.json(result[0])
-            }
+app.get('/get-org-from-email/:email', (req, res) => {
+    orgs.find({})
+        .then(allOrgs => {
+            allOrgs.forEach(org => {
+                // console.log(org.validAdmins)
+                for (let i = 0; i < org.validAdmins.length; i++) {
+                    if (org.validAdmins[i] === req.params.email ) {
+                        // console.log(req.params.email + " is a valid admin for " + org.name)
+                        console.log(org.eventCode)
+                        result = { 
+                            name: org.name,
+                            shortName: org.shortName,
+                            logo: org.logoImage,
+                            address: org.address,
+                            sponsorCode: org.sponsorCode,
+                            fundName: org.fundName
+                        }
+                        res.json(result)
+                    }
+                }
+            })
+        })
+        .catch(() => {
+            res.json({})
         })
 })
 

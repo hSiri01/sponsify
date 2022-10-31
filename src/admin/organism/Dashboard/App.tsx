@@ -18,59 +18,77 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import EmailIcon from '@mui/icons-material/Email';
 import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
 
 interface Props {
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    sponsor_code: string,
     valid_until_date: Date,
     street_address: string,
     address_2?: string, 
     city: string, 
     state: string, 
     zip_code: number, 
-    fund_name: string, 
 }
 
 const Dashboard = (props: Props) => {
 
-    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
+    const { isAuthenticated, user } = useAuth0()
+    const { valid_until_date, street_address, address_2, city, state, zip_code } = props
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    const student_org_name = "Society of Women Engineers"
-    const student_org_short_name = "SWE"
-    // const student_org_name = "Aggie Women in Computer Science"
-    // const student_org_short_name = "AWiCS"
-    // const student_org_name = "Datathon"
-    // const student_org_short_name = "Datathon"
-    localStorage.setItem('org-name', JSON.stringify(student_org_name))
-    localStorage.setItem('org-short-name', JSON.stringify(student_org_short_name))
+    // const orgName = "Society of Women Engineers"
+    // const orgShortName = "SWE"
+    // const orgName = "Aggie Women in Computer Science"
+    // const orgShortName = "AWiCS"
+    // const orgName = "Datathon"
+    // const orgShortName = "Datathon"
+    let validAdmin = false
 
     const [logo, setLogo] = React.useState("")
-    React.useEffect(() => {
-        const fetchLogo = async() => {
-           try{
-            //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
-                .then((res) => res.json()) 
-                .then((data1) => setLogo(data1.logoImage))
-           }
-           catch(e){
-            console.log("Error fetching logo ",(e))
-           }
-               
+    const [orgName, setOrgName] = React.useState("")
+    const [orgShortName, setOrgShortName] = React.useState("")
+    const [sponsorCode, setSponsorCode] = React.useState("")
+    const [fundName, setFundName] = React.useState("")
+
+    if (isAuthenticated) {
+        const getOrg = async() => { 
+            try {
+                await fetch("/get-org-from-email/" + user?.email)
+                    .then((res) => res.json()) 
+                    .then((data) => {
+                        // console.log(data)
+                        setOrgName(data.name)
+                        setOrgShortName(data.shortName)
+                        setLogo(data.logo)
+                        setSponsorCode(data.sponsorCode)
+                        setFundName(data.fundName)
+
+                        if (orgName !== "") {
+                            validAdmin = true
+                            localStorage.setItem('org-name', JSON.stringify(orgName))
+                            localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
+                        }
+                    })
+            }
+            catch(e) {
+                console.log("Error fetching org from email ", e)
+            }
         }
         
-        fetchLogo() 
+        console.log(isAuthenticated)
+        getOrg()
+        validAdmin = true
 
-      },[])
+    }
     
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar student_org_short_name='swe'/>
-
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
+                {validAdmin && ( <>
+                <MenuBar student_org_short_name={orgShortName}/>
+
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -281,7 +299,7 @@ const Dashboard = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
 
                                 <Typography variant="h6" sx={{ border: 1, borderColor: '#367c63', borderWidth: theme.spacing(1), p: theme.spacing(3), mt: theme.spacing(5) }}>
-                                    {sponsor_code}
+                                    {sponsorCode}
                                 </Typography>
 
                             </Grid>
@@ -564,11 +582,11 @@ const Dashboard = (props: Props) => {
 
                                     (
                                         <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
-                                        Thank you for sponsoring a {student_org_name} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                        Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
                                         <u><b>To pay with check:</b></u><br />
-                                        - Must be made out to "{student_org_name}"<br />
+                                        - Must be made out to "{orgName}"<br />
                                         - Mail to:<br /><br />
-                                        <b>{student_org_name}<br />
+                                        <b>{orgName}<br />
                                             {street_address}<br />
                                             {address_2}<br />
                                             {city}, {state} {zip_code}<br /></b> <br />
@@ -576,37 +594,37 @@ const Dashboard = (props: Props) => {
                                             - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                         - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                         - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                        - It'll show a box that says "enter name or number of fund" - type in <b>{fund_name}</b> for that box<br />
+                                        - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
                                         - The rest of the process consists of entering payment and other information<br /><br />
 
-                                        Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {student_org_name} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+                                        Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
 
                                         Let us know if you have any questions! <br /><br />
 
-                                        <b>{student_org_name} Officer Team</b>
+                                        <b>{orgName} Officer Team</b>
 
                                         </Typography>
                                     ):(
                                         <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
-                                            Thank you for sponsoring a {student_org_name} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                            Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
                                             <u><b>To pay with check:</b></u><br />
-                                            - Must be made out to "{student_org_name}"<br />
+                                            - Must be made out to "{orgName}"<br />
                                             - Mail to:<br /><br />
-                                            <b>{student_org_name}<br />
+                                            <b>{orgName}<br />
                                                 {street_address}<br />
                                                 {city}, {state} {zip_code}<br /></b> <br />
                                             <u><b>To pay with a credit card:</b></u><br />
                                             - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                             - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                             - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                            - It'll show a box that says "enter name or number of fund" - type in <b>{fund_name}</b> for that box<br />
+                                            - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
                                             - The rest of the process consists of entering payment and other information<br /><br />
 
-                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {student_org_name} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
 
                                             Let us know if you have any questions! <br /><br />
 
-                                            <b>{student_org_name} Officer Team</b>
+                                            <b>{orgName} Officer Team</b>
 
                                         </Typography>
                                     ) }
@@ -618,10 +636,10 @@ const Dashboard = (props: Props) => {
 
                 </Grid>
 
-
-                
-
+                </> )}
             </Grid>
+            
+            
 
         </ThemeProvider>
 
