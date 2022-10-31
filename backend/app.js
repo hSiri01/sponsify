@@ -365,7 +365,7 @@ app.delete('/delete-event', (req, res) => {
 app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
-    orgs.find({ eventCode: req.params.code })
+    orgs.find({ sponsorCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
@@ -573,7 +573,7 @@ function generateNewCodes() {
             let lastUpdated = new Date(result.updatedAt)
             if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
                 console.log(result.updatedAt)
-                result.eventCode = generateRandom()
+                result.sponsorCode = generateRandom()
                 result.save()
             }
             
@@ -587,7 +587,7 @@ myInterval = setInterval( generateNewCodes,  60000);
 
 app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
-        .select({ eventCode: 1, updatedAt: 1 })
+        .select({ sponsorCode: 1, updatedAt: 1 })
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-sponsor-code, " + err)
