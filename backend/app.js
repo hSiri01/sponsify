@@ -614,20 +614,21 @@ app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
 
-function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress){
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total){
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
-        text: messageInput,
+        
         
         templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
         dynamicTemplateData: {
             orgName : orgName,
             shortOrgName : shortorgName,
             orgAddress : orgAddress,
-            items : messageInput
+            items : messageInput, 
+            totalCost : "$" + total,
             },
         }
         sgMail
@@ -642,9 +643,9 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
         })
 }
 app.post("/send-checkout-email", (req, res) => {
-    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name,student_org_short_name,orgAddress } = req.body
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name,student_org_short_name,orgAddress, total } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,student_org_short_name,orgAddress);
+    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,student_org_short_name,orgAddress, total);
 })
 
 // The "catchall" handler: for any request that doesn't
