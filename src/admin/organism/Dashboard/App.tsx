@@ -30,10 +30,10 @@ const Dashboard = (props: Props) => {
 
     const { address_2 } = props
     // TO DO: Needs to get changed - retrieved from backend (routes)
-    // const student_org_name = "Society of Women Engineers"
-    // const student_org_short_name = "SWE"
-    const student_org_name = "Aggie Women in Computer Science"
-    const student_org_short_name = "AWiCS"
+    const student_org_name = "Society of Women Engineers"
+    const student_org_short_name = "SWE"
+    // const student_org_name = "Aggie Women in Computer Science"
+    // const student_org_short_name = "AWiCS"
     // const student_org_name = "Datathon"
     // const student_org_short_name = "Datathon"
     localStorage.setItem('org-name', JSON.stringify(student_org_name))
@@ -59,7 +59,7 @@ const Dashboard = (props: Props) => {
         }
 
         const fetchSponsorCode = async () => {
-            await fetch("/get-event-code/" + student_org_name)
+            await fetch("/get-sponsor-code/" + student_org_name)
                 .then((res) => res.json())
                 .then((res) => {
                     let lastUpdated = new Date(res.updatedAt)

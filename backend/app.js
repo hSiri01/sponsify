@@ -585,12 +585,12 @@ function generateNewCodes() {
 // Second parameter represents interval - 60000 ms = 1 s && 1 day = 86400 s
 myInterval = setInterval( generateNewCodes,  60000); 
 
-app.get('/get-event-code/:org', (req, res) => {
+app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ eventCode: 1, updatedAt: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code, " + err)
+                console.log("Error on get-sponsor-code, " + err)
             }
             else {
                 res.json(result[0])
