@@ -49,10 +49,10 @@ const App: React.FC = () => {
           
             <Route path="/admin-login" element={<AdminLogin/>} />
             <Route path="/levels-edit" element={<EditLevels />} />
-            <Route path="/dashboard" element={<Dashboard /*sponsor_code="1l2x9gkd/I3GJD!%[" valid_until_date={new Date(2022, 10, 14)} street_address='3127 TAMU' city='College Station' state="TX" zip_code={77843} fund_name="947490-SWE"*//>} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/events-edit" element={<EditEvents />} />
             <Route path="/summary" element={<PurchaseHistory />} />
-            <Route path="/basic-info" element={<BasicInfo street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
+            <Route path="/basic-info" element={<BasicInfo />} />
 
           </Routes>
 

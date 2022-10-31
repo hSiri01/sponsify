@@ -11,6 +11,10 @@ const orgSchema = new mongoose.Schema({
     },
     address: {
         streetAddress: String,
+        streetAddress2: {
+            type: String,
+            default: ""
+        },
         zip: Number,
         city: String,
         state: String,

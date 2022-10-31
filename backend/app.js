@@ -494,12 +494,13 @@ app.get('/get-all-sponsors/:org', (req, res) => {
 
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
+        .select({ address: 1, logoImage: 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
             }
             else {
-                res.json(result)
+                res.json(result[0])
             }
         })
 })
@@ -599,7 +600,7 @@ app.get('/get-logo/:org', (req,res) => {
     .select({logoImage : 1, _id : 0},)
         .exec((err, result) => {
             if (err) {
-                //console.log("Error on get-org-info, " + err)
+                //console.log("Error on get-logo, " + err)
                 res.send('Error on create-logo')
             }
             else {

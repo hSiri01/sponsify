@@ -23,35 +23,26 @@ import Link from '@mui/material/Link';
 import * as React from 'react';
 
 interface Props {
-    /* TO DO: Needs to get changed - retrieved from backend (routes)
-    valid_until_date: Date,
-    street_address: string,
-    address_2?: string, 
-    city: string, 
-    state: string, 
-    zip_code: number, */
+
 }
 
 const Dashboard = (props: Props) => {
 
     const { isAuthenticated, user } = useAuth0()
-    /*const { valid_until_date, street_address, address_2, city, state, zip_code } = props*/
-    // TO DO: Needs to get changed - retrieved from backend (routes)
-    // const orgName = "Society of Women Engineers"
-    // const orgShortName = "SWE"
-    // const orgName = "Aggie Women in Computer Science"
-    // const orgShortName = "AWiCS"
-    // const orgName = "Datathon"
-    // const orgShortName = "Datathon"
-    let validAdmin = false
+    const [validAdmin, setValidAdmin] = React.useState(false)
 
     const [logo, setLogo] = React.useState("")
     const [orgName, setOrgName] = React.useState("")
     const [orgShortName, setOrgShortName] = React.useState("")
     const [sponsorCode, setSponsorCode] = React.useState("")
     const [fundName, setFundName] = React.useState("")
+    const [streetAddress, setStreetAddress] = React.useState("")
+    const [streetAddress2, setStreetAddress2] = React.useState("")
+    const [city, setCity] = React.useState("")
+    const [state, setState] = React.useState("")
+    const [zipcode, setZipcode] = React.useState(0)
 
-    let valid_until_date = new Date(), street_address = "", address_2 = "", city = "", state = "", zip_code = 0
+    let valid_until_date = new Date()  // TODO: calculate
 
     if (isAuthenticated) {
         const getOrg = async() => { 
@@ -59,15 +50,22 @@ const Dashboard = (props: Props) => {
                 await fetch("/get-org-from-email/" + user?.email)
                     .then((res) => res.json()) 
                     .then((data) => {
-                        console.log(data)
-                        setOrgName(data.name)
-                        setOrgShortName(data.shortName)
-                        setLogo(data.logo)
-                        setSponsorCode(data.sponsorCode)
-                        setFundName(data.fundName)
+                        // console.log(data)
 
-                        if (orgName !== "") {
-                            validAdmin = true
+                        if (data.name !== "") 
+                        {
+                            setValidAdmin(true)
+                            setOrgName(data.name)
+                            setOrgShortName(data.shortName)
+                            setLogo(data.logo)
+                            setSponsorCode(data.sponsorCode)
+                            setFundName(data.fundName)
+                            setStreetAddress(data.address.streetAddress)
+                            setStreetAddress2(data.address.streetAddress2)
+                            setCity(data.address.city)
+                            setState(data.address.state)
+                            setZipcode(data.address.zip)
+
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
                         }
@@ -78,10 +76,7 @@ const Dashboard = (props: Props) => {
             }
         }
         
-        console.log(isAuthenticated)
         getOrg()
-        validAdmin = true
-
     }
     
     return (
@@ -580,7 +575,7 @@ const Dashboard = (props: Props) => {
                             <Grid container>
                                 <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
 
-                                {address_2?
+                                {streetAddress2?
 
                                     (
                                         <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
@@ -589,9 +584,9 @@ const Dashboard = (props: Props) => {
                                         - Must be made out to "{orgName}"<br />
                                         - Mail to:<br /><br />
                                         <b>{orgName}<br />
-                                            {street_address}<br />
-                                            {address_2}<br />
-                                            {city}, {state} {zip_code}<br /></b> <br />
+                                            {streetAddress}<br />
+                                            {streetAddress2}<br />
+                                            {city}, {state} {zipcode}<br /></b> <br />
                                         <u><b>To pay with a credit card:</b></u><br />
                                             - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                         - Click on the maroon box on the top right side that reads “give now”<br /><br />
@@ -613,8 +608,8 @@ const Dashboard = (props: Props) => {
                                             - Must be made out to "{orgName}"<br />
                                             - Mail to:<br /><br />
                                             <b>{orgName}<br />
-                                                {street_address}<br />
-                                                {city}, {state} {zip_code}<br /></b> <br />
+                                                {streetAddress}<br />
+                                                {city}, {state} {zipcode}<br /></b> <br />
                                             <u><b>To pay with a credit card:</b></u><br />
                                             - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                             - Click on the maroon box on the top right side that reads “give now”<br /><br />
