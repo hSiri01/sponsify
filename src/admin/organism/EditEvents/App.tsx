@@ -46,22 +46,21 @@ const EditEvents = (props: Props) => {
 
     React.useEffect(() => {
         const fetchLogo = async() => {
-           try{
-            //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+            try{
+            console.log(student_org_name)
+            const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
-           }
-           catch(e){
-            console.log("Error fetching logo",(e))
-           }
+            }
+            catch(e){
+                console.log("Error fetching logo",(e))
+            }
                
         }
         
         fetchLogo() 
-   
+    },[])
 
-      },[])
     React.useEffect(() => {
         const fetchData = async() => {
             const data = await fetch("/get-all-events/" + student_org_name)
@@ -127,7 +126,7 @@ const EditEvents = (props: Props) => {
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name={"swe"}/>
+            <MenuBar />
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

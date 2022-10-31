@@ -556,7 +556,7 @@ app.get('/get-org-from-email/:email', (req, res) => {
             })
         })
         .catch(() => {
-            res.json({})
+            res.json({ name: "" })
         })
 })
 

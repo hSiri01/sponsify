@@ -32,7 +32,7 @@ const PurchaseHistory = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+    },[])
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
 
     const [purchases, setPurchases] = React.useState([{}]);
@@ -42,7 +42,7 @@ const PurchaseHistory = (props: Props) => {
 
     React.useEffect(() => {
         const fetchData = async () => {
-            const data = await fetch("/get-all-purchased-events/" + student_org_name)
+            await fetch("/get-all-purchased-events/" + student_org_name)
                 .then((res) => res.json())
                 .then((data) => {
                     // console.log(data)
@@ -55,11 +55,12 @@ const PurchaseHistory = (props: Props) => {
                     )
                     setPurchases(data)
                 }
-                )
-            const data2 = await fetch("/get-all-sponsors/" + student_org_name)
+            )
+
+            await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
                 .then((data2) => {
-                    console.log(data2)
+                    // console.log(data2)
                     setSponsors(data2)
 
                     let total_sponsored = 0
@@ -70,18 +71,19 @@ const PurchaseHistory = (props: Props) => {
                     setTotal(total_sponsored)
 
                 }
-                )
-            const data3 = await fetch("/get-all-levels/" + student_org_name)
+            )
+
+            await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
                 .then((data3) => {
-                    console.log(data3)
+                    // console.log(data3)
                     setLevels(data3)
                 }
-                )
+            )
         }
 
         fetchData()
-    }, [sponsors])
+    }, [])
 
     // console.log(purchases)
     
@@ -90,7 +92,7 @@ const PurchaseHistory = (props: Props) => {
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name="swe" />
+            <MenuBar />
 
             <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

@@ -12,13 +12,10 @@ import HelpIcon from '@mui/icons-material/Help';
 import HistoryIcon from '@mui/icons-material/History';
 
 interface Props {
-    student_org_short_name: string, 
+    
 }
 
 const MenuBar = (props: Props) => {
-
-  const {student_org_short_name} = props
-
 
     return (
         <ThemeProvider theme={theme}>
@@ -27,7 +24,7 @@ const MenuBar = (props: Props) => {
                 <AppBar position="fixed" sx={{ width: theme.spacing(15), minHeight: "100%", left:0 }}>
                     <Toolbar sx={{ flexDirection: "column", ml: theme.spacing(5)}}>
                         <IconButton
-                            href={`/dashboard-` + student_org_short_name.toString()}
+                            href={'/dashboard'}
                             size="large"
                             edge="start"
                             aria-label="menu"

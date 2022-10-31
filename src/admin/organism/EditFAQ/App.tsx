@@ -100,7 +100,7 @@ const EditFAQ = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar student_org_short_name='swe'/>
+            <MenuBar />
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

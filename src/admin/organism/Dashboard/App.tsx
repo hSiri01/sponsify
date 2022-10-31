@@ -23,19 +23,19 @@ import Link from '@mui/material/Link';
 import * as React from 'react';
 
 interface Props {
-    // TO DO: Needs to get changed - retrieved from backend (routes)
+    /* TO DO: Needs to get changed - retrieved from backend (routes)
     valid_until_date: Date,
     street_address: string,
     address_2?: string, 
     city: string, 
     state: string, 
-    zip_code: number, 
+    zip_code: number, */
 }
 
 const Dashboard = (props: Props) => {
 
     const { isAuthenticated, user } = useAuth0()
-    const { valid_until_date, street_address, address_2, city, state, zip_code } = props
+    /*const { valid_until_date, street_address, address_2, city, state, zip_code } = props*/
     // TO DO: Needs to get changed - retrieved from backend (routes)
     // const orgName = "Society of Women Engineers"
     // const orgShortName = "SWE"
@@ -51,13 +51,15 @@ const Dashboard = (props: Props) => {
     const [sponsorCode, setSponsorCode] = React.useState("")
     const [fundName, setFundName] = React.useState("")
 
+    let valid_until_date = new Date(), street_address = "", address_2 = "", city = "", state = "", zip_code = 0
+
     if (isAuthenticated) {
         const getOrg = async() => { 
             try {
                 await fetch("/get-org-from-email/" + user?.email)
                     .then((res) => res.json()) 
                     .then((data) => {
-                        // console.log(data)
+                        console.log(data)
                         setOrgName(data.name)
                         setOrgShortName(data.shortName)
                         setLogo(data.logo)
@@ -87,7 +89,7 @@ const Dashboard = (props: Props) => {
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 {validAdmin && ( <>
-                <MenuBar student_org_short_name={orgShortName}/>
+                <MenuBar />
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
@@ -307,7 +309,7 @@ const Dashboard = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
 
                                 <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                    Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
+                                    Valid Until <b>{valid_until_date.getMonth()+1}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
                                 </Typography>
 
                             </Grid>
