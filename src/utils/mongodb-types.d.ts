@@ -2,6 +2,7 @@ export type Event = {
     _id: string
     name: string
     date: Date
+    endDate?: Date
     price: number
     desc: string
     briefDesc: string
@@ -9,7 +10,7 @@ export type Event = {
     spotsTaken: number
     totalSpots: number
     visible: boolean
-    sponsors: Sponsor[]
+    sponsors: Sponsor[] | number[]
     org: string
 }
 
@@ -41,7 +42,7 @@ export type Organization = {
     eventCode: string
     validAdmins: string[]
     levels: SponsorshipLevel[]
-    events: Event[]
+    events: Event[] | number[]
     exampleInvoice: string
     fundName: string
     FAQ: FAQ[]
@@ -51,8 +52,8 @@ export type Organization = {
 
 export type Purchase = {
     _id: string
-    sponsorId: Sponsor
-    events: Event[]
+    sponsorID: Sponsor | number
+    events: Event[] | number[]
     totalAmount: number
     dateSponsored: Date
     org: string

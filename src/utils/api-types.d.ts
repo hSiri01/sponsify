@@ -19,7 +19,7 @@ export type VerifySponsorCode = {
     shortName: string
 } | {}
 export type CheckoutEvents = { status: '200' | '500' } | UpdateEvent
-export type GetAllPurchasedEvents = Event[]
+export type GetAllPurchasedEvents = Purchase[]
 export type CreateSponsor = undefined
 export type GetAllSponsors = {
     sponsorLevel: SponsorshipLevel,
