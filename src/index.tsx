@@ -15,7 +15,7 @@ root.render(
     <Auth0Provider
     domain="dev-laoquug3.us.auth0.com"
     clientId="QmSkQRLon0Xp1ZUmfGMi5oszDNF0Rder"
-    redirectUri="http://localhost:3000/dashboard-swe"
+    redirectUri="http://localhost:3000/dashboard"
   >
     <App />
   </Auth0Provider>

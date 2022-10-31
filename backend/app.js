@@ -357,7 +357,7 @@ app.delete('/delete-event', (req, res) => {
 app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
-    orgs.find({ eventCode: req.params.code })
+    orgs.find({ sponsorCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
@@ -536,10 +536,10 @@ app.get('/get-org-from-email/:email', (req, res) => {
         .then(allOrgs => {
             allOrgs.forEach(org => {
                 // console.log(org.validAdmins)
-                for (let i = 0; i < org.validAdmins.length; i++) {
-                    if (org.validAdmins[i] === req.params.email ) {
-                        // console.log(req.params.email + " is a valid admin for " + org.name)
-                        console.log(org.eventCode)
+                for (let i = 0; i < org.validAdmins.length; i++) 
+                {
+                    if (org.validAdmins[i] === req.params.email ) 
+                    {
                         result = { 
                             name: org.name,
                             shortName: org.shortName,
@@ -548,6 +548,8 @@ app.get('/get-org-from-email/:email', (req, res) => {
                             sponsorCode: org.sponsorCode,
                             fundName: org.fundName
                         }
+
+                        // console.log(result)
                         res.json(result)
                     }
                 }
@@ -560,10 +562,10 @@ app.get('/get-org-from-email/:email', (req, res) => {
 
 app.get('/get-event-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
-        .select({ eventCode: 1 })
+        .select({ sponsorCode: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code, " + err)
+                console.log("Error on get-sponsor-code, " + err)
             }
             else {
                 res.json(result[0])

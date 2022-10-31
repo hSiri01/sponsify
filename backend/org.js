@@ -16,7 +16,7 @@ const orgSchema = new mongoose.Schema({
         state: String,
         country: String
     },
-    eventCode: {
+    sponsorCode: {
         type: String,
         required: true
     },
