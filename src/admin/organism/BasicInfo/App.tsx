@@ -58,9 +58,31 @@ const BasicInfo = (props: Props) => {
         fetchOrgInfo()
     },[])
 
+    const updateInfo = () => {
+        fetch('/update-org-info', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: orgName,
+                address: {
+                    streetAddress: streetAddress,
+                    streetAddress2: streetAddress2,
+                    city: city,
+                    state: state,
+                    zip: zipcode
+                }
+            })
+        })
+            .then(() => {
+                window.location.reload()})
+    }
+
     const handleCreateLogoUrl =  (url : string) => {
 
-        if(url){
+        if (url) {
             const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -74,11 +96,11 @@ const BasicInfo = (props: Props) => {
             .then ((data) => setLogo(url))
             console.log("handdle create set logo ", logo)
             
+        }
     }
-     
-    }
+
     const uploadImage =  () => {
-        if(image){
+        if (image) {
             const data = new FormData()
             data.append("file", image[0])
             data.append('upload_preset', uploadPreset)
@@ -235,7 +257,7 @@ const BasicInfo = (props: Props) => {
                             
                                 
                                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6), }}>
-                                    <Button type="submit" value="Upload" variant="contained" size="large" color="primary" sx={{
+                                    <Button type="submit" onClick={updateInfo} value="Upload" variant="contained" size="large" color="primary" sx={{
                                         borderRadius: 0,
                                         pt: theme.spacing(3),
                                         pb: theme.spacing(3),

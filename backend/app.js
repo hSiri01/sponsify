@@ -505,31 +505,21 @@ app.get('/get-org-info/:org', (req,res) => {
         })
 })
 
-app.get('/update-org-info', (req, res) => {
-
-    const id = req.body.id
-    if (!id) {
-        console.log('Cannot update org, no id in request body')
-        res.json({ status: '400' })
-    }
-    else {
-        if (mongoose.Types.ObjectId.isValid(id)) {
-
-            orgs.findByIdAndUpdate(id, { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } }, (err, event) => {
-                if (err) {
-                    console.log('Error on update-org-info: ' + err)
-                }
-                else {
-                    console.log('Successfully updated org info: \n' + event)
-                }
-            })
+app.put('/update-org-info', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.name },
+        { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } },
+        (err, event) => {
+            if (err) {
+                console.log('Error on update-org-info: ' + err)
+                res.json({ status: '500' })
+            }
+            else {
+                console.log('Successfully updated org info: \n' + event)
+                res.json({ status: '200' })
+            }
         }
-        else {
-            console.log('Cannot update org-info, invalid id in request body')
-        }
-    }
-
-
+    )
 })
 
 app.get('/get-org-from-email/:email', (req, res) => {
