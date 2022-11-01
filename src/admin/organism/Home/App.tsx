@@ -14,7 +14,7 @@ interface Props {
 const AdminLogin = (props: Props) => {
     const { loginWithRedirect } = useAuth0();
 
-    return (
+    return ( 
         <ThemeProvider theme={theme}>
 
             <Grid container>

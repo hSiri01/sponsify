@@ -9,44 +9,81 @@ import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
 
+
 interface Props {
-    street_address: string, 
-    street_address_2?: string, 
-    city: string, 
-    state: string, 
-    zipcode: number, 
+
 }
 
 
 const BasicInfo = (props: Props) => {
-    const { street_address, street_address_2, city, state, zipcode} = props
+
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    
+    const [orgName, setOrgName] = React.useState(student_org_name)
+    const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
+    // TODO: add short name and fund name inputs
+
+    const [streetAddress, setStreetAddress] = React.useState("")
+    const [streetAddress2, setStreetAddress2] = React.useState("")
+    const [city, setCity] = React.useState("")
+    const [state, setState] = React.useState("")
+    const [zipcode, setZipcode] = React.useState(-1)
+
     const [image, setImage] = React.useState<any|null>(null);
     const [logo, setLogo] = React.useState('')
     
     const uploadPreset = 'db6q2mz0'
-      
+    const cloudName = "dmkykmach"
+
     
     React.useEffect(() => {
-        const fetchLogo = async() => {
-           try{
-             await fetch("/get-logo/" + student_org_name)
-                .then((res) => res.json()) 
-                .then((data1) => setLogo(data1.logoImage))
-           }
-           catch(e){
-            console.log("Error fetching logo ",(e))
-           }
-               
+        const fetchOrgInfo = async() => {
+            try {
+                await fetch("/get-org-info/" + student_org_name)
+                    .then((res) => res.json()) 
+                    .then((data) => {
+                        setLogo(data.logoImage)
+                        setStreetAddress(data.address.streetAddress)
+                        setStreetAddress2(data.address.streetAddress2)
+                        setCity(data.address.city)
+                        setState(data.address.state)
+                        setZipcode(data.address.zip)
+                    })
+            }
+            catch (e) {
+                console.log("Error fetching org info ", (e))
+            }
         }
-        fetchLogo() 
 
-      },[student_org_name])
+        fetchOrgInfo()
+    },[])
+
+    const updateInfo = () => {
+        fetch('/update-org-info', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: orgName,
+                address: {
+                    streetAddress: streetAddress,
+                    streetAddress2: streetAddress2,
+                    city: city,
+                    state: state,
+                    zip: zipcode
+                }
+            })
+        })
+            .then(() => {
+                window.location.reload()})
+    }
 
     const handleCreateLogoUrl =  (url : string) => {
 
-        if(url){
+        if (url) {
             const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -60,11 +97,11 @@ const BasicInfo = (props: Props) => {
             .then ((data) => setLogo(url))
             console.log("handdle create set logo ", logo)
             
+        }
     }
-     
-    }
+
     const uploadImage =  () => {
-        if(image){
+        if (image) {
             const data = new FormData()
             data.append("file", image[0])
             data.append('upload_preset', uploadPreset)
@@ -85,7 +122,7 @@ const BasicInfo = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar student_org_short_name='swe' />
+            <MenuBar />
 
             <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -114,38 +151,74 @@ const BasicInfo = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {student_org_short_name} Basic Information
+                        {orgShortName} Basic Information
                     </Typography>
                 </Grid>
 
 
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
-                    <TextField sx={{ minWidth: theme.spacing(100), mb: theme.spacing(4) }} id="outlined-basic" label="Organization" variant="outlined" defaultValue={student_org_name} />
+                    <TextField
+                        sx={{ minWidth: theme.spacing(100), mb: theme.spacing(4) }}
+                        id="outlined-basic"
+                        label="Organization"
+                        variant="outlined"
+                        value={orgName}
+                        onChange={ev => setOrgName(ev.target.value)} />
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
-                    <TextField sx={{ minWidth: theme.spacing(100) }} id="outlined-basic" label="Street Address" variant="outlined" defaultValue={street_address} />
+                    <TextField
+                        sx={{ minWidth: theme.spacing(100) }}
+                        id="outlined-basic"
+                        label="Street Address"
+                        variant="outlined"
+                        value={streetAddress}
+                        onChange={ev => setStreetAddress(ev.target.value)} />
 
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
 
-                    <TextField sx={{ minWidth: theme.spacing(100)}} id="outlined-basic" label="Street Address 2" variant="outlined" defaultValue={street_address_2} />
+                    <TextField
+                        sx={{ minWidth: theme.spacing(100)}}
+                        id="outlined-basic"
+                        label="Street Address 2"
+                        variant="outlined"
+                        value={streetAddress2}
+                        onChange={ev => setStreetAddress2(ev.target.value)} />
 
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
 
-                    <TextField sx={{ minWidth: theme.spacing(100)}} id="outlined-basic" label="City" variant="outlined" defaultValue={city} />
+                    <TextField
+                        sx={{ minWidth: theme.spacing(100)}}
+                        id="outlined-basic"
+                        label="City"
+                        variant="outlined"
+                        value={city}
+                        onChange={ev => setCity(ev.target.value)} />
 
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
 
-                    <TextField sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2)}} id="outlined-basic" label="State" variant="outlined" defaultValue={state} />
+                    <TextField
+                        sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2)}}
+                        id="outlined-basic"
+                        label="State"
+                        variant="outlined"
+                        value={state}
+                        onChange={ev => setState(ev.target.value)} />
 
-                    <TextField sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2), mb: theme.spacing(4) }} id="outlined-basic" label="Zipcode" variant="outlined" defaultValue={zipcode} />
+                    <TextField
+                        sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2), mb: theme.spacing(4) }}
+                        id="outlined-basic"
+                        label="Zipcode"
+                        variant="outlined"
+                        value={zipcode > -1 ? zipcode : ""}
+                        onChange={ev => setZipcode(+ev.target.value)} />
 
                 </Grid>
                 <Grid item xs={12} > 
@@ -185,7 +258,7 @@ const BasicInfo = (props: Props) => {
                             
                                 
                                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6), }}>
-                                    <Button type="submit" value="Upload" variant="contained" size="large" color="primary" sx={{
+                                    <Button type="submit" onClick={updateInfo} value="Upload" variant="contained" size="large" color="primary" sx={{
                                         borderRadius: 0,
                                         pt: theme.spacing(3),
                                         pb: theme.spacing(3),

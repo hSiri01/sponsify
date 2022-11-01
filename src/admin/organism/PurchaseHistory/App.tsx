@@ -18,8 +18,9 @@ interface Props {
 
 const PurchaseHistory = (props: Props) => {
 
-    const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const [logo, setLogo] = React.useState("")
+    
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
@@ -35,7 +36,7 @@ const PurchaseHistory = (props: Props) => {
         
         fetchLogo() 
 
-      },[student_org_name])
+    },[])
 
     const [purchases, setPurchases] = React.useState<GetAllPurchasedEvents>([]);
     const [sponsors, setSponsors] = React.useState<GetAllSponsors>([]);
@@ -58,7 +59,8 @@ const PurchaseHistory = (props: Props) => {
                     )
                     setPurchases(data)
                 }
-                )
+            )
+
             await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
                 .then((data2: GetAllSponsors) => {
@@ -70,18 +72,19 @@ const PurchaseHistory = (props: Props) => {
                     setTotal(total_sponsored)
 
                 }
-                )
+            )
+
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
                 .then((data3: GetAllLevels) => {
                     console.log(data3)
                     setLevels(data3)
                 }
-                )
+            )
         }
 
         fetchData()
-    }, [student_org_name, sponsors])
+    }, [student_org_name])
 
     // console.log(purchases)
     
@@ -90,7 +93,7 @@ const PurchaseHistory = (props: Props) => {
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name="swe" />
+            <MenuBar />
 
             <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
