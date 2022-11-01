@@ -110,9 +110,9 @@ const Checkout = (props: Props) => {
     };
     const sendEmail = ()=>{
         
-        cartMessage += "\n \n  Total Cost: $" + total
+       
         
-        setSubject('Sponsor Information')
+        setSubject( student_org_name + ' Sponsorship Information')
         fetch("/send-checkout-email",{
             method:'POST',
             headers:{
@@ -127,6 +127,7 @@ const Checkout = (props: Props) => {
             student_org_name,
             student_org_short_name,
             orgAddress,
+            total,
         })
         }).catch(err=>{
             console.log("Error found",err)
