@@ -28,8 +28,9 @@ interface Props {
 
 const Dashboard = (props: Props) => {
 
-    const { isAuthenticated, user } = useAuth0()
+    const { isAuthenticated, isLoading, user } = useAuth0()
     const [validAdmin, setValidAdmin] = React.useState(false)
+    const [notRegistered, setNotRegistered] = React.useState(false)
 
     const [logo, setLogo] = React.useState("")
     const [orgName, setOrgName] = React.useState("")
@@ -46,14 +47,14 @@ const Dashboard = (props: Props) => {
 
     if (isAuthenticated) {
         const getOrg = async() => { 
-            try {
-                await fetch("/get-org-from-email/" + user?.email)
+            if (user) {
+                await fetch("/get-org-from-email/" + user.email)
                     .then((res) => res.json()) 
                     .then((data) => {
-                        // console.log(data)
 
                         if (data.name !== "") 
                         {
+                            console.log("got valid org!")
                             setValidAdmin(true)
                             setOrgName(data.name)
                             setOrgShortName(data.shortName)
@@ -69,10 +70,15 @@ const Dashboard = (props: Props) => {
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
                         }
+                        else {
+                            console.log("not associated")
+                            setNotRegistered(true)
+                            // TODO: graceful retry process
+                            // logout({ returnTo: process.env.NODE_ENV === "production" ? 
+                            // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
+                        }
+
                     })
-            }
-            catch(e) {
-                console.log("Error fetching org from email ", e)
             }
         }
         
@@ -634,6 +640,34 @@ const Dashboard = (props: Props) => {
                 </Grid>
 
                 </> )}
+
+                {notRegistered && (
+                    <Grid container sx={{ backgroundColor:"#fff"}}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h5">
+                                Your email is not associated with any student organization.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                )}
+
+                {isLoading && (
+                    <Grid container sx={{ backgroundColor:"#fff" }}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ maxHeight: theme.spacing(60), display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h4">
+                                ...
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                )}
             </Grid>
             
             
