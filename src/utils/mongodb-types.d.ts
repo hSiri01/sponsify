@@ -39,7 +39,7 @@ export type Organization = {
         state: string
         country: string
     }
-    eventCode: string
+    sponsorCode: string
     validAdmins: string[]
     levels: SponsorshipLevel[]
     events: Event[] | number[]

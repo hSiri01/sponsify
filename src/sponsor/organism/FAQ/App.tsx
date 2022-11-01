@@ -83,8 +83,8 @@ const FAQ = (props: Props) => {
                 </Grid>
 
                 <>
-                    {faq.map((one: any) =>   
-                        <React.Fragment key={one._id}>
+                    {faq.map((one) =>
+                        <React.Fragment key={one.question}>
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
                             <Question question= {one.question}
                                 answer={one.answer}/>

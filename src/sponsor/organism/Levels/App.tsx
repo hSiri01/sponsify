@@ -87,12 +87,12 @@ const Levels = (props: Props) => {
                 </Grid>
 
                 <>
-                    {levels.map((level: any) =>   
-                    <>
+                    {levels.map((level) =>   
+                    <React.Fragment key={level._id}>
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(8) }}>
                                 <Level name={level.name} lower_bound={level.minAmount} description={level.description} upper_bound={level.maxAmount} color_level={level.color} />
                             </Grid>
-                    </>
+                    </React.Fragment>
                     )}
                 </>            
 

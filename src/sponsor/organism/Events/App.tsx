@@ -45,29 +45,24 @@ const Events = (props: Props) => {
     const [logo, setLogo] = React.useState("")
 
     React.useEffect(() => {
-        const fetchData = async() => {
-            await fetch("/get-enabled-events/" + student_org_name)
-                .then((res) => res.json())
-                .then((data: GetEnabledEvents) => {
-                    // console.log(data)
-                    data.sort(
-                        (objA, objB) => {
-                            if (objA.name === "General Donation") {
-                                return -1
-                            }
-                            else {
-                                return objA.name.localeCompare(objB.name)
-                            }
-                        }
-                    )
-                    setEvents(data)
+        const fetchData = async () => {
+            let res = await fetch("/get-enabled-events/" + student_org_name)
+            let data: GetEnabledEvents = await res.json()
+            data.sort(
+                (objA, objB) => {
+                    if (objA.name === "General Donation") {
+                        return -1
+                    }
+                    else {
+                        return objA.name.localeCompare(objB.name)
+                    }
                 }
             )
+            setEvents(data)
         }
 
         fetchData()
-        clearCart()
-    }, [student_org_name, clearCart])
+    }, [student_org_name])
     
     React.useEffect(() => {
         const fetchLogo = async() => {
@@ -88,17 +83,18 @@ const Events = (props: Props) => {
       },[student_org_name])
     
     React.useEffect(() => {
-        setTotal(cart.reduce((total, item) => total + item.price * item.quantity, 0))
+        let localtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0)
+        setTotal(localtotal)
 
         const fetchLevel = async () => {
-            const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + total)
+            const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + localtotal)
             const data: GetLevelByAmount = await response.json()
             setLevelName(data.name)
             setLevelColor(data.color)
         }
         
         fetchLevel()
-    }, [cart, student_org_name, total])
+    }, [cart, student_org_name])
 
     const checkout = () => {
         if (cart.at(0)) {

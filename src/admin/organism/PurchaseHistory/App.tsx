@@ -51,8 +51,8 @@ const PurchaseHistory = (props: Props) => {
                     // FIXME: typing inconsistent?
                     data.sort(
                         (objA, objB) => {
-                            const date1 = new Date(objA.date)
-                            const date2 = new Date(objB.date)
+                            const date1 = new Date(objA.dateSponsored)
+                            const date2 = new Date(objB.dateSponsored)
                             return date1.getTime() - date2.getTime()
                         }
                     )
