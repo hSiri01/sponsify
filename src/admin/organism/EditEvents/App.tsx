@@ -13,6 +13,9 @@ import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import { GetAllEvents } from '../../../utils/api-types';
 
 
 interface Props {
@@ -39,7 +42,7 @@ const EditEvents = (props: Props) => {
     const [dateInput, setDateInput] = React.useState('');
     const [endDateInput, setEndDateInput] = React.useState('');
 
-    const [events, setEvents] = React.useState([{}]);
+    const [events, setEvents] = React.useState<GetAllEvents>([]);
     const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
@@ -47,7 +50,7 @@ const EditEvents = (props: Props) => {
     React.useEffect(() => {
         const fetchLogo = async() => {
             try{
-            console.log(student_org_name)
+            // console.log(student_org_name)
             const data1 = await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
@@ -63,12 +66,12 @@ const EditEvents = (props: Props) => {
 
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-all-events/" + student_org_name)
+            await fetch("/get-all-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetAllEvents) => {
                     // console.log(data)
                     data.sort(
-                        (objA: any, objB: any) => {
+                        (objA, objB) => {
                             if (objA.name === "General Donation") {
                                 return -1
                             }
@@ -76,7 +79,7 @@ const EditEvents = (props: Props) => {
                                 return 1
                             }
                             else {
-                                return objA.name.toLowerCase().localeCompare(objB.name.toLowerCase())
+                                return objA.name.toLocaleLowerCase().localeCompare(objB.name.toLocaleLowerCase())
                             }
                         }
                     )
@@ -86,7 +89,7 @@ const EditEvents = (props: Props) => {
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name])
 
     const createEvent = () => {
         if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
@@ -261,6 +264,11 @@ const EditEvents = (props: Props) => {
                     overflow: 'scroll',
                 }}>
                     <Grid container>
+                    <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseNewQuestion} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
@@ -273,7 +281,7 @@ const EditEvents = (props: Props) => {
                     <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
 
                         <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-
+                       
                             <Grid item xs={3}>
                                 <TextField
                                     id="date"

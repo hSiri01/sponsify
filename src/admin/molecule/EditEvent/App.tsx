@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import CloseIcon from '@mui/icons-material/Close';
 
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import dayjs, { Dayjs } from 'dayjs';
@@ -193,8 +194,15 @@ const EditEvent = (props: Props) => {
                         }}>
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m:theme.spacing(6)}} >
 
+                                <Grid container sx={{mb: theme.spacing(6), mt:theme.spacing(4)}}>
+                                <Grid item xs={12} sx={{  }}>
+                                        <IconButton color="secondary" aria-label="Edit" onClick={handleCloseEvent} sx={{  }}>
+                                         <CloseIcon />
+                                     </IconButton>
+                                     </Grid>
+                                </Grid>
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-
+                                    
                                     <Grid item xs={3}>
                                         <TextField
                                             id="date"

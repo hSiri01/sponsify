@@ -6,13 +6,14 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Question from '../../molecule/Question/App';
 import Button from '@mui/material/Button';
+import { GetAllFaq } from '../../../utils/api-types';
 
 interface Props {
 }
 
 const FAQ = (props: Props) => {
 
-    const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
+    const [faq, setFAQ] = React.useState<GetAllFaq>([{question: '', answer: ''}])
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
     const [logo, setLogo] = React.useState("")
@@ -20,18 +21,18 @@ const FAQ = (props: Props) => {
     React.useEffect(() => {
 
         const fetchData = async() => {
-            const data = await fetch("/get-all-FAQ/" + student_org_name)
+            await fetch("/get-all-FAQ/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => setFAQ(data))
+                .then((data: GetAllFaq) => setFAQ(data))
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name])
 
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -43,7 +44,7 @@ const FAQ = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
 
     return (
         <ThemeProvider theme={theme}>
@@ -82,8 +83,8 @@ const FAQ = (props: Props) => {
                 </Grid>
 
                 <>
-                    {faq.map((one: any) =>   
-                        <React.Fragment key={one._id}>
+                    {faq.map((one) =>
+                        <React.Fragment key={one.question}>
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
                             <Question question= {one.question}
                                 answer={one.answer}/>

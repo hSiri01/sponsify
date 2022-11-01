@@ -594,7 +594,7 @@ const Dashboard = (props: Props) => {
                                             {streetAddress2}<br />
                                             {city}, {state} {zipcode}<br /></b> <br />
                                         <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                         - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                         - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
                                         - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
@@ -617,7 +617,7 @@ const Dashboard = (props: Props) => {
                                                 {streetAddress}<br />
                                                 {city}, {state} {zipcode}<br /></b> <br />
                                             <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                             - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                             - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
                                             - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />

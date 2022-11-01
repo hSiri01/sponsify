@@ -9,8 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Button from '@mui/material/Button';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 interface Props {
@@ -127,6 +127,11 @@ const EditQuestion = (props: Props) => {
                     overflow: 'scroll',
                 }}>
                     <Grid container>
+                    <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseQuestion} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)}} >

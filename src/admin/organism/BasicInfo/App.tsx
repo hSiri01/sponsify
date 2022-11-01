@@ -222,7 +222,7 @@ const BasicInfo = (props: Props) => {
                 </Grid>
                 <Grid item xs={12} > 
                     
-                        <iframe name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
+                        <iframe title="dummyframe" name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
                         <form  onSubmit={uploadImage} action ="#" /*method="POST" action="/create-logo"*/ target = "dummyframe" encType="multipart/form-data">
                             <input type="hidden" name="organization" value={student_org_name} />
                             <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(10)}}>

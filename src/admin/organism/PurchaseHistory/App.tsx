@@ -8,6 +8,8 @@ import MenuBar from '../../molecule/MenuBar/App'
 import Transaction from '../../molecule/Transaction/App';
 import { Paper } from '@mui/material';
 import LevelSponsors from '../../molecule/LevelSponsors/App';
+import { Event, Sponsor } from '../../../utils/mongodb-types';
+import { GetAllLevels, GetAllPurchasedEvents, GetAllSponsors } from '../../../utils/api-types';
 
 
 
@@ -17,10 +19,11 @@ interface Props {
 const PurchaseHistory = (props: Props) => {
 
     const [logo, setLogo] = React.useState("")
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -35,21 +38,22 @@ const PurchaseHistory = (props: Props) => {
     },[])
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
 
-    const [purchases, setPurchases] = React.useState([{}]);
-    const [sponsors, setSponsors] = React.useState([{}]);
-    const [levels, setLevels] = React.useState([{}]);
+    const [purchases, setPurchases] = React.useState<GetAllPurchasedEvents>([]);
+    const [sponsors, setSponsors] = React.useState<GetAllSponsors>([]);
+    const [levels, setLevels] = React.useState<GetAllLevels>([]);
     const [total, setTotal] = React.useState(0);
 
     React.useEffect(() => {
         const fetchData = async () => {
             await fetch("/get-all-purchased-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetAllPurchasedEvents) => {
                     // console.log(data)
+                    // FIXME: typing inconsistent?
                     data.sort(
-                        (objA: any, objB: any) => {
-                            const date1 = new Date(objA.date)
-                            const date2 = new Date(objB.date)
+                        (objA, objB) => {
+                            const date1 = new Date(objA.dateSponsored)
+                            const date2 = new Date(objB.dateSponsored)
                             return date1.getTime() - date2.getTime()
                         }
                     )
@@ -59,14 +63,11 @@ const PurchaseHistory = (props: Props) => {
 
             await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
-                .then((data2) => {
-                    // console.log(data2)
+                .then((data2: GetAllSponsors) => {
+                    console.log(data2)
                     setSponsors(data2)
 
-                    let total_sponsored = 0
-                    data2.map((sponsor:any) => {
-                        total_sponsored += sponsor.totalAmount
-                    })
+                    let total_sponsored = data2.reduce((accumulator, current) => accumulator + current.totalAmount, 0)
                     
                     setTotal(total_sponsored)
 
@@ -75,15 +76,15 @@ const PurchaseHistory = (props: Props) => {
 
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
-                .then((data3) => {
-                    // console.log(data3)
+                .then((data3: GetAllLevels) => {
+                    console.log(data3)
                     setLevels(data3)
                 }
             )
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name, sponsors])
 
     // console.log(purchases)
     
@@ -231,18 +232,22 @@ const PurchaseHistory = (props: Props) => {
 
                
                 <>
-                    {purchases.map((purchase: any) => {
-                        // console.log(purchase.events)
-                        
-                        if (purchase.events !== undefined) {
-                            return purchase.events.map((event: any) => (
+                    {purchases.map((purchase) => {
+                        // FIXME: Change keying for outer purchase fragment
+                        let sponsor = purchase.sponsorID as Sponsor
+                        console.log(purchase)
+                        return <React.Fragment key={purchase._id}>
+                        {purchase.events && 
+                            purchase.events.map((e) => {
+                                let event = e as Event
+                                return (
                                
                                 <React.Fragment key={event._id}>
                                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                                        <Transaction company_name={purchase.sponsorID.company}
-                                            rep_name={purchase.sponsorID.firstName + " " + purchase.sponsorID.lastName}
-                                            rep_email={purchase.sponsorID.email}
+                                        <Transaction company_name={sponsor.company}
+                                            rep_name={sponsor.firstName + " " + sponsor.lastName}
+                                            rep_email={sponsor.email}
                                             event_name={event.name}
                                             short_description={event.briefDesc}
                                             purchase_date={new Date(purchase.dateSponsored)}
@@ -255,9 +260,10 @@ const PurchaseHistory = (props: Props) => {
                                 </React.Fragment>
                            
                             )
-
-                        )
+                                }
+                            )
                         }
+                        </React.Fragment>
                     }
 
                     )} 

@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 interface Props {
@@ -187,6 +188,11 @@ const EditLevel = (props: Props) => {
                 }}>
                     
                     <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
+                    <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseLevel} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
                         <Grid item xs={1}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)

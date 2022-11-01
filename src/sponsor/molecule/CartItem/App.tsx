@@ -4,12 +4,11 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
 import Date from '../../atom/Date/App'
-import Button from '@mui/material/Button';
 
 import {useCart} from '../../../contexts/Cart'
 
 
-export type CartItem = {
+export type CartItemType = {
     name: string,
     short_description: string, 
     price: number, 
@@ -19,7 +18,7 @@ export type CartItem = {
     id: string
 }
 
-const CartItem = (props: CartItem) => {
+const CartItem = (props: CartItemType) => {
 
     const {name, short_description, price, quantity, date_start, date_end} = props
 
