@@ -11,7 +11,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import InputAdornment from '@mui/material/InputAdornment';
-
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 interface Props {  
 }
 
@@ -190,6 +191,13 @@ const EditLevels = (props: Props) => {
                     overflow: 'scroll',
                 }}>
                     <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
+                        
+                        <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseNewLevel} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
+                        
                         <Grid item xs={1}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
@@ -209,7 +217,7 @@ const EditLevels = (props: Props) => {
                             defaultValue={''} onChange={handleMaxChange()} variant="outlined" />
                         </Grid>
 
-                        <Grid item xs={3} sx={{
+                        <Grid item xs={2} sx={{
                             display: 'flex', justifyContent: 'left', mt: theme.spacing(5)
                         }}>
                             <TextField

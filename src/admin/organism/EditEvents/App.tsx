@@ -13,6 +13,8 @@ import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 
 interface Props {
@@ -262,6 +264,11 @@ const EditEvents = (props: Props) => {
                     overflow: 'scroll',
                 }}>
                     <Grid container>
+                    <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseNewQuestion} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
@@ -274,7 +281,7 @@ const EditEvents = (props: Props) => {
                     <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
 
                         <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-
+                       
                             <Grid item xs={3}>
                                 <TextField
                                     id="date"
