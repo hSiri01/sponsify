@@ -9,10 +9,11 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import { GetAllFaq } from '../../../utils/api-types';
+
 
 interface Props {
 }
@@ -23,7 +24,7 @@ const EditFAQ = (props: Props) => {
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const [org, setOrg] = React.useState('')
-    const [FAQ, setFAQ] = React.useState([{}])
+    const [FAQ, setFAQ] = React.useState<GetAllFaq>([])
     const [question, setQuestion] = React.useState('')
     const [answer, setAnswer] = React.useState('')
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
@@ -33,7 +34,7 @@ const EditFAQ = (props: Props) => {
         const fetchLogo = async() => {
            try{
             //console.log("Org ", student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -44,7 +45,7 @@ const EditFAQ = (props: Props) => {
         }
         
         fetchLogo() 
-    },[])
+    },[student_org_name])
     const handleCloseNewQuestion = () => {
         resetInputs()
         setOpenNewQuestion(false);
@@ -58,15 +59,15 @@ const EditFAQ = (props: Props) => {
     React.useEffect(() => {
         const fetchData = async() => {
             // const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
-            const data = await fetch("/get-all-FAQ/" + student_org_name)
+            await fetch("/get-all-FAQ/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => setFAQ(data))
+                .then((data: GetAllFaq) => setFAQ(data))
                 .then(() => setOrg(student_org_name))
 
         }
         fetchData()
 
-    }, [FAQ])
+    }, [student_org_name, FAQ])
 
     const handleQuestionChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuestion(event.target.value )

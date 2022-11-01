@@ -7,7 +7,6 @@ import Levels from './sponsor/organism/Levels/App';
 import Events from './sponsor/organism/Events/App';
 import { ThemeProvider } from '@mui/system';
 import { theme } from './utils/theme';
-import SWELogo from './assets/images/graphics/SWE_logo.png';
 import Checkout from './sponsor/organism/Checkout/App'
 import Inbox from './sponsor/organism/Inbox/App'
 import CartProvider from './contexts/Cart'
