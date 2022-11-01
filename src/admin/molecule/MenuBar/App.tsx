@@ -10,13 +10,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import TuneIcon from '@mui/icons-material/Tune';
 import HelpIcon from '@mui/icons-material/Help';
 import HistoryIcon from '@mui/icons-material/History';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface Props {
     
 }
 
 const MenuBar = (props: Props) => {
-
+    const { logout } = useAuth0();
+    const logoutRoute = window.location.hostname === "localhost" ? 
+                              "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
     return (
         <ThemeProvider theme={theme}>
 
@@ -81,6 +85,16 @@ const MenuBar = (props: Props) => {
                             sx={{ mr: 2, color: "white" }}
                         >
                             <HistoryIcon />
+                        </IconButton>
+
+                        <IconButton
+                            onClick={() => logout({ returnTo: logoutRoute })}
+                            size="large"
+                            edge="start"
+                            aria-label="menu"
+                            sx={{ mr: 2, color: "white" }}
+                        >
+                            <LogoutIcon />
                         </IconButton>
                         
                     </Toolbar>
