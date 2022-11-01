@@ -358,7 +358,7 @@ app.delete('/delete-event', (req, res) => {
 app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
-    orgs.find({ eventCode: req.params.code })
+    orgs.find({ sponsorCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {

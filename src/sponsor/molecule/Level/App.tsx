@@ -10,7 +10,7 @@ import { Paper } from '@mui/material';
 interface Props {
     name: string,
     lower_bound: number, 
-    upper_bound?: number, 
+    upper_bound?: number | null, 
     description: string, 
     color_level: string, 
 }
