@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import { theme} from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
@@ -23,7 +23,6 @@ import Link from '@mui/material/Link';
 import * as React from 'react';
 
 interface Props {
-
 }
 
 const Dashboard = (props: Props) => {
@@ -36,6 +35,7 @@ const Dashboard = (props: Props) => {
     const [orgName, setOrgName] = React.useState("")
     const [orgShortName, setOrgShortName] = React.useState("")
     const [sponsorCode, setSponsorCode] = React.useState("")
+    const [validUntilDate, setValidUntilDate] = React.useState(new Date())
     const [fundName, setFundName] = React.useState("")
     const [streetAddress, setStreetAddress] = React.useState("")
     const [streetAddress2, setStreetAddress2] = React.useState("")
@@ -43,7 +43,8 @@ const Dashboard = (props: Props) => {
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
 
-    let valid_until_date = new Date()  // TODO: calculate
+    let date = new Date()
+    let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
 
     if (isAuthenticated) {
         const getOrg = async() => { 
@@ -54,7 +55,7 @@ const Dashboard = (props: Props) => {
 
                         if (data.name !== "") 
                         {
-                            console.log("got valid org!")
+                            console.log("got valid org!")    
                             setValidAdmin(true)
                             setOrgName(data.name)
                             setOrgShortName(data.shortName)
@@ -112,89 +113,89 @@ const Dashboard = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                
- 
-                <Grid item xs={1} sx={{justifyContent: 'center',}}>
-                </Grid> 
 
-                <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5),}}>
+
+                <Grid item xs={1} sx={{ justifyContent: 'center', }}>
+                </Grid>
+
+                <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5), }}>
                     <Link href={'/events-edit'} underline='none'>
-                        <Paper variant="outlined" sx={{border:'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                        <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb:theme.spacing(1) }} >
+                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
+                                <Grid container>
+                                    <Grid item xs={2}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            sx={{ mr: 2, color: 'black' }}
+                                        >
+                                            <AddCircleIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                            Create/Edit Events
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                            {'>'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+
                             <Grid container>
-                                <Grid item xs={2}>
+                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
                                     <IconButton
                                         size="large"
                                         aria-label="menu"
-                                        sx={{ mr: 2, color:'black' }}
+                                        color="secondary"
+                                        sx={{ mr: 2, ml: theme.spacing(2) }}
                                     >
-                                        <AddCircleIcon  />
+                                        <AddCircleIcon />
                                     </IconButton>
                                 </Grid>
-                                <Grid item xs={8}>
-                                    <Typography variant="h6" sx={{ mt:theme.spacing(2) }}>
-                                        Create/Edit Events
+                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                        Create Events
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                        {'>'}
+
+                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="menu"
+                                        color="secondary"
+                                        sx={{ mr: 2, ml: theme.spacing(2) }}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                        Delete Events
                                     </Typography>
                                 </Grid>
+
+                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="menu"
+                                        color="secondary"
+                                        sx={{ mr: 2, ml: theme.spacing(2) }}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                        Edit Events
+                                    </Typography>
+                                </Grid>
+
                             </Grid>
                         </Paper>
-
-                        <Grid container>
-                            <Grid item xs={2} sx={{mt: theme.spacing(2)}}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="menu"
-                                    color="secondary"
-                                    sx={{ mr: 2,  ml: theme.spacing(2)}}
-                                >
-                                    <AddCircleIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                    Create Events
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={2} sx={{mt: theme.spacing(2)}}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="menu"
-                                    color="secondary"
-                                    sx={{ mr: 2,  ml: theme.spacing(2)}}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                    Delete Events
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={2} sx={{mt: theme.spacing(2)}}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="menu"
-                                    color="secondary"
-                                    sx={{ mr: 2,  ml: theme.spacing(2)}}
-                                >
-                                    <EditIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                    Edit Events
-                                </Typography>
-                            </Grid>
-
-                        </Grid>
-                    </Paper>
                     </Link>
 
 
@@ -310,7 +311,7 @@ const Dashboard = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
 
                                 <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                    Valid Until <b>{valid_until_date.getMonth()+1}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
+                                    Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
                                 </Typography>
 
                             </Grid>
@@ -330,7 +331,7 @@ const Dashboard = (props: Props) => {
 
 
 
-                <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr:theme.spacing(15) }}>
+                <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr: theme.spacing(15) }}>
                     <Link href={'/basic-info'} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
@@ -504,7 +505,7 @@ const Dashboard = (props: Props) => {
                                     </Grid>
                                     <Grid item xs={8}>
                                         <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                           Purchase History
+                                            Purchase History
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={2}>
@@ -528,7 +529,7 @@ const Dashboard = (props: Props) => {
                                 </Grid>
                                 <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
                                     <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        View all transactions 
+                                        View all transactions
                                     </Typography>
                                 </Grid>
 
@@ -548,7 +549,7 @@ const Dashboard = (props: Props) => {
                                     </Typography>
                                 </Grid>
 
-                                
+
 
                             </Grid>
                         </Paper>
@@ -557,29 +558,29 @@ const Dashboard = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={3} sx={{ mt: theme.spacing(5) }}>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <EmailIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Email Preview
-                                        </Typography>
-                                    </Grid>
-                                   
-                                </Grid>
-                            </Paper>
-
+                    <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                        <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                             <Grid container>
-                                <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+                                <Grid item xs={2}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="menu"
+                                        sx={{ mr: 2, color: 'black' }}
+                                    >
+                                        <EmailIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                        Email Preview
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+                        </Paper>
+
+                        <Grid container>
+                            <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
 
                                 {streetAddress2?
 
@@ -602,12 +603,12 @@ const Dashboard = (props: Props) => {
 
                                         Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
 
-                                        Let us know if you have any questions! <br /><br />
+                                            Let us know if you have any questions! <br /><br />
 
                                         <b>{orgName} Officer Team</b>
 
                                         </Typography>
-                                    ):(
+                                    ) : (
                                         <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
                                             Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
                                             <u><b>To pay with check:</b></u><br />
@@ -630,12 +631,12 @@ const Dashboard = (props: Props) => {
                                             <b>{orgName} Officer Team</b>
 
                                         </Typography>
-                                    ) }
-                                </Grid>
+                                    )}
                             </Grid>
-                        </Paper>
+                        </Grid>
+                    </Paper>
 
-                        
+
 
                 </Grid>
 

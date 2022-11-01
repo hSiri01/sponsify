@@ -6,10 +6,11 @@ const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
 const app = express()
-const bodyParser = require('body-parser')
-const path = require('path')
-const sponsor = require('./sponsor')
-var cors = require('cors')
+const bodyParser = require('body-parser');
+const path = require('path');
+const sponsor = require('./sponsor');
+var cors = require('cors');
+var async = require('async');
 app.use(cors())
 
 
@@ -74,6 +75,7 @@ app.put('/update-FAQ', (req, res) => {
     orgs.findOneAndUpdate(
         { "FAQ._id": req.body.FAQId },
         { $set: freq },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log("Error", error);
@@ -96,6 +98,7 @@ app.post('/create-FAQ', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $push: { FAQ: freq } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log(error);
@@ -113,6 +116,7 @@ app.delete('/delete-FAQ', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $pull: { FAQ: { _id: req.body.FAQId } } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 res.send("Error")
@@ -176,6 +180,7 @@ app.put('/update-level', (req, res) => {
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
         { $set: level },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log("Error", error);
@@ -200,6 +205,7 @@ app.post('/create-level', async (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $push: { levels: level } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log(error);
@@ -216,6 +222,7 @@ app.delete('/delete-level', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $pull: { levels: { _id: req.body.levelId } } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 res.send("Error")
@@ -558,9 +565,40 @@ app.get('/get-org-from-email/:email', (req, res) => {
         })
 })
 
-app.get('/get-event-code/:org', (req, res) => {
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$^&*()';
+function generateRandom() {
+    let result = '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 12; i++ ) {
+        result += characters.charAt(Math.floor(Math.random()  * charactersLength));
+    }
+
+    return result
+}
+
+
+function generateNewCodes() {
+    let date = new Date()
+    orgs.find(function(err, results) {
+        async.each(results, function (result, callback) {
+            let lastUpdated = new Date(result.updatedAt)
+            if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
+                console.log(result.updatedAt)
+                result.sponsorCode = generateRandom()
+                result.save()
+            }
+            
+        });
+    });
+}
+
+// This makes the function run depending on the interval
+// Second parameter represents interval - 60000 ms = 1 min 
+myInterval = setInterval( generateNewCodes,   24 * 60 * 60000); 
+
+app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
-        .select({ sponsorCode: 1 })
+        .select({ sponsorCode: 1, updatedAt: 1 })
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-sponsor-code, " + err)
@@ -611,6 +649,7 @@ app.post('/create-logo', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $set: {logoImage: req.body.logoImage}},
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 //console.log("Error in create-logo", error);

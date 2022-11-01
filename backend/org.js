@@ -63,7 +63,7 @@ const orgSchema = new mongoose.Schema({
     shortName: {
         type: String,
         default: ""
-    }
-})
+    },
+}, {timestamps: true})
 
 module.exports = mongoose.model('organizations', orgSchema);
