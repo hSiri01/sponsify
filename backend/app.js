@@ -12,14 +12,6 @@ const sponsor = require('./sponsor');
 var cors = require('cors');
 app.use(cors())
 
-process.once('SIGUSR2', () => {
-    process.kill(process.pid, 'SIGUSR2');
-})
-
-process.on('SIGINT', () => {
-    // this is only called on ctrl+c, not restart
-    process.kill(process.pid, 'SIGINT');
-})
 
 const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
@@ -540,7 +532,7 @@ app.get('/get-org-from-email/:email', (req, res) => {
                 // console.log(org.validAdmins)
                 for (let i = 0; i < org.validAdmins.length; i++) 
                 {
-                    if (org.validAdmins[i] === req.params.email ) 
+                    if (org.validAdmins[i] === req.params.email) 
                     {
                         result = { 
                             name: org.name,
@@ -556,10 +548,14 @@ app.get('/get-org-from-email/:email', (req, res) => {
                     }
                 }
             })
+            
+            if (result.name === "") {
+                res.json(result)
+            }
         })
-    
-    // console.log("didn't find org for " + req.params.email + ", returning " + result.name)
-    return res.json(result)
+        .catch((err) => {
+            console.log("Error finding orgs: " + err)
+        })
 })
 
 app.get('/get-event-code/:org', (req, res) => {
