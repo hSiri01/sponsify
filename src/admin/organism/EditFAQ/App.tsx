@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
+import { GetAllFaq } from '../../../utils/api-types';
 
 
 interface Props {
@@ -21,7 +22,7 @@ const EditFAQ = (props: Props) => {
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const [org, setOrg] = React.useState('')
-    const [FAQ, setFAQ] = React.useState([{}])
+    const [FAQ, setFAQ] = React.useState<GetAllFaq>([])
     const [question, setQuestion] = React.useState('')
     const [answer, setAnswer] = React.useState('')
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
@@ -58,7 +59,7 @@ const EditFAQ = (props: Props) => {
             // const student_org_name = JSON.parse(localStorage.getItem('org') || '{}');
             await fetch("/get-all-FAQ/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => setFAQ(data))
+                .then((data: GetAllFaq) => setFAQ(data))
                 .then(() => setOrg(student_org_name))
 
         }

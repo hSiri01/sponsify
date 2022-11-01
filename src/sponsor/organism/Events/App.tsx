@@ -17,6 +17,7 @@ import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import { useNavigate } from "react-router-dom"
 import { useCart } from '../../../contexts/Cart';
+import { GetEnabledEvents, GetLevelByAmount } from '../../../utils/api-types';
 
 interface Props {
 }
@@ -39,7 +40,7 @@ const Events = (props: Props) => {
 
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
-    const [events, setEvents] = React.useState([{}]);
+    const [events, setEvents] = React.useState<GetEnabledEvents>([]);
     const [total, setTotal] = React.useState(0);
     const [logo, setLogo] = React.useState("")
 
@@ -47,10 +48,10 @@ const Events = (props: Props) => {
         const fetchData = async() => {
             await fetch("/get-enabled-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetEnabledEvents) => {
                     // console.log(data)
                     data.sort(
-                        (objA: any, objB: any) => {
+                        (objA, objB) => {
                             if (objA.name === "General Donation") {
                                 return -1
                             }
@@ -91,7 +92,7 @@ const Events = (props: Props) => {
 
         const fetchLevel = async () => {
             const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + total)
-            const data = await response.json()
+            const data: GetLevelByAmount = await response.json()
             setLevelName(data.name)
             setLevelColor(data.color)
         }

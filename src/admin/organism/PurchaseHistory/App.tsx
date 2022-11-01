@@ -48,8 +48,9 @@ const PurchaseHistory = (props: Props) => {
                 .then((res) => res.json())
                 .then((data: GetAllPurchasedEvents) => {
                     // console.log(data)
+                    // FIXME: typing inconsistent?
                     data.sort(
-                        (objA: any, objB: any) => {
+                        (objA, objB) => {
                             const date1 = new Date(objA.date)
                             const date2 = new Date(objB.date)
                             return date1.getTime() - date2.getTime()

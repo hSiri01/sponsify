@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 import Level from '../../molecule/Level/App';
+import { GetAllLevels } from '../../../utils/api-types';
 
 interface Props {
 }
@@ -14,14 +15,14 @@ const Levels = (props: Props) => {
 
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [logo, setLogo] = React.useState("")
-    const [levels, setLevels] = React.useState([{}])
+    const [levels, setLevels] = React.useState<GetAllLevels>([])
 
     React.useEffect(() => {
         const fetchData = async() => {
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => {
-                    data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
+                .then((data: GetAllLevels) => {
+                    data.sort((a, b) => (a.minAmount < b.minAmount) ? 1 : -1)
                     setLevels(data)
                 })
 

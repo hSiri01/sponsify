@@ -6,13 +6,14 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Question from '../../molecule/Question/App';
 import Button from '@mui/material/Button';
+import { GetAllFaq } from '../../../utils/api-types';
 
 interface Props {
 }
 
 const FAQ = (props: Props) => {
 
-    const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
+    const [faq, setFAQ] = React.useState<GetAllFaq>([{question: '', answer: ''}])
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
     const [logo, setLogo] = React.useState("")
@@ -22,7 +23,7 @@ const FAQ = (props: Props) => {
         const fetchData = async() => {
             await fetch("/get-all-FAQ/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => setFAQ(data))
+                .then((data: GetAllFaq) => setFAQ(data))
         }
 
         fetchData()
