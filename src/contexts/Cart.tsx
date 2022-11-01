@@ -1,25 +1,25 @@
 import React from 'react'
-import { CartItem } from '../sponsor/molecule/CartItem/App'
+import { CartItemType } from '../sponsor/molecule/CartItem/App'
 
 type Props = {
     children: React.ReactNode
 }
 
-type CartContext = {
-    addToCart: (item: CartItem) => void
+type CartContextType = {
+    addToCart: (item: CartItemType) => void
     removeFromCart: (id: string) => void
     clearCart: () => void
-    cart: CartItem[]
+    cart: CartItemType[]
 }
 
-const CartContext = React.createContext({} as CartContext)
+const CartContext = React.createContext({} as CartContextType)
 
 export const useCart = () => React.useContext(CartContext)
 
 const CartProvider = ({ children }: Props) => {
-    const [cart, setCart] = React.useState<CartItem[]>([])
+    const [cart, setCart] = React.useState<CartItemType[]>([])
 
-    const addToCart = (item: CartItem) => {
+    const addToCart = (item: CartItemType) => {
         console.log(cart.filter(e => e.id !== item.id).concat([item]))
         setCart(existingCart => existingCart.filter(e => e.id !== item.id).concat([item]))
     }

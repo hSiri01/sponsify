@@ -28,7 +28,7 @@ const GeneralDonation = (props: Props) => {
 
     const [checked, setChecked] = React.useState(false);
 
-    const { addToCart, removeFromCart, cart } = useCart()
+    const { addToCart, removeFromCart } = useCart()
 
     const [price, setPrice] = React.useState(0);
 
@@ -60,21 +60,21 @@ const GeneralDonation = (props: Props) => {
         console.log(price)
         if (price > 0) {
             setChecked(true);
-            removeFromCart(props.id)
+            removeFromCart(id)
             addToCart({
                 name: "General Donation",
-                short_description: props.short_description,
+                short_description: short_description,
                 price: price,
                 date_start: new Date(),
                 quantity: 1,
-                id: props.id
+                id: id
             })
         }
         else {
             setChecked(false);
-            removeFromCart(props.id);
+            removeFromCart(id);
         }
-    }, [price])
+    }, [addToCart, removeFromCart, id, short_description, price])
 
 
     return (

@@ -5,18 +5,9 @@ import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
-import axios from "axios";
-import * as dotenv from 'dotenv'
-import { isCompositeComponent } from 'react-dom/test-utils';
-import { convertRoutesToDataRoutes } from '@remix-run/router/dist/utils';
-import { AnyAaaaRecord } from 'dns';
-
 
 interface Props {
     street_address: string, 
@@ -32,19 +23,15 @@ const BasicInfo = (props: Props) => {
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const [image, setImage] = React.useState<any|null>(null);
-    const [imageFile, setFile] = React.useState();
-    const [org, setOrg] = React.useState('')
     const [logo, setLogo] = React.useState('')
-    const [selectedFile, setSelectedFile] = React.useState<any|null>(null);
     
     const uploadPreset = 'db6q2mz0'
-    const cloudName = "dmkykmach"
       
     
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -55,7 +42,7 @@ const BasicInfo = (props: Props) => {
         }
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
 
     const handleCreateLogoUrl =  (url : string) => {
 
@@ -163,7 +150,7 @@ const BasicInfo = (props: Props) => {
                 </Grid>
                 <Grid item xs={12} > 
                     
-                        <iframe name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
+                        <iframe title="dummyframe" name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
                         <form  onSubmit={uploadImage} action ="#" /*method="POST" action="/create-logo"*/ target = "dummyframe" encType="multipart/form-data">
                             <input type="hidden" name="organization" value={student_org_name} />
                             <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(10)}}>

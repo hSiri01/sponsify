@@ -13,6 +13,7 @@ import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import { GetAllEvents } from '../../../utils/api-types';
 
 
 interface Props {
@@ -39,7 +40,7 @@ const EditEvents = (props: Props) => {
     const [dateInput, setDateInput] = React.useState('');
     const [endDateInput, setEndDateInput] = React.useState('');
 
-    const [events, setEvents] = React.useState([{}]);
+    const [events, setEvents] = React.useState<GetAllEvents>([]);
     const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
@@ -48,7 +49,7 @@ const EditEvents = (props: Props) => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -61,15 +62,15 @@ const EditEvents = (props: Props) => {
         fetchLogo() 
    
 
-      },[])
+      },[student_org_name])
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-all-events/" + student_org_name)
+            await fetch("/get-all-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetAllEvents) => {
                     // console.log(data)
                     data.sort(
-                        (objA: any, objB: any) => {
+                        (objA, objB) => {
                             if (objA.name === "General Donation") {
                                 return -1
                             }
@@ -77,7 +78,7 @@ const EditEvents = (props: Props) => {
                                 return 1
                             }
                             else {
-                                return objA.name.toLowerCase().localeCompare(objB.name.toLowerCase())
+                                return objA.name.toLocaleLowerCase().localeCompare(objB.name.toLocaleLowerCase())
                             }
                         }
                     )
@@ -87,7 +88,7 @@ const EditEvents = (props: Props) => {
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name])
 
     const createEvent = () => {
         if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {

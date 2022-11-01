@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import InputAdornment from '@mui/material/InputAdornment';
+import { GetAllLevels } from '../../../utils/api-types';
 
 interface Props {  
 }
@@ -19,7 +20,7 @@ const EditLevels = (props: Props) => {
     
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
-    const [levels, setLevels] = React.useState([{}])
+    const [levels, setLevels] = React.useState<GetAllLevels>([])
     const [levelName, setLevelName] = React.useState('')
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
@@ -37,21 +38,21 @@ const EditLevels = (props: Props) => {
         const fetchData = async() => {
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => {
-                    data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
+                .then((data: GetAllLevels) => {
+                    data.sort((a, b) => (a.minAmount < b.minAmount) ? 1 : -1)
                     setLevels(data)
                 })
 
         }
         fetchData()
         
-    }, [levels])
+    }, [student_org_name, levels])
    
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -63,7 +64,7 @@ const EditLevels = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
       
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )

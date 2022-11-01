@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from "react-router-dom"
+import { VerifySponsorCode } from '../../../utils/api-types';
 
 
 interface Props {
@@ -36,8 +37,8 @@ const SponsorHome = (props: Props) => {
 
             await fetch("/verify-sponsor-code/" + input)
             .then((res) => res.json())
-            .then((data) => {
-                if (data.name === undefined) {
+            .then((data: VerifySponsorCode) => {
+                if (!('name' in data)) {
                     console.log("invalid")
                     setOpenAlert(true)
                 } else {

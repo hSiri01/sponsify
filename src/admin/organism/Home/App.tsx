@@ -1,13 +1,10 @@
 import { Grid, Link } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import Support from '../../../assets/images/graphics/support.svg';
 import Admin from '../../../assets/images/graphics/admin_login.svg';
-import { theme, darkGreen } from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Auth0Provider } from "@auth0/auth0-react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 

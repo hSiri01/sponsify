@@ -17,6 +17,7 @@ import HowItWorksContents from '../../molecule/HowItWorksContents/App'
 import CartItem from '../../molecule/CartItem/App'
 import { useNavigate } from "react-router-dom"
 import { useCart } from '../../../contexts/Cart';
+import { GetEnabledEvents, GetLevelByAmount } from '../../../utils/api-types';
 
 interface Props {
 }
@@ -39,18 +40,18 @@ const Events = (props: Props) => {
 
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
-    const [events, setEvents] = React.useState([{}]);
+    const [events, setEvents] = React.useState<GetEnabledEvents>([]);
     const [total, setTotal] = React.useState(0);
     const [logo, setLogo] = React.useState("")
 
     React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-enabled-events/" + student_org_name)
+            await fetch("/get-enabled-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetEnabledEvents) => {
                     // console.log(data)
                     data.sort(
-                        (objA: any, objB: any) => {
+                        (objA, objB) => {
                             if (objA.name === "General Donation") {
                                 return -1
                             }
@@ -66,13 +67,13 @@ const Events = (props: Props) => {
 
         fetchData()
         clearCart()
-    }, [])
+    }, [student_org_name, clearCart])
     
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -84,20 +85,20 @@ const Events = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
     
     React.useEffect(() => {
         setTotal(cart.reduce((total, item) => total + item.price * item.quantity, 0))
 
         const fetchLevel = async () => {
             const response = await fetch('/get-level-by-amount/' + student_org_name + '/' + total)
-            const data = await response.json()
+            const data: GetLevelByAmount = await response.json()
             setLevelName(data.name)
             setLevelColor(data.color)
         }
         
         fetchLevel()
-    })
+    }, [cart, student_org_name, total])
 
     const checkout = () => {
         if (cart.at(0)) {
