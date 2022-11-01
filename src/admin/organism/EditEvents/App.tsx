@@ -51,7 +51,7 @@ const EditEvents = (props: Props) => {
         const fetchLogo = async() => {
             try{
             // console.log(student_org_name)
-            const data1 = await fetch("/get-logo/" + student_org_name)
+            await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
             }
@@ -62,7 +62,7 @@ const EditEvents = (props: Props) => {
         }
         
         fetchLogo() 
-    },[])
+    },[student_org_name])
 
     React.useEffect(() => {
         const fetchData = async() => {

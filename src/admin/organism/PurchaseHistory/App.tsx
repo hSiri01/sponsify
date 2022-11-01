@@ -18,8 +18,9 @@ interface Props {
 
 const PurchaseHistory = (props: Props) => {
 
-    const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const [logo, setLogo] = React.useState("")
+    
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
@@ -36,7 +37,6 @@ const PurchaseHistory = (props: Props) => {
         fetchLogo() 
 
     },[])
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
 
     const [purchases, setPurchases] = React.useState<GetAllPurchasedEvents>([]);
     const [sponsors, setSponsors] = React.useState<GetAllSponsors>([]);
@@ -84,7 +84,7 @@ const PurchaseHistory = (props: Props) => {
         }
 
         fetchData()
-    }, [student_org_name, sponsors])
+    }, [student_org_name])
 
     // console.log(purchases)
     

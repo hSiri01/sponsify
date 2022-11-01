@@ -10,7 +10,6 @@ import { theme } from './utils/theme';
 import Checkout from './sponsor/organism/Checkout/App'
 import Inbox from './sponsor/organism/Inbox/App'
 import CartProvider from './contexts/Cart'
-import { Auth0Provider } from '@auth0/auth0-react';
 
 import EditFAQ from './admin/organism/EditFAQ/App';
 import Dashboard from './admin/organism/Dashboard/App'

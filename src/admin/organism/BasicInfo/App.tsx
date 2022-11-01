@@ -22,6 +22,7 @@ const BasicInfo = (props: Props) => {
     
     const [orgName, setOrgName] = React.useState(student_org_name)
     const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
+    // TODO: add short name and fund name inputs
 
     const [streetAddress, setStreetAddress] = React.useState("")
     const [streetAddress2, setStreetAddress2] = React.useState("")
