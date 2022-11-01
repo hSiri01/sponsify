@@ -1,15 +1,15 @@
-require('dotenv').config({ path: `${__dirname}/../.env` });
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const events = require('./event');
+const events = require('./event')
 const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
 const app = express()
-const bodyParser = require('body-parser');
-const path = require('path');
-const sponsor = require('./sponsor');
-var cors = require('cors');
+const bodyParser = require('body-parser')
+const path = require('path')
+const sponsor = require('./sponsor')
+var cors = require('cors')
 app.use(cors())
 
 
