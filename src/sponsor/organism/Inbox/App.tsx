@@ -7,9 +7,6 @@ import { ThemeProvider } from '@mui/system';
 import Button from '@mui/material/Button';
 import React from 'react';
 
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
-
-
 interface Props {
 }
 
@@ -17,12 +14,11 @@ const Inbox = (props: Props) => {
 
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [logo, setLogo] = React.useState("") 
-    const student_org_logo = SWELogo
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -35,7 +31,7 @@ const Inbox = (props: Props) => {
         fetchLogo() 
    
 
-      },[])
+      },[student_org_name])
     return (
         <ThemeProvider theme={theme}>
 

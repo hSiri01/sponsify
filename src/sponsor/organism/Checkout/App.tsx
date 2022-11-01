@@ -15,6 +15,8 @@ import CartItem from '../../molecule/CartItem/App'
 import TextField from '@mui/material/TextField'
 import { useCart } from '../../../contexts/Cart';
 import {useNavigate} from "react-router-dom"
+import { GetLevelByAmount } from '../../../utils/api-types';
+import { Organization } from '../../../utils/mongodb-types';
 
 
 interface Props {
@@ -35,7 +37,7 @@ const Checkout = (props: Props) => {
         const fetchLogo = async() => {
            try{
             //console.log(student_org_name)
-             const data1 = await fetch("/get-logo/" + student_org_name)
+             await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => setLogo(data1.logoImage))
            }
@@ -47,7 +49,7 @@ const Checkout = (props: Props) => {
         
         fetchLogo() 
 
-      },[])
+      },[student_org_name])
   
     const [firstNameInput, setFirstNameInput] = React.useState('');
     const [lastNameInput, setLastNameInput] = React.useState('');
@@ -62,28 +64,27 @@ const Checkout = (props: Props) => {
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     var cartMessage : string = ""
     const [orgAddress, setOrgAddress] = React.useState('');
-    const [message,setMessage] = React.useState('')
     const [subject,setSubject] = React.useState('')
     
     React.useEffect(() => {
         fetch('/get-level-by-amount/' + student_org_name + '/' + total)
             .then((response) => response.json())
-            .then((data) => {
+            .then((data: GetLevelByAmount) => {
                 console.log(data)
                 setLevelName(data.name)
                 setLevelColor(data.color)
             })
-    }, [cart])
+    }, [student_org_name, total, cart])
 
     React.useEffect(() => {
         fetch('/get-org-info/' + student_org_name )
             .then((response) => response.json())
-            .then((data) => {
+            .then((data: Organization) => {
                 
                setOrgAddress(`${data.address.streetAddress} /n ${data.address.city}, ${data.address.state} ${data.address.zip}` )
-               console.log(orgAddress)
+               console.log(orgAddress) // FIXME: State changes are not immediate
             })
-    }, [])
+    }, [orgAddress, student_org_name])
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
@@ -111,7 +112,6 @@ const Checkout = (props: Props) => {
         
        
         
-        setMessage(cartMessage)
         setSubject( student_org_name + ' Sponsorship Information')
         fetch("/send-checkout-email",{
             method:'POST',

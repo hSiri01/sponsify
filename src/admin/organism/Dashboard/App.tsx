@@ -18,85 +18,81 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import EmailIcon from '@mui/icons-material/Email';
 import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
 
 interface Props {
-    // TO DO: Needs to get changed - retrieved from backend (routes)
-    address_2?: string,
 }
 
 const Dashboard = (props: Props) => {
 
-    const { address_2 } = props
-    // TO DO: Needs to get changed - retrieved from backend (routes)
-    const student_org_name = "Society of Women Engineers"
-    const student_org_short_name = "SWE"
-    // const student_org_name = "Aggie Women in Computer Science"
-    // const student_org_short_name = "AWiCS"
-    // const student_org_name = "Datathon"
-    // const student_org_short_name = "Datathon"
-    localStorage.setItem('org-name', JSON.stringify(student_org_name))
-    localStorage.setItem('org-short-name', JSON.stringify(student_org_short_name))
+    const { isAuthenticated, isLoading, user } = useAuth0()
+    const [validAdmin, setValidAdmin] = React.useState(false)
+    const [notRegistered, setNotRegistered] = React.useState(false)
+
     const [logo, setLogo] = React.useState("")
+    const [orgName, setOrgName] = React.useState("")
+    const [orgShortName, setOrgShortName] = React.useState("")
     const [sponsorCode, setSponsorCode] = React.useState("")
-    const [validDate, setValidDate] = React.useState(new Date(2022, 10, 5))
-    const [address, setAddress] = React.useState({streetAddress: '', zip: 0, city: '', state: '', country: ''})
-    const [fundName, setFundName] = React.useState('')
+    const [validUntilDate, setValidUntilDate] = React.useState(new Date())
+    const [fundName, setFundName] = React.useState("")
+    const [streetAddress, setStreetAddress] = React.useState("")
+    const [streetAddress2, setStreetAddress2] = React.useState("")
+    const [city, setCity] = React.useState("")
+    const [state, setState] = React.useState("")
+    const [zipcode, setZipcode] = React.useState(0)
 
-    React.useEffect(() => {
-        const fetchLogo = async () => {
-            try {
-                //console.log(student_org_name)
-                const data1 = await fetch("/get-logo/" + student_org_name)
-                    .then((res) => res.json())
-                    .then((data1) => setLogo(data1.logoImage))
+    let date = new Date()
+    let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
+
+    if (isAuthenticated) {
+        const getOrg = async() => { 
+            if (user) {
+                await fetch("/get-org-from-email/" + user.email)
+                    .then((res) => res.json()) 
+                    .then((data) => {
+
+                        if (data.name !== "") 
+                        {
+                            console.log("got valid org!")    
+                            setValidAdmin(true)
+                            setOrgName(data.name)
+                            setOrgShortName(data.shortName)
+                            setLogo(data.logo)
+                            setSponsorCode(data.sponsorCode)
+                            setFundName(data.fundName)
+                            setStreetAddress(data.address.streetAddress)
+                            setStreetAddress2(data.address.streetAddress2)
+                            setCity(data.address.city)
+                            setState(data.address.state)
+                            setZipcode(data.address.zip)
+
+                            localStorage.setItem('org-name', JSON.stringify(orgName))
+                            localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
+                        }
+                        else {
+                            console.log("not associated")
+                            setNotRegistered(true)
+                            // TODO: graceful retry process
+                            // logout({ returnTo: process.env.NODE_ENV === "production" ? 
+                            // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
+                        }
+
+                    })
             }
-            catch (e) {
-                console.log("Error fetching logo ", (e))
-            }
-
         }
-
-        const fetchSponsorCode = async () => {
-            await fetch("/get-sponsor-code/" + student_org_name)
-                .then((res) => res.json())
-                .then((res) => {
-                    let lastUpdated = new Date(res.updatedAt)
-                    let date = new Date()
-                    setSponsorCode(res.eventCode) 
-                    if (lastUpdated.getMinutes() >= 30 || lastUpdated.getMinutes() < 5) {
-                        setValidDate(new Date(date.getFullYear() + 1, 5, 1))
-                    } else {
-                        setValidDate(new Date(date.getFullYear(), 11, 1))
-                    }                
-
-                }
-
-                )
-        }
-
-        const fetchOrgInfo = async () => {
-            await fetch("/get-org-info/" + student_org_name)
-                .then((res) => res.json())
-                .then((data) => {
-                    setAddress(data.address)
-                    setFundName(data.fundName)
-                })
-        }
-
-        fetchLogo()
-        fetchSponsorCode()
-        fetchOrgInfo()
-
-    }, [logo, sponsorCode])
-
+        
+        getOrg()
+    }
+    
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar student_org_short_name='swe' />
+            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
+                {validAdmin && ( <>
+                <MenuBar />
 
-            <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -315,7 +311,7 @@ const Dashboard = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
 
                                 <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                    Valid Until <b>{validDate.getMonth()}/{validDate.getDate()}/{validDate.getFullYear()}</b>
+                                    Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
                                 </Typography>
 
                             </Grid>
@@ -586,53 +582,53 @@ const Dashboard = (props: Props) => {
                         <Grid container>
                             <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
 
-                                {address_2 ?
+                                {streetAddress2?
 
                                     (
                                         <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
-                                            Thank you for sponsoring a {student_org_name} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
-                                            <u><b>To pay with check:</b></u><br />
-                                            - Must be made out to "{student_org_name}"<br />
-                                            - Mail to:<br /><br />
-                                            <b>{student_org_name}<br />
-                                                {address.streetAddress}<br />
-                                                {address_2}<br />
-                                                {address.city}, {address.state} {address.zip}<br /></b> <br />
-                                            <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
-                                            - Click on the maroon box on the top right side that reads “give now”<br /><br />
-                                            - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                            - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
-                                            - The rest of the process consists of entering payment and other information<br /><br />
+                                        Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                        <u><b>To pay with check:</b></u><br />
+                                        - Must be made out to "{orgName}"<br />
+                                        - Mail to:<br /><br />
+                                        <b>{orgName}<br />
+                                            {streetAddress}<br />
+                                            {streetAddress2}<br />
+                                            {city}, {state} {zipcode}<br /></b> <br />
+                                        <u><b>To pay with a credit card:</b></u><br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                        - Click on the maroon box on the top right side that reads “give now”<br /><br />
+                                        - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
+                                        - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
+                                        - The rest of the process consists of entering payment and other information<br /><br />
 
-                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {student_org_name} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+                                        Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
 
                                             Let us know if you have any questions! <br /><br />
 
-                                            <b>{student_org_name} Officer Team</b>
+                                        <b>{orgName} Officer Team</b>
 
                                         </Typography>
                                     ) : (
                                         <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
-                                            Thank you for sponsoring a {student_org_name} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                            Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
                                             <u><b>To pay with check:</b></u><br />
-                                            - Must be made out to "{student_org_name}"<br />
+                                            - Must be made out to "{orgName}"<br />
                                             - Mail to:<br /><br />
-                                            <b>{student_org_name}<br />
-                                                {address.streetAddress}<br />
-                                                {address.city}, {address.state} {address.zip}<br /></b> <br />
+                                            <b>{orgName}<br />
+                                                {streetAddress}<br />
+                                                {city}, {state} {zipcode}<br /></b> <br />
                                             <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
                                             - Click on the maroon box on the top right side that reads “give now”<br /><br />
                                             - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
                                             - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
                                             - The rest of the process consists of entering payment and other information<br /><br />
 
-                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {student_org_name} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
 
                                             Let us know if you have any questions! <br /><br />
 
-                                            <b>{student_org_name} Officer Team</b>
+                                            <b>{orgName} Officer Team</b>
 
                                         </Typography>
                                     )}
@@ -644,10 +640,38 @@ const Dashboard = (props: Props) => {
 
                 </Grid>
 
+                </> )}
 
+                {notRegistered && (
+                    <Grid container sx={{ backgroundColor:"#fff"}}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h5">
+                                Your email is not associated with any student organization.
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                )}
 
-
+                {isLoading && (
+                    <Grid container sx={{ backgroundColor:"#fff" }}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ maxHeight: theme.spacing(60), display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h4">
+                                ...
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                )}
             </Grid>
+            
+            
 
         </ThemeProvider>
 

@@ -7,11 +7,9 @@ import Levels from './sponsor/organism/Levels/App';
 import Events from './sponsor/organism/Events/App';
 import { ThemeProvider } from '@mui/system';
 import { theme } from './utils/theme';
-import SWELogo from './assets/images/graphics/SWE_logo.png';
 import Checkout from './sponsor/organism/Checkout/App'
 import Inbox from './sponsor/organism/Inbox/App'
 import CartProvider from './contexts/Cart'
-
 
 import EditFAQ from './admin/organism/EditFAQ/App';
 import Dashboard from './admin/organism/Dashboard/App'
@@ -49,10 +47,10 @@ const App: React.FC = () => {
           
             <Route path="/admin-login" element={<AdminLogin/>} />
             <Route path="/levels-edit" element={<EditLevels />} />
-            <Route path="/dashboard-swe" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/events-edit" element={<EditEvents />} />
             <Route path="/summary" element={<PurchaseHistory />} />
-            <Route path="/basic-info" element={<BasicInfo street_address='3127 TAMU' city='College Station' state="TX" zipcode={77843} />} />
+            <Route path="/basic-info" element={<BasicInfo />} />
 
           </Routes>
 

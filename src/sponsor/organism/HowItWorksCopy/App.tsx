@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Bug from '../../../assets/images/graphics/bug.svg';
 import { theme} from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
-import Button from '@mui/material/Button';
-import FAQPage from '../FAQ/App';
 
 interface Props {
     

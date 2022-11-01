@@ -1,7 +1,7 @@
-require('dotenv').config();
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const events = require('./event');
+const events = require('./event')
 const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
@@ -12,6 +12,7 @@ const sponsor = require('./sponsor');
 var cors = require('cors');
 var async = require('async');
 app.use(cors())
+
 
 const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
@@ -40,7 +41,6 @@ mongoose.connect(
         useUnifiedTopology: true
     }
 )
-
 
 
 // Access database connection
@@ -502,6 +502,7 @@ app.get('/get-all-sponsors/:org', (req, res) => {
 
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
+        .select({ address: 1, logoImage: 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
@@ -512,56 +513,66 @@ app.get('/get-org-info/:org', (req,res) => {
         })
 })
 
-app.get('/update-org-info', (req, res) => {
-
-    const id = req.body.id
-    if (!id) {
-        console.log('Cannot update org, no id in request body')
-        res.json({ status: '400' })
-    }
-    else {
-        if (mongoose.Types.ObjectId.isValid(id)) {
-
-            orgs.findByIdAndUpdate(id, { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } }, { timestamps: false }, (err, event) => {
-                if (err) {
-                    console.log('Error on update-org-info: ' + err)
-                }
-                else {
-                    console.log('Successfully updated org info: \n' + event)
-                }
-            })
-        }
-        else {
-            console.log('Cannot update org-info, invalid id in request body')
-        }
-    }
-
-
-})
-
-app.get('/get-valid-admins/:org', (req, res) => {
-    orgs.find({ name: req.params.org })
-        .select({ validAdmins: 1 })
-        .exec((err, result) => {
+app.put('/update-org-info', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.name },
+        { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } },
+        (err, event) => {
             if (err) {
-                console.log("Error on get-valid-admins, " + err)
+                console.log('Error on update-org-info: ' + err)
+                res.json({ status: '500' })
             }
             else {
-                res.json(result[0])
+                console.log('Successfully updated org info: \n' + event)
+                res.json({ status: '200' })
             }
+        }
+    )
+})
+
+app.get('/get-org-from-email/:email', (req, res) => {
+    let result = { name: "" }
+
+    orgs.find({})
+        .then(allOrgs => {
+            allOrgs.forEach(org => {
+                // console.log(org.validAdmins)
+                for (let i = 0; i < org.validAdmins.length; i++) 
+                {
+                    if (org.validAdmins[i] === req.params.email) 
+                    {
+                        result = { 
+                            name: org.name,
+                            shortName: org.shortName,
+                            logo: org.logoImage,
+                            address: org.address,
+                            sponsorCode: org.sponsorCode,
+                            fundName: org.fundName
+                        }
+
+                        // console.log(result)
+                        return res.json(result)
+                    }
+                }
+            })
+            
+            if (result.name === "") {
+                res.json(result)
+            }
+        })
+        .catch((err) => {
+            console.log("Error finding orgs: " + err)
         })
 })
 
 const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$^&*()';
 function generateRandom() {
-    // console.log("Hello")
     let result = '';
     const charactersLength = characters.length;
     for ( let i = 0; i < 12; i++ ) {
         result += characters.charAt(Math.floor(Math.random()  * charactersLength));
     }
 
-    // console.log(result)
     return result
 }
 
@@ -582,8 +593,8 @@ function generateNewCodes() {
 }
 
 // This makes the function run depending on the interval
-// Second parameter represents interval - 60000 ms = 1 s && 1 day = 86400 s
-myInterval = setInterval( generateNewCodes,  60000); 
+// Second parameter represents interval - 60000 ms = 1 min 
+myInterval = setInterval( generateNewCodes,   24 * 60 * 60000); 
 
 app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
@@ -624,7 +635,7 @@ app.get('/get-logo/:org', (req,res) => {
     .select({logoImage : 1, _id : 0},)
         .exec((err, result) => {
             if (err) {
-                //console.log("Error on get-org-info, " + err)
+                //console.log("Error on get-logo, " + err)
                 res.send('Error on create-logo')
             }
             else {
