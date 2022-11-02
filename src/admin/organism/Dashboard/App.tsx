@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
@@ -21,6 +21,7 @@ import { Paper } from '@mui/material';
 import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
+//import Logout from '@mui/icons-material/Logout';
 
 interface Props {
 }
@@ -42,7 +43,9 @@ const Dashboard = (props: Props) => {
     const [city, setCity] = React.useState("")
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
-
+    const logoutRoute = window.location.hostname === "localhost" ? 
+    "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
+    const { logout } = useAuth0();
     let date = new Date()
     let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
 
@@ -77,6 +80,9 @@ const Dashboard = (props: Props) => {
                             // TODO: graceful retry process
                             // logout({ returnTo: process.env.NODE_ENV === "production" ? 
                             // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
+                            
+                            //if logout and go back to admin page
+                            //logout({ returnTo: logoutRoute })
                         }
 
                     })
@@ -651,7 +657,18 @@ const Dashboard = (props: Props) => {
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
                             <Typography variant="h5">
                                 Your email is not associated with any student organization.
+                                Logout below and try again!
                             </Typography>
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Button onClick={() => logout({ returnTo: logoutRoute })} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                }}>Logout</Button>
                         </Grid>
                     </Grid>
                 )}
@@ -667,6 +684,7 @@ const Dashboard = (props: Props) => {
                                 ...
                             </Typography>
                         </Grid>
+                        
                     </Grid>
                 )}
             </Grid>
