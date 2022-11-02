@@ -151,7 +151,7 @@ const Events = (props: Props) => {
                     disableScrollLock
                 >
                     <Box sx={{
-                        position: 'absolute' as 'absolute',
+                        position: 'absolute',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -170,7 +170,7 @@ const Events = (props: Props) => {
 
                         <Grid container>
                             {cart.map(item => (
-                                <Grid key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                <Grid item key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                                     <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
                                 </Grid>
                             ))}
@@ -198,7 +198,7 @@ const Events = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(5) }}>
-                                <Button /*href="/checkout"*/ onClick={checkout} variant="contained" size="large" color="primary" sx={{
+                                <Button onClick={checkout} variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
