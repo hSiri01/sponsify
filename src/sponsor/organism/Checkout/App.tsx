@@ -197,14 +197,14 @@ const Checkout = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <TextField 
                         sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
-                        id="outlined-basic" 
+                        id="first-name" 
                         label="First Name" 
                         variant="outlined"
                         value={firstNameInput} 
                         onChange={ev => setFirstNameInput(ev.target.value)} />
                     <TextField 
                         sx={{ minWidth: theme.spacing(80) }}
-                        id="outlined-basic"
+                        id="last-name"
                         label="Last Name"
                         variant="outlined"
                         value={lastNameInput} 
@@ -214,14 +214,14 @@ const Checkout = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10), mb: theme.spacing(5) }}>
                     <TextField 
                         sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
-                        id="outlined-basic" 
+                        id="email" 
                         label="Email" 
                         variant="outlined"
                         value={emailInput} 
                         onChange={ev => setEmailInput(ev.target.value)} />
                     <TextField 
                         sx={{ minWidth: theme.spacing(80) }}
-                        id="outlined-basic"
+                        id="company"
                         label="Company"
                         variant="outlined"
                         value={companyInput}
