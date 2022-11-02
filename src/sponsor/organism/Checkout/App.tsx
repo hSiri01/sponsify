@@ -56,14 +56,17 @@ const Checkout = (props: Props) => {
     const [emailInput, setEmailInput] = React.useState('');
     const [companyInput, setCompanyInput] = React.useState('');
     const checkoutReady = firstNameInput && lastNameInput && emailInput && companyInput;
+    const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
     
+    const [orgFundName, setOrgFundName] = React.useState("")
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
 
     const { cart } = useCart();
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     var cartMessage : string = ""
-    const [orgAddress, setOrgAddress] = React.useState('');
+    const [orgAddress1, setOrgAddress1] = React.useState('');
+    const [orgAddress2, setOrgAddress2] = React.useState('');
     const [subject,setSubject] = React.useState('')
     
     React.useEffect(() => {
@@ -81,10 +84,13 @@ const Checkout = (props: Props) => {
             .then((response) => response.json())
             .then((data: Organization) => {
                 
-               setOrgAddress(`${data.address.streetAddress} /n ${data.address.city}, ${data.address.state} ${data.address.zip}` )
-               console.log(orgAddress) // FIXME: State changes are not immediate
+               setOrgAddress1(`${data.address.streetAddress}` )
+               setOrgAddress2(`${data.address.city}, ${data.address.state} ${data.address.zip}`)
+               setOrgFundName(data.fundName)
+               setOrgShortName(data.shortName)
+              // console.log(orgFundName) // FIXME: State changes are not immediate
             })
-    }, [orgAddress, student_org_name])
+    }, [orgAddress1, student_org_name, orgFundName])
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
@@ -125,9 +131,11 @@ const Checkout = (props: Props) => {
             subject,
             cartMessage,
             student_org_name,
-            student_org_short_name,
-            orgAddress,
+            orgShortName,
+            orgAddress1,
+            orgAddress2,
             total,
+            orgFundName
         })
         }).catch(err=>{
             console.log("Error found",err)
@@ -237,7 +245,7 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 {cart.map(item => {
-                    cartMessage += "Item:" + item.name +  "    Price: $" + item.price +   "    Quanitity:" +  item.quantity + "\n"
+                    cartMessage += "Item:" + item.name +  "    Price: $" + item.price +   "    Quanitity:" +  item.quantity + "/n"
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />

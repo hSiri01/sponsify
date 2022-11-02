@@ -502,7 +502,7 @@ app.get('/get-all-sponsors/:org', (req, res) => {
 
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ address: 1, logoImage: 1})
+        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
@@ -516,7 +516,7 @@ app.get('/get-org-info/:org', (req,res) => {
 app.put('/update-org-info', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.name },
-        { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } },
+        { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address, shortName: req.body.shortName } },
         (err, event) => {
             if (err) {
                 console.log('Error on update-org-info: ' + err)
@@ -666,7 +666,7 @@ app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
 
-function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total){
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2){
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
         to: toInput, // Change to your recipient
@@ -678,9 +678,11 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
         dynamicTemplateData: {
             orgName : orgName,
             shortOrgName : shortorgName,
-            orgAddress : orgAddress,
+            orgAddress1 : orgAddress,
             items : messageInput, 
             totalCost : "$" + total,
+            orgFundName : orgFundName,
+            orgAddress2 : orgAddress2
             },
         }
         sgMail
@@ -695,9 +697,9 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
         })
 }
 app.post("/send-checkout-email", (req, res) => {
-    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name,student_org_short_name,orgAddress, total } = req.body
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,student_org_short_name,orgAddress, total);
+    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
 })
 
 // The "catchall" handler: for any request that doesn't

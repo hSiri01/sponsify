@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
 
 
 interface Props {
@@ -22,8 +23,8 @@ const BasicInfo = (props: Props) => {
     
     const [orgName, setOrgName] = React.useState(student_org_name)
     const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
-    // TODO: add short name and fund name inputs
-
+    
+    const [orgFundName, setOrgFundName] = React.useState("")
     const [streetAddress, setStreetAddress] = React.useState("")
     const [streetAddress2, setStreetAddress2] = React.useState("")
     const [city, setCity] = React.useState("")
@@ -49,13 +50,16 @@ const BasicInfo = (props: Props) => {
                         setCity(data.address.city)
                         setState(data.address.state)
                         setZipcode(data.address.zip)
+                        setOrgFundName(data.fundName)
+                        setOrgShortName(data.shortName)
                     })
             }
             catch (e) {
                 console.log("Error fetching org info ", (e))
             }
         }
-
+        console.log(orgFundName)
+        console.log(orgShortName)
         fetchOrgInfo()
     },[])
 
@@ -74,7 +78,9 @@ const BasicInfo = (props: Props) => {
                     city: city,
                     state: state,
                     zip: zipcode
-                }
+                },
+                fundName : orgFundName,
+                shortName : orgShortName,
             })
         })
             .then(() => {
@@ -221,6 +227,26 @@ const BasicInfo = (props: Props) => {
                         onChange={ev => setZipcode(+ev.target.value)} />
 
                 </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
+
+                    <TextField
+                        sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2)}}
+                        id="outlined-basic"
+                        label="Fund Name"
+                        variant="outlined"
+                        value={orgFundName}
+                        onChange={ev => setOrgFundName(ev.target.value)} />
+
+                    <TextField
+                        sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2), mb: theme.spacing(4) }}
+                        id="outlined-basic"
+                        label="Short Name"
+                        variant="outlined"
+                        value={orgShortName}
+                        onChange={ev => setOrgShortName(ev.target.value)} />
+
+                </Grid>
+               
                 <Grid item xs={12} > 
                     
                         <iframe title="dummyframe" name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
