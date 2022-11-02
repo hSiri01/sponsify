@@ -69,7 +69,8 @@ app.put('/update-FAQ', (req, res) => {
     // res.send('This route will update an FAQ')
     var freq = {
         "FAQ.$.question": req.body.question,
-        "FAQ.$.answer": req.body.answer
+        "FAQ.$.answer": req.body.answer,
+        
     }
 
     orgs.findOneAndUpdate(
@@ -92,7 +93,8 @@ app.post('/create-FAQ', (req, res) => {
     // res.send('This route will create a new FAQ')
     var freq = {
         question: req.body.question,
-        answer: req.body.answer
+        answer: req.body.answer,
+        organization : req.body.organization
     };
 
     orgs.findOneAndUpdate(

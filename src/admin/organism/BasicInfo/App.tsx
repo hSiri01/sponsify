@@ -58,8 +58,6 @@ const BasicInfo = (props: Props) => {
                 console.log("Error fetching org info ", (e))
             }
         }
-        console.log(orgFundName)
-        console.log(orgShortName)
         fetchOrgInfo()
     },[])
 

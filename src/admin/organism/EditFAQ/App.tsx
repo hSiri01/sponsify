@@ -28,6 +28,7 @@ const EditFAQ = (props: Props) => {
     const [question, setQuestion] = React.useState('')
     const [answer, setAnswer] = React.useState('')
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
+    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
 
     const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
@@ -46,15 +47,11 @@ const EditFAQ = (props: Props) => {
         
         fetchLogo() 
     },[student_org_name])
-    const handleCloseNewQuestion = () => {
-        resetInputs()
-        setOpenNewQuestion(false);
-    }
 
-    const resetInputs = () => {
-        setQuestion('')
-        setAnswer('')
-    }
+    // const handleCloseNewQuestion = () => {
+    //     setOpenNewQuestion(false);
+    // }
+
 
     React.useEffect(() => {
         const fetchData = async() => {
@@ -63,7 +60,7 @@ const EditFAQ = (props: Props) => {
                 .then((res) => res.json()) 
                 .then((data: GetAllFaq) => setFAQ(data))
                 .then(() => setOrg(student_org_name))
-
+            
         }
         fetchData()
 
@@ -149,11 +146,11 @@ const EditFAQ = (props: Props) => {
                 <>
                     {FAQ.map((questions: any) =>   
                     <>
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
+                            <Grid key={questions._id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
 
                                 <EditQuestion 
                                         id={questions._id}
-                                        student_org_name={org} 
+                                        student_org_name={student_org_name} 
                                         ques={questions.question}
                                         ans={questions.answer} />
 

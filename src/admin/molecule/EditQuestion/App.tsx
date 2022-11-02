@@ -25,8 +25,8 @@ const EditQuestion = (props: Props) => {
     const {id, student_org_name, ques, ans} = props
 
     const [openQuestion, setOpenQuestion] = React.useState(false);
-    const [question, setQuestion] = React.useState('')
-    const [answer, setAnswer] = React.useState('')
+    const [question, setQuestion] = React.useState(props.ques)
+    const [answer, setAnswer] = React.useState(props.ans)
 
 
     const handleQuestionChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
