@@ -211,6 +211,7 @@ const Events = (props: Props) => {
                         </Grid>
 
                     </Box>
+                    
                 </Modal>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -309,28 +310,60 @@ const Events = (props: Props) => {
                     </React.Fragment>
                     )}
                 </>
+              
+                <Grid item  sx={{   margin: theme.spacing(6) }}>
+                    <Button 
+                            href="/levels" 
+                            variant="contained" 
+                            size="large" 
+                            color="secondary" 
+                        sx={{
+                            color: 'white',
+                            backgroundColor: '#434343',
+                            borderRadius: 0,
+                            fontFamily: 'Oxygen',
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            "&:hover": {
+                                color: 'white',
+                                backgroundColor: '#367c63',
+                            }
+                            }}>Back</Button>
+              
+                </Grid>
+                <Grid item xs sx={{ margin: theme.spacing(6) }}>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
+                    <Grid container direction="row-reverse">
+                    <Grid item >
+                            
+                            <Button onClick={checkout} variant="contained" size="large" color="primary" sx={{
+                                borderRadius: 0,
+                                pt: theme.spacing(3),
+                                pb: theme.spacing(3),
+                                pl: theme.spacing(8),
+                                pr: theme.spacing(8),
+                                ml: theme.spacing(5),maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15)
+                            }}>Checkout</Button>
+                        </Grid>
+                        <Grid item>
+                            <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(50), minWidth: theme.spacing(40), minHeight: theme.spacing(15), alignItems:"center" }} elevation={0}>
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
+                            </Paper>
 
-
-                    <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(50), minHeight: theme.spacing(15) }} elevation={0}>
-                        <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
-                    </Paper>
-
-                    <Button onClick={checkout} variant="contained" size="large" color="primary" sx={{
-                        borderRadius: 0,
-                        pt: theme.spacing(3),
-                        pb: theme.spacing(3),
-                        pl: theme.spacing(8),
-                        pr: theme.spacing(8),
-                        ml: theme.spacing(5),
-                    }}>Checkout</Button>
+                        </Grid>
+                        
+                    </Grid>
+                    
      
 
                 </Grid>
 
 
+
             </Grid>
+           
 
         </ThemeProvider >
 

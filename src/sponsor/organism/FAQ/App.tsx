@@ -94,12 +94,15 @@ const FAQ = (props: Props) => {
                     )}
                 </>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
+
+            </Grid>
+            <Grid container >
+                <Grid item  sx={{   margin: theme.spacing(6) }}>
                     <Button 
-                        href="/levels"
-                        variant="contained"
-                        size="large"
-                        color="secondary"
+                            href="/how-it-works" 
+                            variant="contained" 
+                            size="large" 
+                            color="secondary" 
                         sx={{
                             color: 'white',
                             backgroundColor: '#434343',
@@ -113,9 +116,36 @@ const FAQ = (props: Props) => {
                                 color: 'white',
                                 backgroundColor: '#367c63',
                             }
-                        }}>Next</Button>
+                            }}>Back</Button>
                 </Grid>
-
+                <Grid item xs sx={{  margin: theme.spacing(6) }}>
+                    <Grid container direction="row-reverse">
+                        <Grid>
+                            <Button 
+                            href="/levels" 
+                            variant="contained" 
+                            size="large" 
+                            color="secondary" 
+                        sx={{
+                            color: 'white',
+                            backgroundColor: '#434343',
+                            borderRadius: 0,
+                            fontFamily: 'Oxygen',
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            "&:hover": {
+                                color: 'white',
+                                backgroundColor: '#367c63',
+                            }
+                            }}>Next</Button>
+                        </Grid>
+                         
+                    </Grid>
+                   
+                </Grid>
+                
             </Grid>
 
         </ThemeProvider>

@@ -264,8 +264,35 @@ const Checkout = (props: Props) => {
                 </Grid>
 
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button onClick={(event) => { submitCheckout(); sendEmail();}} variant="contained" size="large" color="primary" sx={{
+               
+
+            </Grid>
+            <Grid container >
+                <Grid item  sx={{   margin: theme.spacing(6) }}>
+                    <Button 
+                            href="/events" 
+                            variant="contained" 
+                            size="large" 
+                            color="secondary" 
+                        sx={{
+                            color: 'white',
+                            backgroundColor: '#434343',
+                            borderRadius: 0,
+                            fontFamily: 'Oxygen',
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            "&:hover": {
+                                color: 'white',
+                                backgroundColor: '#367c63',
+                            }
+                            }}>Back</Button>
+                </Grid>
+                <Grid item xs sx={{  margin: theme.spacing(6) }}>
+                    <Grid container direction="row-reverse">
+                        <Grid>
+                        <Button onClick={(event) => { submitCheckout(); sendEmail();}} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
@@ -273,9 +300,12 @@ const Checkout = (props: Props) => {
                         pr: theme.spacing(8),
                         ml: theme.spacing(5),
                     }}>Submit</Button>
+                        </Grid>
+                         
+                    </Grid>
+                   
                 </Grid>
-
-
+                
             </Grid>
 
         </ThemeProvider>
