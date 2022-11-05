@@ -33,16 +33,20 @@ const GeneralDonation = (props: Props) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const modalInputRef = React.useRef<HTMLInputElement>(null);
 
+    const[badPrice, setBadPrice] = React.useState(false)
     // const [price, setPrice] = React.useState(0);
-
+    const [priceCheck, setPriceCheck] = React.useState("")
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        
         let price: number | undefined = undefined
         if (inputRef.current)
             price = +inputRef.current.value
         if (modalInputRef.current)
             price = +modalInputRef.current.value
+           
          if (price && price > 0) {
             setChecked(event.target.checked);
+            setBadPrice(false)
             if (event.target.checked) {
                 addToCart({
                     name: "General Donation",
@@ -62,6 +66,7 @@ const GeneralDonation = (props: Props) => {
             }
         }
         else {
+            setBadPrice(true)
             setChecked(false);
             removeFromCart(id)
             if (inputRef.current)
@@ -74,6 +79,7 @@ const GeneralDonation = (props: Props) => {
     const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let price = +event.currentTarget.value
         if (price > 0) {
+        setBadPrice(false)
            setChecked(true)
             addToCart({
                 name: "General Donation",
@@ -89,6 +95,7 @@ const GeneralDonation = (props: Props) => {
                 modalInputRef.current.value = `${price}`
        }
        else {
+           setBadPrice(true)
            setChecked(false);
            removeFromCart(id)
            if (inputRef.current)
@@ -155,11 +162,13 @@ const GeneralDonation = (props: Props) => {
                                     </Grid>
                                     <Grid item xs={10}>
                                         <TextField
+                                            error= {badPrice === true}
+                                            helperText={(badPrice === true) ? 'Enter Price!' : ' '}
                                             hiddenLabel
                                             inputRef={inputRef}
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             defaultValue=''
-                                            onChange={handleTextChange}
+                                            onChange= {handleTextChange}
                                             sx={{ maxWidth: theme.spacing(20) }}
                                             id="outlined-basic"
                                             // label="Price"
@@ -217,6 +226,8 @@ const GeneralDonation = (props: Props) => {
                                     </Grid>
                                     <Grid item xs={5}>
                                         <TextField
+                                            error={badPrice === true}
+                                            helperText={(badPrice === true) ? 'Enter Price!' : ' '}
                                             inputRef={modalInputRef}
                                             defaultValue={inputRef.current?.value ?? ''}
                                             onChange={handleTextChange}
