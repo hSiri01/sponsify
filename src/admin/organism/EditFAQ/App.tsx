@@ -212,7 +212,7 @@ const EditFAQ = (props: Props) => {
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
                             <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" 
-                            value={question} onChange={handleQuestionChange()} />
+                            defaultValue={''} onChange={handleQuestionChange()} />
                         </Grid>
 
                         <Grid item xs={12} sx={{
@@ -223,7 +223,7 @@ const EditFAQ = (props: Props) => {
                                 placeholder="Answer"
                                 minRows={8}
                                 style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
-                                value={answer} 
+                                defaultValue={''} 
                                 onChange={handleAnswerChange()} 
                             />
                         </Grid>

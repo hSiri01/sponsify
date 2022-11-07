@@ -40,10 +40,13 @@ const EditQuestion = (props: Props) => {
     const handleOpenQuestion = () => {
         setQuestion(ques)
         setAnswer(ans)
-        // console.log(id)
         setOpenQuestion(true)
     };
     const handleCloseQuestion = () => setOpenQuestion(false);
+    
+    const [openConfirmation, setOpenConfirmation] = React.useState(false)
+    const handleOpenConfirmation = () => setOpenConfirmation(true)
+    const handleCloseConfirmation = () => setOpenConfirmation(false)
 
     const handleUpdateQuestion = async () => {
         const requestOptions = {
@@ -75,6 +78,7 @@ const EditQuestion = (props: Props) => {
             .then((res) => console.log(res)) 
 
         handleCloseQuestion()
+        handleCloseConfirmation()
     }
 
     return (
@@ -98,7 +102,7 @@ const EditQuestion = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'left' }}>
-                    <IconButton onClick={handleDeleteQuestion} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                    <IconButton onClick={handleOpenConfirmation} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                         <DeleteIcon />
                     </IconButton>
                 </Grid>
@@ -161,7 +165,7 @@ const EditQuestion = (props: Props) => {
                         <Grid item xs={6} sx={{
                             display: 'flex', justifyContent: 'left', mt: theme.spacing(10)
                         }}>
-                            <IconButton onClick={handleDeleteQuestion} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                            <IconButton onClick={handleOpenConfirmation} color="secondary" aria-label="Edit" sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                                 <DeleteIcon />
                             </IconButton>
                         </Grid>
@@ -182,6 +186,73 @@ const EditQuestion = (props: Props) => {
 
                     </Grid>
                     
+                    
+                    </Box>
+                </Modal>
+
+                <Modal
+                    open={openConfirmation}
+                    onClose={handleCloseConfirmation}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    disableScrollLock
+                >
+                    <Box sx={{
+                        position: 'absolute' as 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: theme.spacing(200),
+                        minWidth: theme.spacing(150),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(55),
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4
+                    }}>
+                    
+                        <Grid container direction = "column">
+                            <Grid item xs={1} >
+                                    <IconButton color="secondary" aria-label="Edit" onClick={handleCloseConfirmation}>
+                                        <CloseIcon />
+                                    </IconButton>
+                            </Grid>
+
+                            <Grid>
+                                <Typography variant="h6" sx={{
+                                    display: 'flex', justifyContent: 'center', mt: theme.spacing(3)
+                                }} > 
+                                Are you sure you want to delete this question?
+                                </Typography>
+                                
+                            </Grid>
+
+                            <Grid sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
+                                    <Button  
+                                        onClick={handleCloseConfirmation} 
+                                        variant="outlined" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+
+                                    }}>No</Button>
+                                <Button  
+                                        onClick={handleDeleteQuestion} 
+                                        variant="contained" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+
+                                    }}>Yes</Button>
+                            </Grid>
+                            
+                        </Grid>
                     
                     </Box>
                 </Modal>
