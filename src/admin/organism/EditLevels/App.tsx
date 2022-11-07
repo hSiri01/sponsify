@@ -116,7 +116,7 @@ const EditLevels = (props: Props) => {
             
             <MenuBar />
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
+            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
