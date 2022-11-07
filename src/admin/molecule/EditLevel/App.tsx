@@ -114,7 +114,7 @@ const EditLevel = (props: Props) => {
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  margin: "auto" }}>
+            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  margin: "auto", m: theme.spacing(2) }}>
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', margin: "auto" }}>
                        
