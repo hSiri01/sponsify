@@ -91,14 +91,26 @@ const EditQuestion = (props: Props) => {
                     </IconButton>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography variant="h6">
+                <Grid item xs={2}>
+                </Grid>
+
+                <Grid item xs={8} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Typography variant="h5" sx={{textAlign:'center', fontWeight: 500}}>
                         {question}
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4), mr: theme.spacing(35), ml: theme.spacing(35)}}>
-                    <Typography variant="body1" sx={{textAlign:"center"}} dangerouslySetInnerHTML={{ __html: answer}} />
+                <Grid item xs={2}>
+                </Grid>
+
+                <Grid item xs={2}>
+                </Grid>
+
+                <Grid item xs={8} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4)}}>
+                    <Typography variant="body1" dangerouslySetInnerHTML={{ __html: answer}} />
+                </Grid>
+
+                <Grid item xs={2}>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'left' }}>

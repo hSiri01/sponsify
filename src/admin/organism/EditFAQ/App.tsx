@@ -146,7 +146,7 @@ const EditFAQ = (props: Props) => {
                 <>
                     {FAQ.map((questions: any) =>   
                     <>
-                            <Grid key={questions._id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
+                            <Grid key={questions._id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', mb: theme.spacing(3) }}>
 
                                 <EditQuestion 
                                         id={questions._id}
