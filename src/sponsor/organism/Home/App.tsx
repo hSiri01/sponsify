@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid,Link } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Support from '../../../assets/images/graphics/support.svg';
 import { theme} from '../../../utils/theme';
@@ -108,6 +108,10 @@ const SponsorHome = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Support} alt="Giving money" />
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mb: theme.spacing(6), mt: theme.spacing(6) }}>
+                    <Link href="/admin-login" color="inherit">Administrator? </Link>
                 </Grid>
             </Grid>
             
