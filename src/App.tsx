@@ -17,9 +17,11 @@ import EditEvents from './admin/organism/EditEvents/App'
 import PurchaseHistory from './admin/organism/PurchaseHistory/App';
 import EditLevels from './admin/organism/EditLevels/App';
 import BasicInfo from './admin/organism/BasicInfo/App';
+import NewUser from './admin/organism/NewUser/App'
+
 
 import AdminLogin from './admin/organism/Home/App';
-import CheckBackLater from './sponsor/organism/HowItWorksCopy/App'
+import CheckBackLater from './sponsor/organism/CheckBackLater/App'
 
 import {
   BrowserRouter,
@@ -51,6 +53,7 @@ const App: React.FC = () => {
             <Route path="/events-edit" element={<EditEvents />} />
             <Route path="/summary" element={<PurchaseHistory />} />
             <Route path="/basic-info" element={<BasicInfo />} />
+            <Route path="/new-user" element={<NewUser />} />
 
           </Routes>
 
