@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
-import ShoppingCart from '@mui/icons-material/ShoppingCart';
 
 
 interface Props {
@@ -291,7 +290,7 @@ const BasicInfo = (props: Props) => {
                                         ml: theme.spacing(5),
                                     }} 
                                 
-                                    >Save</Button>
+                                    >SAVE</Button>
 
                             </Grid>
                             
