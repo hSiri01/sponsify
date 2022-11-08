@@ -18,14 +18,24 @@ const Question = (props: Props) => {
         <ThemeProvider theme={theme}>
 
             <Grid container>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Typography align='left' variant="h6">
+                <Grid item xs={2}>
+                </Grid>
+                <Grid item xs={8} sx={{ display: 'flex', justifyContent: 'center', textAlign:'center' }}>
+                    <Typography  variant="h5" sx={{fontWeight:500}}>
                         {question}
                     </Typography>
                 </Grid>
+                <Grid item xs={2}>
+                </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4), mr: theme.spacing(35), ml: theme.spacing(35)}}>
+                <Grid item xs={2}>
+                </Grid>
+
+                <Grid item xs={8} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(4)}}>
                     <Typography align='left' variant="body1" dangerouslySetInnerHTML={{ __html: answer}} />
+                </Grid>
+
+                <Grid item xs={2}>
                 </Grid>
 
             </Grid>
