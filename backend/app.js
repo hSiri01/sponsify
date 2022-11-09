@@ -517,8 +517,8 @@ app.get('/get-org-info/:org', (req,res) => {
 
 app.put('/update-org-info', (req, res) => {
     orgs.findOneAndUpdate(
-        { name: req.body.name },
-        { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address, shortName: req.body.shortName } },
+        { validAdmins: req.body.email },
+        { name: req.body.name, fundName: req.body.fundName, address: req.body.address, shortName: req.body.shortName },
         (err, event) => {
             if (err) {
                 console.log('Error on update-org-info: ' + err)
