@@ -303,6 +303,8 @@ const Events = (props: Props) => {
                                     price={event.price}
                                     date_start={new Date(event.date)}
                                     date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                    total_spots = {event.totalSpots}
+                                    spots_taken = {event.spotsTaken}
                                 />
                             )}
 
