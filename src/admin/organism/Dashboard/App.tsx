@@ -21,6 +21,7 @@ import { Paper } from '@mui/material';
 import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
+import {useNavigate} from "react-router-dom"
 //import Logout from '@mui/icons-material/Logout';
 
 interface Props {
@@ -46,6 +47,8 @@ const Dashboard = (props: Props) => {
     const logoutRoute = window.location.hostname === "localhost" ? 
     "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
     const { logout } = useAuth0();
+    const navigate = useNavigate();
+
     let date = new Date()
     let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
 
@@ -55,8 +58,16 @@ const Dashboard = (props: Props) => {
                 await fetch("/get-org-from-email/" + user.email)
                     .then((res) => res.json()) 
                     .then((data) => {
+                        // console.log(data)
 
-                        if (data.name !== "") 
+                        if (data.name === "new") {
+                            localStorage.setItem('org-name', JSON.stringify(data.name))
+                            localStorage.setItem('org-short-name', JSON.stringify(data.shortName))
+                            localStorage.setItem('email', JSON.stringify(user.email))
+                            navigate("/basic-info")
+                        }
+
+                        else if (data.name !== "") 
                         {
                             console.log("got valid org!")    
                             setValidAdmin(true)
@@ -73,6 +84,8 @@ const Dashboard = (props: Props) => {
 
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
+                            localStorage.setItem('email', JSON.stringify(user.email))
+
                         }
                         else {
                             console.log("not associated")

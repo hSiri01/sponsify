@@ -19,6 +19,7 @@ const BasicInfo = (props: Props) => {
 
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const user_email = JSON.parse(localStorage.getItem('email') || '{}');
     
     const [orgName, setOrgName] = React.useState(student_org_name)
     const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
@@ -36,6 +37,7 @@ const BasicInfo = (props: Props) => {
     const uploadPreset = 'db6q2mz0'
     const cloudName = "dmkykmach"
 
+    console.log(student_org_name)
     
     React.useEffect(() => {
         const fetchOrgInfo = async() => {
@@ -68,6 +70,7 @@ const BasicInfo = (props: Props) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                email: user_email,
                 name: orgName,
                 address: {
                     streetAddress: streetAddress,
@@ -81,6 +84,8 @@ const BasicInfo = (props: Props) => {
             })
         })
             .then(() => {
+                localStorage.setItem('org-name', JSON.stringify(orgName))
+                localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
                 window.location.reload()})
     }
 
@@ -154,7 +159,7 @@ const BasicInfo = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
-                        {orgShortName} Basic Information
+                        {student_org_short_name} Basic Information
                     </Typography>
                 </Grid>
 
@@ -163,10 +168,11 @@ const BasicInfo = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
                     <TextField
                         sx={{ minWidth: theme.spacing(100), mb: theme.spacing(4) }}
+                        required
                         id="outlined-basic"
-                        label="Organization"
+                        label={student_org_name==="new" ? "Organization Name Required" : "Organization"}
                         variant="outlined"
-                        value={orgName}
+                        value={orgName === "new" ? "" : orgName}
                         onChange={ev => setOrgName(ev.target.value)} />
                 </Grid>
 
