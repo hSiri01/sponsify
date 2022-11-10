@@ -157,16 +157,22 @@ const PurchaseHistory = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
-                    <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
+                    <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(350), minWidth: theme.spacing(340), minHeight: theme.spacing(10) }} >
                         <Grid container>
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(3) }}>
+                                    DELETE
+                                </Typography>
+                            </Grid>
+
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", textAlign: 'left', mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", textAlign: 'left', mt: theme.spacing(5), ml: theme.spacing(7) }}>
                                     COMPANY NAME
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(16), mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(10), mt: theme.spacing(5) }}>
                                     COMPANY REP
                                 </Typography>
                             </Grid>
@@ -184,13 +190,13 @@ const PurchaseHistory = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={1}>
-                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(12) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(3) }}>
                                     DATE
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={1}>
-                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(30) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(8) }}>
                                     PRICE
                                 </Typography>
                             </Grid>
@@ -235,7 +241,7 @@ const PurchaseHistory = (props: Props) => {
                     {purchases.map((purchase) => {
                         // FIXME: Change keying for outer purchase fragment
                         let sponsor = purchase.sponsorID as Sponsor
-                        console.log(purchase)
+                        // console.log(purchase)
                         return <React.Fragment key={purchase._id}>
                         {purchase.events && 
                             purchase.events.map((e) => {

@@ -4,6 +4,8 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
 import Date from '../../../sponsor/atom/Date/App'
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 
 
 
@@ -27,11 +29,16 @@ const Transaction = (props: Props) => {
         <ThemeProvider theme={theme}>
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(320), minWidth: theme.spacing(320), minHeight: theme.spacing(20), mt:theme.spacing(2), mb: theme.spacing(2) }} >
+                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(420), minWidth: theme.spacing(350), minHeight: theme.spacing(20), mt:theme.spacing(2), mb: theme.spacing(2) }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={() => console.log("Click")} sx={{ ml: theme.spacing(5), mb: theme.spacing(2), pt: theme.spacing(0) }}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Grid>
 
                             <Grid item xs={2}>
-                                <Typography sx={{ fontWeight: "600", mt: theme.spacing(3)}} variant="h6">{company_name}</Typography>    
+                                <Typography sx={{ fontWeight: "600", mt: theme.spacing(3), ml: theme.spacing(8)}} variant="h6">{company_name}</Typography>    
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3)}}>
@@ -48,11 +55,11 @@ const Transaction = (props: Props) => {
                                 <Typography sx={{ color: "#979797" }} variant="body2">{short_description}</Typography>
                             </Grid>
 
-                            <Grid item xs={2} sx={{ marginTop: theme.spacing(5), ml: theme.spacing(8) }}>
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5), ml: theme.spacing(8) }}>
                                 <Typography sx={{ color: "#979797" }} variant="h6">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
                             </Grid>
 
-                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5), ml: theme.spacing(10) }}>
                                 <Typography sx={{ color:"#367c63", fontWeight: "600" }} variant="h6">${price}</Typography>
                             </Grid>
 

@@ -467,6 +467,103 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
         )
 })
 
+app.delete('/delete-event-from-purchase', async (req, res) => {
+
+    let purchaseId = req.body.purchaseId
+
+    // Remove event id
+    await purchases.findOneAndUpdate(
+        { _id: purchaseId },
+        { $pull: { events: req.body.eventId}},
+        function (error, success) {
+            if (error) {
+                //console.log("Error in create-logo", error);
+                console.log('Error on updating')
+            } else {
+                console.log("Updated successfully")    
+            }
+        }
+    ).clone().then(console.log("Done")) 
+
+    // Decrement number of spots taken from event
+    // Remove sponsor
+    await events.findOneAndUpdate(
+        { _id: req.body.eventId },
+        { $inc: { spotsTaken: -1 }},
+        function (error, success) {
+            if (error) {
+                console.log('Error decrementing spots taken')
+            } else {
+                console.log('Spots taken updated successfully')
+            }
+        }
+    ).clone()
+
+    await events.findOneAndUpdate(
+        { _id: req.body.eventId },
+        { $pull: { sponsors: req.body.sponsorId}},
+        function (error, success) {
+            if (error) {
+                console.log('Error removing sponsor')
+            } else {
+                console.log('Removed sponsor successfully')
+            }
+        }
+    ).clone()
+
+    let empty = 0
+    // check if events array from purchase is empty
+    await purchases.find({ _id: req.body.purchaseId }, { events: 1 }).clone()
+        .exec(async(err, result) => {
+            if (err) {
+                console.log("Error on get-all-sponsors, " + err)
+            }
+            
+            if (result[0].events.length == 0) {
+                empty = 1
+
+                console.log("Deleting...")
+
+                // let sponsor = await purchases.find({ _id: req.body.purchaseId }, { sponsorID: 1}).clone().exec()
+                // console.log(sponsor[0].sponsorID)
+
+                // remove purchase
+                purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
+                    if (err) {
+                        console.log('Error on delete-purchase: ' + err)
+                        // res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Successfully deleted purchase: \n' + purchase)
+                        // res.json({ status: '200' })
+                    }
+                })
+
+                // remove sponsor
+                sponsors.findByIdAndRemove(req.body.sponsorId, (err, purchase) => {
+                    if (err) {
+                        console.log('Error on delete-sponsor: ' + err)
+                        // res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Successfully deleted sponsor: \n' + purchase)
+                        // res.json({ status: '200' })
+                    }
+                })
+            }
+        })
+    
+    // if empty -> delete purchase and sponsor
+    if (empty == 1) {
+        console.log("Deleting...")
+        
+
+    
+    }
+
+
+})
+
 app.post('/create-sponsor', (req,res) => {
     
     var newSponsor = new sponsors({
