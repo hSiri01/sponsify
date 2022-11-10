@@ -245,7 +245,7 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 {cart.map(item => {
-                    cartMessage += "Item:" + item.name +  "    Price: $" + item.price +   "    Quanitity:" +  item.quantity + "/n"
+                    cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quanitity:   </b>" +  item.quantity + "<br>"
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
