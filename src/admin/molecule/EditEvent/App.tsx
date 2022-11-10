@@ -15,6 +15,8 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import CloseIcon from '@mui/icons-material/Close';
+import MediaQuery from 'react-responsive'
+
 
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import dayjs, { Dayjs } from 'dayjs';
@@ -118,9 +120,19 @@ const EditEvent = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
+            <MediaQuery minWidth={1350}>
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(2), mb: theme.spacing(2) }} >
+                    <Paper variant="outlined" sx={{ 
+                        borderWidth: theme.spacing(.5), 
+                        borderRadius: 0, 
+                        borderColor:"#c2c2c2", 
+                        maxWidth: theme.spacing(300), 
+                        minWidth: theme.spacing(300), 
+                        minHeight: theme.spacing(20), 
+                        mt:theme.spacing(2), 
+                        mb: theme.spacing(2),
+                        }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             
                             <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
@@ -419,7 +431,600 @@ const EditEvent = (props: Props) => {
                     </Box>
                 </Modal>
                 </Grid>
-            </Grid>    
+            </Grid> 
+            </MediaQuery>
+
+
+            <MediaQuery minWidth={750} maxWidth={1349}>
+                <Grid container>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Paper variant="outlined" sx={{
+                            borderWidth: theme.spacing(.5),
+                            borderRadius: 0,
+                            borderColor: "#c2c2c2",
+                            maxWidth: theme.spacing(160),
+                            minWidth: theme.spacing(160),
+                            minHeight: theme.spacing(20),
+                            mt: theme.spacing(2),
+                            mb: theme.spacing(2),
+                            ml: "8%",
+                        }} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(3) }}>
+
+                                
+                                <Grid item xs={4} sx={{ mt: theme.spacing(2),pr: theme.spacing(15) }}>
+                                    <Date date_1={date_start} date_2={date_end} />
+                                </Grid>
+
+                                <Grid item xs={8}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body1">{short_description}</Typography>
+                                </Grid>
+                                
+
+                                <Grid item xs={3} sx={{ mt: theme.spacing(5) }}>
+                                    <IconButton color="secondary" aria-label="Edit" onClick={handleOpenConfirmation} sx={{ 
+                                        ml: "25%", 
+                                        mb: theme.spacing(2) 
+                                        }}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+
+                                <Grid item xs={3} sx={{ mt: theme.spacing(3), pl: theme.spacing(9) }}>
+                                    <IconButton onClick={handleOpenEvent} color="secondary" aria-label="Edit" sx={{ 
+                                        ml: "25%", 
+                                        mt: theme.spacing(2) }}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+
+                            </Grid>
+
+                        </Paper>
+
+                        <Modal
+                            open={openEvent}
+                            onClose={handleCloseEvent}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            disableScrollLock
+                        >
+                            <Box sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxWidth: theme.spacing(250),
+                                minWidth: theme.spacing(250),
+                                maxHeight: theme.spacing(100),
+                                minHeight: theme.spacing(100),
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                overflow: 'scroll',
+                            }}>
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+
+                                    <Grid container sx={{ mb: theme.spacing(6), mt: theme.spacing(4) }}>
+                                        <Grid item xs={12} sx={{}}>
+                                            <IconButton color="secondary" aria-label="Edit" onClick={handleCloseEvent} sx={{}}>
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+
+                                        <Grid item xs={3}>
+                                            <TextField
+                                                id="date"
+                                                label="Date Start"
+                                                type="date"
+                                                defaultValue={date_start_format}
+                                                value={dateInput}
+                                                onChange={ev => setDateInput(ev.target.value)}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                sx={{ maxWidth: theme.spacing(40) }} />
+
+                                            {(date_end) ?
+                                                (
+
+                                                    <TextField
+                                                        id="date"
+                                                        label="Date End"
+                                                        type="date"
+                                                        defaultValue={date_end_format}
+                                                        value={endDateInput}
+                                                        onChange={ev => setEndDateInput(ev.target.value)}
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        sx={{ maxWidth: theme.spacing(40), mt: theme.spacing(4) }} />
+
+                                                ) : (
+                                                    <></>
+                                                )
+                                            }
+
+                                        </Grid>
+
+
+                                        <Grid item xs={5}>
+                                            <TextField
+                                                sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
+                                                id="outlined-basic"
+                                                label="Name"
+                                                variant="outlined"
+                                                defaultValue={name}
+                                                value={nameInput}
+                                                onChange={ev => setNameInput(ev.target.value)}
+                                            />
+                                            <TextField
+                                                sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Short Description"
+                                                variant="outlined"
+                                                defaultValue={short_description}
+                                                value={briefDescInput}
+                                                onChange={ev => setBriefDescInput(ev.target.value)}
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={4} sx={{ textAlign: "right" }}>
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Price"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={price}
+                                                value={priceInput}
+                                                onChange={ev => setPriceInput(+ev.target.value)}
+                                            />
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Occurances"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={occurances}
+                                                value={totalSpotsInput}
+                                                onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) } }}
+                                            />
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Sponsored"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={num_sponsored}
+                                                value={spotsTakenInput}
+                                                onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) } }}
+                                            />
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Avg Attendance"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={avg_attendance}
+                                                value={avgAttendanceInput}
+                                                onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                            />
+                                        </Grid>
+
+
+
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Grid item xs={10}>
+                                        <TextareaAutosize
+                                            aria-label="empty textarea"
+                                            placeholder="Empty"
+                                            defaultValue={long_description}
+                                            value={descInput}
+                                            onChange={ev => { setDescInput(ev.target.value) }}
+                                            minRows={8}
+                                            style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+
+                                <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
+
+
+                                    <Grid item xs={1}>
+                                        <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
+                                    </Grid>
+                                    <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                        <Checkbox checked={checked}
+                                            onChange={handleChange} />
+                                    </Grid>
+
+                                    <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
+                                        <Button /*href="/"*/ onClick={updateEvent} variant="contained" size="large" color="primary" sx={{
+                                            borderRadius: 0,
+                                            pt: theme.spacing(3),
+                                            pb: theme.spacing(3),
+                                            pl: theme.spacing(8),
+                                            pr: theme.spacing(8),
+                                            ml: theme.spacing(5),
+                                        }}>Update</Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Modal>
+
+                        <Modal
+                            open={openConfirmation}
+                            onClose={handleCloseConfirmation}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            disableScrollLock
+                        >
+                            <Box sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxWidth: theme.spacing(200),
+                                minWidth: theme.spacing(150),
+                                maxHeight: theme.spacing(100),
+                                minHeight: theme.spacing(55),
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4
+                            }}>
+
+                                <Grid container direction="column">
+                                    <Grid item xs={1} >
+                                        <IconButton color="secondary" aria-label="Edit" onClick={handleCloseConfirmation}>
+                                            <CloseIcon />
+                                        </IconButton>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Typography variant="h6" sx={{
+                                            display: 'flex', justifyContent: 'center', m: theme.spacing(5)
+                                        }} >
+                                            Are you sure you want to delete {nameInput}?
+                                        </Typography>
+
+                                    </Grid>
+
+                                    <Grid sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
+                                        <Button
+                                            onClick={handleCloseConfirmation}
+                                            variant="outlined" size="large" color="primary" sx={{
+                                                borderRadius: 0,
+                                                pt: theme.spacing(3),
+                                                pb: theme.spacing(3),
+                                                pl: theme.spacing(8),
+                                                pr: theme.spacing(8),
+                                                ml: theme.spacing(5),
+
+                                            }}>No</Button>
+                                        <Button
+                                            onClick={deleteEvent}
+                                            variant="contained" size="large" color="primary" sx={{
+                                                borderRadius: 0,
+                                                pt: theme.spacing(3),
+                                                pb: theme.spacing(3),
+                                                pl: theme.spacing(8),
+                                                pr: theme.spacing(8),
+                                                ml: theme.spacing(5),
+
+                                            }}>Yes</Button>
+                                    </Grid>
+
+                                </Grid>
+
+                            </Box>
+                        </Modal>
+                    </Grid>
+                </Grid>
+            </MediaQuery>   
+
+            <MediaQuery maxWidth={749}>
+                <Grid container>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Paper variant="outlined" sx={{
+                            borderWidth: theme.spacing(.5),
+                            borderRadius: 0,
+                            borderColor: "#c2c2c2",
+                            maxWidth: theme.spacing(75),
+                            minWidth: theme.spacing(75),
+                            minHeight: theme.spacing(20),
+                            mt: theme.spacing(2),
+                            mb: theme.spacing(2),
+                            ml: "15%",
+                        }} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(3)}}>
+
+
+                                <Grid item xs={5} sx={{ mt: theme.spacing(2), }}>
+                                    <Date date_1={date_start} date_2={date_end} />
+                                </Grid>
+
+                                <Grid item xs={8} sx={{ml:"10%", mt: theme.spacing(2)}}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body1">{short_description}</Typography>
+                                </Grid>
+
+
+                                <Grid item xs={5} sx={{ mt: theme.spacing(5) }}>
+                                    <IconButton color="secondary" aria-label="Edit" onClick={handleOpenConfirmation} sx={{
+                                        ml: "25%",
+                                        mb: theme.spacing(2)
+                                    }}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+
+                                <Grid item xs={5} sx={{ mt: theme.spacing(3), pl: theme.spacing(9) }}>
+                                    <IconButton onClick={handleOpenEvent} color="secondary" aria-label="Edit" sx={{
+                                        ml: "25%",
+                                        mt: theme.spacing(2)
+                                    }}>
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+
+                            </Grid>
+
+                        </Paper>
+
+                        <Modal
+                            open={openEvent}
+                            onClose={handleCloseEvent}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            disableScrollLock
+                        >
+                            <Box sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxWidth: theme.spacing(250),
+                                minWidth: theme.spacing(250),
+                                maxHeight: theme.spacing(100),
+                                minHeight: theme.spacing(100),
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                overflow: 'scroll',
+                            }}>
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+
+                                    <Grid container sx={{ mb: theme.spacing(6), mt: theme.spacing(4) }}>
+                                        <Grid item xs={12} sx={{}}>
+                                            <IconButton color="secondary" aria-label="Edit" onClick={handleCloseEvent} sx={{}}>
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+
+                                        <Grid item xs={3}>
+                                            <TextField
+                                                id="date"
+                                                label="Date Start"
+                                                type="date"
+                                                defaultValue={date_start_format}
+                                                value={dateInput}
+                                                onChange={ev => setDateInput(ev.target.value)}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                                sx={{ maxWidth: theme.spacing(40) }} />
+
+                                            {(date_end) ?
+                                                (
+
+                                                    <TextField
+                                                        id="date"
+                                                        label="Date End"
+                                                        type="date"
+                                                        defaultValue={date_end_format}
+                                                        value={endDateInput}
+                                                        onChange={ev => setEndDateInput(ev.target.value)}
+                                                        InputLabelProps={{
+                                                            shrink: true,
+                                                        }}
+                                                        sx={{ maxWidth: theme.spacing(40), mt: theme.spacing(4) }} />
+
+                                                ) : (
+                                                    <></>
+                                                )
+                                            }
+
+                                        </Grid>
+
+
+                                        <Grid item xs={5}>
+                                            <TextField
+                                                sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
+                                                id="outlined-basic"
+                                                label="Name"
+                                                variant="outlined"
+                                                defaultValue={name}
+                                                value={nameInput}
+                                                onChange={ev => setNameInput(ev.target.value)}
+                                            />
+                                            <TextField
+                                                sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Short Description"
+                                                variant="outlined"
+                                                defaultValue={short_description}
+                                                value={briefDescInput}
+                                                onChange={ev => setBriefDescInput(ev.target.value)}
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={4} sx={{ textAlign: "right" }}>
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Price"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={price}
+                                                value={priceInput}
+                                                onChange={ev => setPriceInput(+ev.target.value)}
+                                            />
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Occurances"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={occurances}
+                                                value={totalSpotsInput}
+                                                onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) } }}
+                                            />
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Sponsored"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={num_sponsored}
+                                                value={spotsTakenInput}
+                                                onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) } }}
+                                            />
+                                            <TextField
+                                                sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
+                                                id="outlined-basic"
+                                                label="Avg Attendance"
+                                                variant="outlined"
+                                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                                defaultValue={avg_attendance}
+                                                value={avgAttendanceInput}
+                                                onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                            />
+                                        </Grid>
+
+
+
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Grid item xs={10}>
+                                        <TextareaAutosize
+                                            aria-label="empty textarea"
+                                            placeholder="Empty"
+                                            defaultValue={long_description}
+                                            value={descInput}
+                                            onChange={ev => { setDescInput(ev.target.value) }}
+                                            minRows={8}
+                                            style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+
+                                <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
+
+
+                                    <Grid item xs={1}>
+                                        <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
+                                    </Grid>
+                                    <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                        <Checkbox checked={checked}
+                                            onChange={handleChange} />
+                                    </Grid>
+
+                                    <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
+                                        <Button /*href="/"*/ onClick={updateEvent} variant="contained" size="large" color="primary" sx={{
+                                            borderRadius: 0,
+                                            pt: theme.spacing(3),
+                                            pb: theme.spacing(3),
+                                            pl: theme.spacing(8),
+                                            pr: theme.spacing(8),
+                                            ml: theme.spacing(5),
+                                        }}>Update</Button>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+                        </Modal>
+
+                        <Modal
+                            open={openConfirmation}
+                            onClose={handleCloseConfirmation}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            disableScrollLock
+                        >
+                            <Box sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxWidth: theme.spacing(200),
+                                minWidth: theme.spacing(150),
+                                maxHeight: theme.spacing(100),
+                                minHeight: theme.spacing(55),
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4
+                            }}>
+
+                                <Grid container direction="column">
+                                    <Grid item xs={1} >
+                                        <IconButton color="secondary" aria-label="Edit" onClick={handleCloseConfirmation}>
+                                            <CloseIcon />
+                                        </IconButton>
+                                    </Grid>
+
+                                    <Grid>
+                                        <Typography variant="h6" sx={{
+                                            display: 'flex', justifyContent: 'center', m: theme.spacing(5)
+                                        }} >
+                                            Are you sure you want to delete {nameInput}?
+                                        </Typography>
+
+                                    </Grid>
+
+                                    <Grid sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
+                                        <Button
+                                            onClick={handleCloseConfirmation}
+                                            variant="outlined" size="large" color="primary" sx={{
+                                                borderRadius: 0,
+                                                pt: theme.spacing(3),
+                                                pb: theme.spacing(3),
+                                                pl: theme.spacing(8),
+                                                pr: theme.spacing(8),
+                                                ml: theme.spacing(5),
+
+                                            }}>No</Button>
+                                        <Button
+                                            onClick={deleteEvent}
+                                            variant="contained" size="large" color="primary" sx={{
+                                                borderRadius: 0,
+                                                pt: theme.spacing(3),
+                                                pb: theme.spacing(3),
+                                                pl: theme.spacing(8),
+                                                pr: theme.spacing(8),
+                                                ml: theme.spacing(5),
+
+                                            }}>Yes</Button>
+                                    </Grid>
+
+                                </Grid>
+
+                            </Box>
+                        </Modal>
+                    </Grid>
+                </Grid>
+            </MediaQuery>   
 
         </ThemeProvider>
 
