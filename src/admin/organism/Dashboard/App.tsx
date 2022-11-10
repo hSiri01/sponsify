@@ -84,6 +84,8 @@ const Dashboard = (props: Props) => {
 
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
+                            localStorage.setItem('email', JSON.stringify(user.email))
+
                         }
                         else {
                             console.log("not associated")

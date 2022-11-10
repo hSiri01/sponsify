@@ -37,6 +37,7 @@ const BasicInfo = (props: Props) => {
     const uploadPreset = 'db6q2mz0'
     const cloudName = "dmkykmach"
 
+    console.log(student_org_name)
     
     React.useEffect(() => {
         const fetchOrgInfo = async() => {
