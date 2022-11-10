@@ -21,8 +21,9 @@ import { Paper } from '@mui/material';
 import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
-import {useNavigate} from "react-router-dom"
-//import Logout from '@mui/icons-material/Logout';
+import { useNavigate } from "react-router-dom"
+import MediaQuery from 'react-responsive'
+
 
 interface Props {
 }
@@ -44,19 +45,19 @@ const Dashboard = (props: Props) => {
     const [city, setCity] = React.useState("")
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
-    const logoutRoute = window.location.hostname === "localhost" ? 
-    "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
+    const logoutRoute = window.location.hostname === "localhost" ?
+        "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login"
     const { logout } = useAuth0();
     const navigate = useNavigate();
 
     let date = new Date()
-    let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
+    let valid_until_date = (date.getMonth() + 1 >= 11 || date.getMonth() + 1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
 
     if (isAuthenticated) {
-        const getOrg = async() => { 
+        const getOrg = async () => {
             if (user) {
                 await fetch("/get-org-from-email/" + user.email)
-                    .then((res) => res.json()) 
+                    .then((res) => res.json())
                     .then((data) => {
                         // console.log(data)
 
@@ -67,9 +68,8 @@ const Dashboard = (props: Props) => {
                             navigate("/basic-info")
                         }
 
-                        else if (data.name !== "") 
-                        {
-                            console.log("got valid org!")    
+                        else if (data.name !== "") {
+                            console.log("got valid org!")
                             setValidAdmin(true)
                             setOrgName(data.name)
                             setOrgShortName(data.shortName)
@@ -93,7 +93,7 @@ const Dashboard = (props: Props) => {
                             // TODO: graceful retry process
                             // logout({ returnTo: process.env.NODE_ENV === "production" ? 
                             // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
-                            
+
                             //if logout and go back to admin page
                             //logout({ returnTo: logoutRoute })
                         }
@@ -101,580 +101,840 @@ const Dashboard = (props: Props) => {
                     })
             }
         }
-        
+
         getOrg()
     }
-    
+
     return (
         <ThemeProvider theme={theme}>
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
-                {validAdmin && ( <>
-                <MenuBar />
+            <div style={{
+                backgroundColor: "#f3f3f3",
+                minWidth: "100vw",
+                minHeight: "100vh",
+            }}>
+                <Grid container
+                >
+                    {validAdmin && (<>
+                        <MenuBar />
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                        <MediaQuery minWidth={1200}>
+                            <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{
+                                    maxHeight: theme.spacing(30),
+                                    marginTop: theme.spacing(10),
+                                }}
+                                    src={Logo} alt="Sponsify logo" />
+                            </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                                <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                    x
+                                </Typography>
+                            </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                            </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                            <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            </Grid>
+                        </MediaQuery>
+
+                        <MediaQuery minWidth={500} maxWidth={1199}>
+                            <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{
+                                    maxHeight: theme.spacing(20),
+                                    marginTop: theme.spacing(10),
+                                }}
+                                    src={Logo} alt="Sponsify logo" />
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                                <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                    x
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                            </Grid>
+
+                            <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            </Grid>
+                        </MediaQuery>
+
+                        <MediaQuery maxWidth={499}>
+                            <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{
+                                    maxHeight: theme.spacing(15),
+                                    marginTop: theme.spacing(10),
+                                }}
+                                    src={Logo} alt="Sponsify logo" />
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                                <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                    x
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                            </Grid>
+
+                            <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            </Grid>
+                        </MediaQuery>
 
 
 
-                <Grid item xs={1} sx={{ justifyContent: 'center', }}>
-                </Grid>
+                        <Grid item xs={1} sx={{ justifyContent: 'center', }}>
+                        </Grid>
 
-                <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5), }}>
-                    <Link href={'/events-edit'} underline='none'>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
+                        <Grid item xs={12} sm={10} md={3} sx={{
+                            mt: theme.spacing(5),
+                            [theme.breakpoints.down('md')]: {
+                                ml: "25%",
+                            },
+                            [theme.breakpoints.down('md')]: {
+                                ml: "20%",
+                            },
+                        }}>
+                            <Link href={'/events-edit'} underline='none'>
+                                <Paper variant="outlined" sx={{ 
+                                    border: 'none', borderRadius: 0, 
+                                    maxWidth: theme.spacing(100), 
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(40), 
+                                    mt: theme.spacing(4), 
+                                    boxShadow: "3px 3px 3px #c7c7c7",
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Paper variant="outlined" sx={{ 
+                                        borderStyle: "none none solid none",
+                                        borderWidth: theme.spacing(.5),
+                                        borderRadius: 0,
+                                        borderColor: "#c2c2c2",
+                                        maxWidth: theme.spacing(100),
+                                        minWidth: theme.spacing(100),
+                                        minHeight: theme.spacing(10),
+                                        mt: theme.spacing(1),
+                                        mb: theme.spacing(1),
+                                        [theme.breakpoints.down('sm')]: {
+                                            maxWidth: theme.spacing(67),
+                                            minWidth: theme.spacing(67),
+                                        }, }} >
+                                        <Grid container>
+                                            <Grid item xs={2}>
+                                                <IconButton
+                                                    size="large"
+                                                    aria-label="menu"
+                                                    sx={{ mr: 2, color: 'black' }}
+                                                >
+                                                    <AddCircleIcon />
+                                                </IconButton>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Create/Edit Events
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                    {'>'}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+
+                                    <Grid container>
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <AddCircleIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Create Events
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Delete Events
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Edit Events
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+                            </Link>
+
+
+                            <Link href={'/levels-edit'} underline='none'>
+                                <Paper variant="outlined" sx={{ 
+                                    border: 'none', 
+                                    borderRadius: 0, 
+                                    maxWidth: theme.spacing(100), 
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(40), 
+                                    mt: theme.spacing(5), 
+                                    boxShadow: "3px 3px 3px #c7c7c7",
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Paper variant="outlined" sx={{ 
+                                        borderStyle: "none none solid none", 
+                                        borderWidth: theme.spacing(.5), 
+                                        borderRadius: 0, 
+                                        borderColor: "#c2c2c2", 
+                                        maxWidth: theme.spacing(100), 
+                                        minWidth: theme.spacing(100), 
+                                        minHeight: theme.spacing(10), 
+                                        mt: theme.spacing(1), 
+                                        mb: theme.spacing(1),
+                                        [theme.breakpoints.down('sm')]: {
+                                            maxWidth: theme.spacing(67),
+                                            minWidth: theme.spacing(67),
+                                        }, }} >
+                                        <Grid container>
+                                            <Grid item xs={2}>
+                                                <IconButton
+                                                    size="large"
+                                                    aria-label="menu"
+                                                    sx={{ mr: 2, color: 'black' }}
+                                                >
+                                                    <TuneIcon />
+                                                </IconButton>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Edit Sponsorship Levels
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                    {'>'}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+
+                                    <Grid container>
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <AddCircleIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Add Levels
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <PaidIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Add Ranges
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <InvertColorsIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Format Colors
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+                            </Link>
+
+                            <Paper variant="outlined" sx={{ 
+                                border: 'none', 
+                                borderRadius: 0, 
+                                maxWidth: theme.spacing(100), 
+                                minWidth: theme.spacing(100), 
+                                minHeight: theme.spacing(40), 
+                                mt: theme.spacing(5), 
+                                mb: theme.spacing(5), 
+                                boxShadow: "3px 3px 3px #c7c7c7",
+                                [theme.breakpoints.down('sm')]: {
+                                    maxWidth: theme.spacing(67),
+                                    minWidth: theme.spacing(67),
+                                }, }} >
+                                <Paper variant="outlined" sx={{ 
+                                    borderStyle: "none none solid none", 
+                                    borderWidth: theme.spacing(.5),
+                                    borderRadius: 0, 
+                                    borderColor: "#c2c2c2",
+                                    maxWidth: theme.spacing(100),
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(10),
+                                    mt: theme.spacing(1),
+                                    mb: theme.spacing(1),
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Grid container>
+                                        <Grid item xs={2}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                sx={{ mr: 2, color: 'black' }}
+                                            >
+                                                <LockIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                Sponsor Code
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+
                                 <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <AddCircleIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Create/Edit Events
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
+
+                                        <Typography variant="h6" sx={{ border: 1, borderColor: '#367c63', borderWidth: theme.spacing(1), p: theme.spacing(3), mt: theme.spacing(5) }}>
+                                            {sponsorCode}
                                         </Typography>
+
                                     </Grid>
-                                    <Grid item xs={2}>
-                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                            {'>'}
+
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
+
+                                        <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
+                                            Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
                                         </Typography>
+
+                                    </Grid>
+
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+
+                                        <Typography variant="body1" sx={{ fontWeight: 700, mt: theme.spacing(2), mb: theme.spacing(3) }}>
+                                            Share this with Companies
+                                        </Typography>
+
+                                    </Grid>
+
+                                </Grid>
+                            </Paper>
+
+                        </Grid>
+
+
+
+                        <Grid item xs={12} sm={10} md={3} sx={{
+                            mt: theme.spacing(5), ml: theme.spacing(15), mr: theme.spacing(15),
+                            [theme.breakpoints.down('md')]: {
+                                ml: "25%",
+                            },
+                            [theme.breakpoints.down('md')]: {
+                                ml: "20%",
+                            },
+                        }}>
+                            <Link href={'/basic-info'} underline='none'>
+                                <Paper variant="outlined" sx={{ 
+                                    border: 'none', 
+                                    borderRadius: 0, 
+                                    maxWidth: theme.spacing(100), 
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(40), 
+                                    mt: theme.spacing(4), 
+                                    boxShadow: "3px 3px 3px #c7c7c7",
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Paper variant="outlined" sx={{ 
+                                        borderStyle: "none none solid none", 
+                                        borderWidth: theme.spacing(.5), 
+                                        borderRadius: 0, 
+                                        borderColor: "#c2c2c2", 
+                                        maxWidth: theme.spacing(100), 
+                                        minWidth: theme.spacing(100), 
+                                        minHeight: theme.spacing(10), 
+                                        mt: theme.spacing(1), 
+                                        mb: theme.spacing(1),
+                                        [theme.breakpoints.down('sm')]: {
+                                            maxWidth: theme.spacing(67),
+                                            minWidth: theme.spacing(67),
+                                        }, }} >
+                                        <Grid container>
+                                            <Grid item xs={2}>
+                                                <IconButton
+                                                    size="large"
+                                                    aria-label="menu"
+                                                    sx={{ mr: 2, color: 'black' }}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Basic Info
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                    {'>'}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+
+                                    <Grid container>
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <AddCircleIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Add Address
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <UploadIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Upload Logo
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Edit Name
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+                            </Link>
+
+                            <Link href={'/faq-edit'} underline='none'>
+                                <Paper variant="outlined" sx={{ 
+                                    border: 'none', 
+                                    borderRadius: 0, 
+                                    maxWidth: theme.spacing(100), 
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(40), 
+                                    mt: theme.spacing(5), 
+                                    boxShadow: "3px 3px 3px #c7c7c7",
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Paper variant="outlined" sx={{ 
+                                        borderStyle: "none none solid none", 
+                                        borderWidth: theme.spacing(.5), 
+                                        borderRadius: 0, 
+                                        borderColor: "#c2c2c2", 
+                                        maxWidth: theme.spacing(100), 
+                                        minWidth: theme.spacing(100), 
+                                        minHeight: theme.spacing(10), 
+                                        mt: theme.spacing(1), 
+                                        mb: theme.spacing(1),
+                                        [theme.breakpoints.down('sm')]: {
+                                            maxWidth: theme.spacing(67),
+                                            minWidth: theme.spacing(67),
+                                        }, }} >
+                                        <Grid container>
+                                            <Grid item xs={2}>
+                                                <IconButton
+                                                    size="large"
+                                                    aria-label="menu"
+                                                    sx={{ mr: 2, color: 'black' }}
+                                                >
+                                                    <HelpIcon />
+                                                </IconButton>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Create/Edit FAQs
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                    {'>'}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+
+                                    <Grid container>
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <AddCircleIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Add questions/answers
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Delete questions/answers
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                Edit questions/answers
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+                            </Link>
+
+                            <Link href={'/summary'} underline='none'>
+                                <Paper variant="outlined" sx={{ 
+                                    border: 'none', 
+                                    borderRadius: 0, 
+                                    maxWidth: theme.spacing(100), 
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(40),
+                                     mt: theme.spacing(5), 
+                                     mb: theme.spacing(5), 
+                                     boxShadow: "3px 3px 3px #c7c7c7",
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Paper variant="outlined" sx={{ 
+                                        borderStyle: "none none solid none", 
+                                        borderWidth: theme.spacing(.5), 
+                                        borderRadius: 0, 
+                                        borderColor: "#c2c2c2", 
+                                        maxWidth: theme.spacing(100), 
+                                        minWidth: theme.spacing(100), 
+                                        minHeight: theme.spacing(10), 
+                                        mt: theme.spacing(1), 
+                                        mb: theme.spacing(1),
+                                        [theme.breakpoints.down('sm')]: {
+                                            maxWidth: theme.spacing(67),
+                                            minWidth: theme.spacing(67),
+                                        }, }} >
+                                        <Grid container>
+                                            <Grid item xs={2}>
+                                                <IconButton
+                                                    size="large"
+                                                    aria-label="menu"
+                                                    sx={{ mr: 2, color: 'black' }}
+                                                >
+                                                    <HistoryIcon />
+                                                </IconButton>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Purchase History
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                    {'>'}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Paper>
+
+                                    <Grid container>
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <PaidIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                View all transactions
+                                            </Typography>
+                                        </Grid>
+
+                                        <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                color="secondary"
+                                                sx={{ mr: 2, ml: theme.spacing(2) }}
+                                            >
+                                                <PageviewIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                            <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                                View all sponsors
+                                            </Typography>
+                                        </Grid>
+
+
+
+                                    </Grid>
+                                </Paper>
+                            </Link>
+
+                        </Grid>
+
+                        <Grid item xs={12} sm={10} md={3} sx={{
+                            mt: theme.spacing(5),
+                            [theme.breakpoints.down('md')]: {
+                                ml: "25%",
+                                mb: theme.spacing(5),
+                            },
+                            [theme.breakpoints.down('md')]: {
+                                ml: "20%",
+                            },
+                        }}>
+                            <Paper variant="outlined" sx={{ 
+                                border: 'none', 
+                                borderRadius: 0, 
+                                maxWidth: theme.spacing(100), 
+                                minWidth: theme.spacing(100), 
+                                minHeight: theme.spacing(40), 
+                                mt: theme.spacing(4), 
+                                boxShadow: "3px 3px 3px #c7c7c7",
+                                mb: theme.spacing(5),
+                                [theme.breakpoints.down('sm')]: {
+                                    maxWidth: theme.spacing(67),
+                                    minWidth: theme.spacing(67),
+                                    mb: theme.spacing(5),
+                                }, }} >
+                                <Paper variant="outlined" sx={{ 
+                                    borderStyle: "none none solid none", 
+                                    borderWidth: theme.spacing(.5), 
+                                    borderRadius: 0, 
+                                    borderColor: "#c2c2c2", 
+                                    maxWidth: theme.spacing(100), 
+                                    minWidth: theme.spacing(100), 
+                                    minHeight: theme.spacing(10), 
+                                    mt: theme.spacing(1), 
+                                    mb: theme.spacing(1),
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(67),
+                                        minWidth: theme.spacing(67),
+                                    }, }} >
+                                    <Grid container>
+                                        <Grid item xs={2}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                sx={{ mr: 2, color: 'black' }}
+                                            >
+                                                <EmailIcon />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                Email Preview
+                                            </Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container>
+                                    <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+
+                                        {streetAddress2 ?
+
+                                            (
+                                                <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
+                                                    Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                                    <u><b>To pay with check:</b></u><br />
+                                                    - Must be made out to "{orgName}"<br />
+                                                    - Mail to:<br /><br />
+                                                    <b>{orgName}<br />
+                                                        {streetAddress}<br />
+                                                        {streetAddress2}<br />
+                                                        {city}, {state} {zipcode}<br /></b> <br />
+                                                    <u><b>To pay with a credit card:</b></u><br />
+                                                    - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                                    - Click on the maroon box on the top right side that reads “give now”<br /><br />
+                                                    - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
+                                                    - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
+                                                    - The rest of the process consists of entering payment and other information<br /><br />
+
+                                                    Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+
+                                                    Let us know if you have any questions! <br /><br />
+
+                                                    <b>{orgName} Officer Team</b>
+
+                                                </Typography>
+                                            ) : (
+                                                <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
+                                                    Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                                    <u><b>To pay with check:</b></u><br />
+                                                    - Must be made out to "{orgName}"<br />
+                                                    - Mail to:<br /><br />
+                                                    <b>{orgName}<br />
+                                                        {streetAddress}<br />
+                                                        {city}, {state} {zipcode}<br /></b> <br />
+                                                    <u><b>To pay with a credit card:</b></u><br />
+                                                    - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                                    - Click on the maroon box on the top right side that reads “give now”<br /><br />
+                                                    - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
+                                                    - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
+                                                    - The rest of the process consists of entering payment and other information<br /><br />
+
+                                                    Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+
+                                                    Let us know if you have any questions! <br /><br />
+
+                                                    <b>{orgName} Officer Team</b>
+
+                                                </Typography>
+                                            )}
                                     </Grid>
                                 </Grid>
                             </Paper>
 
-                            <Grid container>
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <AddCircleIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Create Events
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Delete Events
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Edit Events
-                                    </Typography>
-                                </Grid>
-
-                            </Grid>
-                        </Paper>
-                    </Link>
 
 
-                    <Link href={'/levels-edit'} underline='none'>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <TuneIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Edit Sponsorship Levels
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={2}>
-                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                            {'>'}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
+                        </Grid>
 
-                            <Grid container>
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <AddCircleIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Add Levels
-                                    </Typography>
-                                </Grid>
+                    </>)}
 
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <PaidIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Add Ranges
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <InvertColorsIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Format Colors
-                                    </Typography>
-                                </Grid>
-
-                            </Grid>
-                        </Paper>
-                    </Link>
-
-                    <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                        <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                            <Grid container>
-                                <Grid item xs={2}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        sx={{ mr: 2, color: 'black' }}
-                                    >
-                                        <LockIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={8}>
-                                    <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                        Sponsor Code
-                                    </Typography>
-                                </Grid>
-
-                            </Grid>
-                        </Paper>
-
-                        <Grid container>
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
-
-                                <Typography variant="h6" sx={{ border: 1, borderColor: '#367c63', borderWidth: theme.spacing(1), p: theme.spacing(3), mt: theme.spacing(5) }}>
-                                    {sponsorCode}
-                                </Typography>
-
-                            </Grid>
-
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
-
-                                <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                    Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
-                                </Typography>
-
-                            </Grid>
-
+                    {notRegistered && (
+                        <Grid container sx={{ backgroundColor: "#fff" }}>
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                            </Grid>
 
-                                <Typography variant="body1" sx={{ fontWeight: 700, mt: theme.spacing(2), mb: theme.spacing(3) }}>
-                                    Share this with Companies
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                                <Typography variant="h5">
+                                    Your email is not associated with any student organization.
+                                    Logout below and try again!
                                 </Typography>
-
                             </Grid>
-
-                        </Grid>
-                    </Paper>
-
-                </Grid>
-
-
-
-                <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr: theme.spacing(15) }}>
-                    <Link href={'/basic-info'} underline='none'>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Basic Info
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={2}>
-                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                            {'>'}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-
-                            <Grid container>
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <AddCircleIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Add Address
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <UploadIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Upload Logo
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Edit Name
-                                    </Typography>
-                                </Grid>
-
-                            </Grid>
-                        </Paper>
-                    </Link>
-
-                    <Link href={'/faq-edit'} underline='none'>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <HelpIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Create/Edit FAQs
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={2}>
-                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                            {'>'}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-
-                            <Grid container>
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <AddCircleIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Add questions/answers
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Delete questions/answers
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        Edit questions/answers
-                                    </Typography>
-                                </Grid>
-
-                            </Grid>
-                        </Paper>
-                    </Link>
-
-                    <Link href={'/summary'} underline='none'>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <HistoryIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Purchase History
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={2}>
-                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                            {'>'}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Paper>
-
-                            <Grid container>
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <PaidIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        View all transactions
-                                    </Typography>
-                                </Grid>
-
-                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        color="secondary"
-                                        sx={{ mr: 2, ml: theme.spacing(2) }}
-                                    >
-                                        <PageviewIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        View all sponsors
-                                    </Typography>
-                                </Grid>
-
-
-
-                            </Grid>
-                        </Paper>
-                    </Link>
-
-                </Grid>
-
-                <Grid item xs={3} sx={{ mt: theme.spacing(5) }}>
-                    <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                        <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                            <Grid container>
-                                <Grid item xs={2}>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="menu"
-                                        sx={{ mr: 2, color: 'black' }}
-                                    >
-                                        <EmailIcon />
-                                    </IconButton>
-                                </Grid>
-                                <Grid item xs={8}>
-                                    <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                        Email Preview
-                                    </Typography>
-                                </Grid>
-
-                            </Grid>
-                        </Paper>
-
-                        <Grid container>
-                            <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
-
-                                {streetAddress2?
-
-                                    (
-                                        <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
-                                        Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
-                                        <u><b>To pay with check:</b></u><br />
-                                        - Must be made out to "{orgName}"<br />
-                                        - Mail to:<br /><br />
-                                        <b>{orgName}<br />
-                                            {streetAddress}<br />
-                                            {streetAddress2}<br />
-                                            {city}, {state} {zipcode}<br /></b> <br />
-                                        <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
-                                        - Click on the maroon box on the top right side that reads “give now”<br /><br />
-                                        - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                        - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
-                                        - The rest of the process consists of entering payment and other information<br /><br />
-
-                                        Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
-
-                                            Let us know if you have any questions! <br /><br />
-
-                                        <b>{orgName} Officer Team</b>
-
-                                        </Typography>
-                                    ) : (
-                                        <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
-                                            Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
-                                            <u><b>To pay with check:</b></u><br />
-                                            - Must be made out to "{orgName}"<br />
-                                            - Mail to:<br /><br />
-                                            <b>{orgName}<br />
-                                                {streetAddress}<br />
-                                                {city}, {state} {zipcode}<br /></b> <br />
-                                            <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
-                                            - Click on the maroon box on the top right side that reads “give now”<br /><br />
-                                            - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                            - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
-                                            - The rest of the process consists of entering payment and other information<br /><br />
-
-                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
-
-                                            Let us know if you have any questions! <br /><br />
-
-                                            <b>{orgName} Officer Team</b>
-
-                                        </Typography>
-                                    )}
-                            </Grid>
-                        </Grid>
-                    </Paper>
-
-
-
-                </Grid>
-
-                </> )}
-
-                {notRegistered && (
-                    <Grid container sx={{ backgroundColor:"#fff"}}>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                        </Grid>
-                        
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
-                            <Typography variant="h5">
-                                Your email is not associated with any student organization.
-                                Logout below and try again!
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
-                            <Button onClick={() => logout({ returnTo: logoutRoute })} variant="contained" size="large" color="primary" sx={{
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                                <Button onClick={() => logout({ returnTo: logoutRoute })} variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
@@ -682,27 +942,28 @@ const Dashboard = (props: Props) => {
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
                                 }}>Logout</Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                )}
+                    )}
 
-                {isLoading && (
-                    <Grid container sx={{ backgroundColor:"#fff" }}>
-                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                    {isLoading && (
+                        <Grid container sx={{ backgroundColor: "#fff" }}>
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                            </Grid>
+
+                            <Grid item xs={12} sx={{ maxHeight: theme.spacing(60), display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                                <Typography variant="h4">
+                                    ...
+                                </Typography>
+                            </Grid>
+
                         </Grid>
-                        
-                        <Grid item xs={12} sx={{ maxHeight: theme.spacing(60), display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
-                            <Typography variant="h4">
-                                ...
-                            </Typography>
-                        </Grid>
-                        
-                    </Grid>
-                )}
-            </Grid>
-            
-            
+                    )}
+                </Grid>
+            </div>
+
+
 
         </ThemeProvider>
 
