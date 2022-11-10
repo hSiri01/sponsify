@@ -14,6 +14,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { GetAllLevels } from '../../../utils/api-types';
+import MediaQuery from 'react-responsive'
+
 
 interface Props {  
 }
@@ -113,31 +115,103 @@ const EditLevels = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
+            <div style={{
+                backgroundColor: "#f3f3f3",
+                minWidth: "100vw",
+                minHeight: "100vh",
+            }}>
             
             <MenuBar />
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+            <Grid container>
+                    <MediaQuery minWidth={1200}>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(30),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10), }}  src= {logo} alt="Organization Logo" />}
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', maxHeight: theme.spacing(13), mb: theme.spacing(5), mr: theme.spacing(10)}}>
+                    <MediaQuery minWidth={500} maxWidth={1199}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(20),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery maxWidth={499}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(15),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                <Grid item xs={12} sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'right', 
+                    maxHeight: theme.spacing(13), 
+                    mb: theme.spacing(5), 
+                    mr: theme.spacing(10),
+                    [theme.breakpoints.down('md')]: {
+                        mt: theme.spacing(5),
+                    },
+                }}>
                     <Button onClick={handleOpenNewLevel} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
@@ -265,6 +339,7 @@ const EditLevels = (props: Props) => {
 
                 </Box>
             </Modal>
+            </div>
 
         </ThemeProvider>
 
