@@ -64,7 +64,7 @@ const PurchaseHistory = (props: Props) => {
             await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
                 .then((data2: GetAllSponsors) => {
-                    console.log(data2)
+                    // console.log(data2)
                     setSponsors(data2)
 
                     let total_sponsored = data2.reduce((accumulator, current) => accumulator + current.totalAmount, 0)
@@ -77,7 +77,7 @@ const PurchaseHistory = (props: Props) => {
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
                 .then((data3: GetAllLevels) => {
-                    console.log(data3)
+                    // console.log(data3)
                     setLevels(data3)
                 }
             )
@@ -251,7 +251,12 @@ const PurchaseHistory = (props: Props) => {
                                 <React.Fragment key={event._id}>
                                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                                        <Transaction company_name={sponsor.company}
+                                        <Transaction 
+                                            totalAmount={purchase.totalAmount}
+                                            purchaseId={purchase._id}
+                                            eventId={event._id}
+                                            sponsorId={sponsor._id}
+                                            company_name={sponsor.company}
                                             rep_name={sponsor.firstName + " " + sponsor.lastName}
                                             rep_email={sponsor.email}
                                             event_name={event.name}

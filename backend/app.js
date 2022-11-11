@@ -142,6 +142,31 @@ app.get('/get-all-levels/:org', (req, res) => {
         })
 })
 
+async function getLevelNameByAmount(org, amount) {
+    let level = []
+    await orgs.find({ name: org })
+    .select({ levels: 1 })
+    .exec().then((result) => {
+            const levels = result[0].levels
+            let currLevel = {}
+
+            for (let i = 0; i < levels.length; i++) {
+                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                    currLevel = levels[i]
+                }
+                else if (amount >= levels[i].minAmount && !levels[i].maxAmount) {
+                    currLevel = levels[i]
+                }
+            }
+
+            level = currLevel
+            
+    })
+
+    return level.name
+
+}
+
 app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ levels: 1 })
@@ -469,63 +494,41 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
 
 app.delete('/delete-event-from-purchase', async (req, res) => {
 
-    let purchaseId = req.body.purchaseId
-
-    // Remove event id
+    // Remove event id, decrease total amount of purchase
     await purchases.findOneAndUpdate(
-        { _id: purchaseId },
-        { $pull: { events: req.body.eventId}},
-        function (error, success) {
-            if (error) {
-                //console.log("Error in create-logo", error);
-                console.log('Error on updating')
-            } else {
-                console.log("Updated successfully")    
-            }
+        { _id: req.body.purchaseId },
+        { 
+            $pull: { events: req.body.eventId},
+            $inc: { totalAmount: -1*req.body.eventPrice }
         }
-    ).clone().then(console.log("Done")) 
+    ).then(console.log("Done")) 
 
     // Decrement number of spots taken from event
     // Remove sponsor
     await events.findOneAndUpdate(
         { _id: req.body.eventId },
-        { $inc: { spotsTaken: -1 }},
-        function (error, success) {
-            if (error) {
-                console.log('Error decrementing spots taken')
-            } else {
-                console.log('Spots taken updated successfully')
-            }
+        { 
+            $inc: { spotsTaken: -1 },
+            $pull: { sponsors: req.body.sponsorId}
         }
-    ).clone()
+    ).then("Dec spots taken & removed sponsor from event")
 
-    await events.findOneAndUpdate(
-        { _id: req.body.eventId },
-        { $pull: { sponsors: req.body.sponsorId}},
-        function (error, success) {
-            if (error) {
-                console.log('Error removing sponsor')
-            } else {
-                console.log('Removed sponsor successfully')
-            }
-        }
-    ).clone()
 
-    let empty = 0
+    // change sponsor level
+    var newLevel = await getLevelNameByAmount(req.body.name, req.body.totalAmount-req.body.eventPrice)
+    await sponsors.findOneAndUpdate(
+        { _id: req.body.sponsorId},
+        { sponsorLevel: newLevel }
+    ).then(console.log("Updated sponsor level"))
+    
     // check if events array from purchase is empty
-    await purchases.find({ _id: req.body.purchaseId }, { events: 1 }).clone()
+    await purchases.find({ _id: req.body.purchaseId }, { events: 1 })
         .exec(async(err, result) => {
             if (err) {
                 console.log("Error on get-all-sponsors, " + err)
             }
             
             if (result[0].events.length == 0) {
-                empty = 1
-
-                console.log("Deleting...")
-
-                // let sponsor = await purchases.find({ _id: req.body.purchaseId }, { sponsorID: 1}).clone().exec()
-                // console.log(sponsor[0].sponsorID)
 
                 // remove purchase
                 purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
@@ -547,19 +550,11 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
                     }
                     else {
                         console.log('Successfully deleted sponsor: \n' + purchase)
-                        // res.json({ status: '200' })
+                        res.json({ status: '200' })
                     }
                 })
             }
         })
-    
-    // if empty -> delete purchase and sponsor
-    if (empty == 1) {
-        console.log("Deleting...")
-        
-
-    
-    }
 
 
 })
@@ -591,10 +586,8 @@ app.get('/get-all-sponsors/:org', (req, res) => {
             let sponsors = []
             for (let i = 0; i < result.length; i++) 
             {
-                console.log(result[i])
                 sponsors.push({sponsorLevel:result[i].sponsorID.sponsorLevel, company:result[i].sponsorID.company, totalAmount:result[i].totalAmount, _id:result[i].sponsorID._id})
             }
-            console.log(sponsors)
             res.json(sponsors)
         })
 })
@@ -682,7 +675,7 @@ function generateNewCodes() {
         async.each(results, function (result, callback) {
             let lastUpdated = new Date(result.updatedAt)
             if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
-                console.log(result.updatedAt)
+                // console.log(result.updatedAt)
                 result.sponsorCode = generateRandom()
                 result.save()
             }
