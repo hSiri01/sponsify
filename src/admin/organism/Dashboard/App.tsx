@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
@@ -22,6 +22,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
 import {useNavigate} from "react-router-dom"
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 //import Logout from '@mui/icons-material/Logout';
 
 interface Props {
@@ -49,6 +56,10 @@ const Dashboard = (props: Props) => {
     const { logout } = useAuth0();
     const navigate = useNavigate();
 
+    const [generateGenerateCodePopup, setGenerateCodePopup] = React.useState(false)
+    const handlePopupOpen = () => {setGenerateCodePopup(true);}; 
+    const handlePopupClose = () => {setGenerateCodePopup(false);}; //TODO : generate new code + set setGenerateCodePopup false there
+        
     let date = new Date()
     let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
 
@@ -342,6 +353,48 @@ const Dashboard = (props: Props) => {
                                 </Typography>
 
                             </Grid>
+                            
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: "auto" }}>
+                                    <Button 
+                                    onClick={handlePopupOpen}
+                                    variant="contained" 
+                                    size="large" 
+                                    color="secondary" 
+                                sx={{
+                                    
+                                    color: 'white',
+                                    mb: theme.spacing(2),
+                                    backgroundColor: '#434343',
+                                    borderRadius: 0,
+                                    fontFamily: 'Oxygen',
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    "&:hover": {
+                                        color: 'white',
+                                        backgroundColor: '#367c63',
+                                    }
+                                    }}>Generate New Code</Button>
+                            </Grid>
+                            <Dialog
+                                open={generateGenerateCodePopup}
+                                keepMounted
+                                onClose={handlePopupClose}
+                                aria-describedby="alert-dialog-slide-description"
+                            >
+                                <DialogTitle>{"Are you sure you want to generate a new code?"}</DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                    Generating a new code will delete the current code. Click yes below if you wish to do this, and make sure to send the new code to your sponsors! If not, click no. 
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button onClick={handlePopupClose}>Yes</Button> 
+                                <Button onClick={handlePopupClose}>No</Button>
+                                
+                                </DialogActions>
+                            </Dialog>
 
                         </Grid>
                     </Paper>
