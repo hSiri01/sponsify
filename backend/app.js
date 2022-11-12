@@ -290,7 +290,7 @@ app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,
         date: req.body.date + 'T06:00:00.000+00:00',
-        endDate: req.body.endDate + 'T06:00:00.000+00:00',
+        endDate: req.body.endDate ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
         price: req.body.price,
         desc: req.body.desc,
         briefDesc: req.body.briefDesc,
@@ -414,7 +414,7 @@ app.post('/checkout-events', (req, res) => {
         lastName: req.body.lastName,
         company: req.body.company,
         email: req.body.email,
-        sponsorLevel: req.body.sponsorLevel
+        sponsorLevel: req.body.sponsorLevel ? req.body.sponsorLevel : 'Not qualified'
     })
 
     newSponsor.save((err) => {
