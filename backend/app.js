@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const requests = require('./request')
 const events = require('./event')
 const orgs = require('./org')
 const sponsors = require('./sponsor')
@@ -792,6 +793,25 @@ app.post("/send-checkout-email", (req, res) => {
     const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
     sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+})
+
+app.post('/create-request', (req, res) => {
+    const newRequest = new requests({
+        name: req.body.name,
+        email: req.body.email,
+        description: req.body.description
+    })
+
+    newRequest.save((err) => {
+        if (err) {
+            console.log('Error on create-request: ' + err)
+            res.json({ status: '500' })
+        }
+        else {
+            console.log('Created new request')
+            res.json({ status: '200' })
+        }
+    })
 })
 
 // The "catchall" handler: for any request that doesn't
