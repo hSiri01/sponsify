@@ -262,7 +262,7 @@ const PurchaseHistory = (props: Props) => {
                                             event_name={event.name}
                                             short_description={event.briefDesc}
                                             purchase_date={new Date(purchase.dateSponsored)}
-                                            price={event.price}
+                                            price={(event.price === -1 && purchase.donationAmount) ? purchase.donationAmount : event.price}
                                             date_start={new Date(event.date)}
                                             date_end={event.endDate ? new Date(event.endDate) : undefined}
                                         />

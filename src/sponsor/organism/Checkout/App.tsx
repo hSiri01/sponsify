@@ -94,17 +94,11 @@ const Checkout = (props: Props) => {
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
-            
-            let sendEvents = []
+
+            let donation = 0
             for (let i = 0; i < cart.length; i++) {
-                if (cart[i].name == 'General Donation') {
-                    sendEvents.push({
-                        id: cart[i].id,
-                        amount: cart[i].price
-                    })
-                }
-                else {
-                    sendEvents.push(cart[i])
+                if (cart[i].name === 'General Donation') {
+                    donation = cart[i].price
                 }
             }
 
@@ -120,8 +114,9 @@ const Checkout = (props: Props) => {
                     company: companyInput,
                     email: emailInput,
                     sponsorLevel: levelName,
-                    events: sendEvents,
+                    events: cart.map(item => item.id),
                     totalAmount: total,
+                    donationAmount: donation ? donation : undefined,
                     org: student_org_name
                 })
             })

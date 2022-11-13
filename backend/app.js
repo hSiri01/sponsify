@@ -425,13 +425,14 @@ app.post('/checkout-events', (req, res) => {
         else {
             console.log('New sponsor created, id: ' + newSponsor._id)
         }
-    });
+    })
 
     // create a purchase
     const purchase = new purchases({
         sponsorID: newSponsor._id,
         events: req.body.events,
         totalAmount: req.body.totalAmount,
+        donationAmount: req.body.donationAmount ? req.body.donationAmount : undefined,
         dateSponsored: Date.now(),
         org: req.body.org
     })
@@ -462,23 +463,9 @@ app.post('/checkout-events', (req, res) => {
     }
 
     res.json(resStatus)
-
-    // TODO: generate invoice and send follow-up email
 })
 
 app.get('/get-all-purchased-events/:org', (req, res) => {
-
-    // events.find({ spotsTaken: { $gt: 0 }, "sponsors.0": { $exists: true }, org: req.params.org })
-    //     .populate("sponsors")
-    //     .exec((err, result) => {
-    //         if (err) {
-    //             console.log("Error on get-all-purchased-events, " + err)
-    //         }
-    //         res.send(result)
-    //         console.log(result)
-    //     }
-    //     )
-
     purchases.find({org: req.params.org })
         .populate("events")
         .populate("sponsorID")
@@ -486,10 +473,10 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-purchased-events, " + err)
             }
+
             res.send(result)
             console.log(result)
-        }
-        )
+        })
 })
 
 app.delete('/delete-event-from-purchase', async (req, res) => {
