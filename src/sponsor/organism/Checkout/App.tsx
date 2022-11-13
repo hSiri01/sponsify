@@ -94,6 +94,14 @@ const Checkout = (props: Props) => {
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
+
+            let donation = 0
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].name === 'General Donation') {
+                    donation = cart[i].price
+                }
+            }
+
             fetch('/checkout-events', {
                 method: 'POST',
                 headers: {
@@ -108,16 +116,15 @@ const Checkout = (props: Props) => {
                     sponsorLevel: levelName,
                     events: cart.map(item => item.id),
                     totalAmount: total,
+                    donationAmount: donation ? donation : undefined,
                     org: student_org_name
                 })
             })
             navigate("/inbox")
         }
     };
-    const sendEmail = ()=>{
-        
-       
-        
+
+    const sendEmail = () => {
         setSubject( student_org_name + ' Sponsorship Information')
         fetch("/send-checkout-email",{
             method:'POST',
@@ -141,6 +148,8 @@ const Checkout = (props: Props) => {
             console.log("Error found",err)
         })
     }
+
+
     return (
         <ThemeProvider theme={theme}>
 

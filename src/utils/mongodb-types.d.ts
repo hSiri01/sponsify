@@ -55,6 +55,7 @@ export type Purchase = {
     sponsorID: Sponsor | number
     events: Event[] | number[]
     totalAmount: number
+    donationAmount: number | null
     dateSponsored: Date
     org: string
     __v: 0
