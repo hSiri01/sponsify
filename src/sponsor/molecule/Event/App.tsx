@@ -86,17 +86,16 @@ const Event = (props: OrgEvent) => {
         removeFromCart(props.id)
     };
     
-        const ref = React.useRef<HTMLDivElement>(null)
+    const ref = React.useRef<HTMLDivElement>(null)
+    const [height, setHeight] = React.useState(0);
+    useLayoutEffect(() => {
+        if (ref.current && ref.current.clientHeight) {
+            const height = ref.current.clientHeight;
+            setHeight(height);
+        }
         
-  const [height, setHeight] = React.useState(0);
-  useLayoutEffect(() => {
-    if (ref.current && ref.current.clientHeight) {
-        const height = ref.current.clientHeight;
-        setHeight(height);
-      }
-    
-  }, []);
-      
+    }, []);
+        
      
        
     
