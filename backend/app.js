@@ -814,6 +814,54 @@ app.post('/create-request', (req, res) => {
     })
 })
 
+app.delete('/delete-request', (req, res) => {
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot delete org request, no id in request body')
+        res.json({ status: '400' })
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            requests.findByIdAndRemove(id, (err, event) => {
+                if (err) {
+                    console.log('Error on delete-request: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully deleted request: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+        }
+        else {
+            console.log('Cannot delete request, invalid id in request body')
+            res.json({ status: '400' })
+        }
+    }
+})
+
+app.post("/request-to-org", async (req, res) => {
+    const newOrg = new orgs({
+        name: "new",
+        validAdmins: [req.body.email],
+        sponsorCode: generateRandom()
+    })
+
+    newOrg.save((err) => {
+        if (err) {
+            console.log('Error on creating new org: ' + err)
+        }
+        else {
+            console.log('Created new org from request')
+        }
+    })
+
+    requests.deleteOne({ email: req.body.email }).then(console.log("Deleted request"))
+
+
+})
+
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
