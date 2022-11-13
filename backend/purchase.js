@@ -8,10 +8,7 @@ const purchaseSchema = new mongoose.Schema({
         required: true
     },
     events: {
-        type: [{
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: 'event'
-        }],
+        type: [{}],
         required: true,
         validate: {
             validator: v => v.length > 0,

@@ -94,6 +94,20 @@ const Checkout = (props: Props) => {
 
     const submitCheckout = () => {
         if (cart.at(0) && checkoutReady ) {
+            
+            let sendEvents = []
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].name == 'General Donation') {
+                    sendEvents.push({
+                        id: cart[i].id,
+                        amount: cart[i].price
+                    })
+                }
+                else {
+                    sendEvents.push(cart[i])
+                }
+            }
+
             fetch('/checkout-events', {
                 method: 'POST',
                 headers: {
@@ -106,7 +120,7 @@ const Checkout = (props: Props) => {
                     company: companyInput,
                     email: emailInput,
                     sponsorLevel: levelName,
-                    events: cart.map(item => item.id),
+                    events: sendEvents,
                     totalAmount: total,
                     org: student_org_name
                 })
@@ -114,10 +128,8 @@ const Checkout = (props: Props) => {
             navigate("/inbox")
         }
     };
-    const sendEmail = ()=>{
-        
-       
-        
+
+    const sendEmail = () => {
         setSubject( student_org_name + ' Sponsorship Information')
         fetch("/send-checkout-email",{
             method:'POST',
@@ -141,6 +153,8 @@ const Checkout = (props: Props) => {
             console.log("Error found",err)
         })
     }
+
+
     return (
         <ThemeProvider theme={theme}>
 
