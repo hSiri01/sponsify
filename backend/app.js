@@ -701,6 +701,22 @@ app.get('/get-sponsor-code/:org', (req, res) => {
         })
 })
 
+app.put('/update-sponsor-code', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.org },
+        { sponsorCode: generateRandom() },
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Updated sponsorship level')
+            }
+        }
+    );
+})
+
 
 //Setting multer for storing uploaded files
 var storage = multer.diskStorage({
