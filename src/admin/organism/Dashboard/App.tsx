@@ -63,6 +63,22 @@ const Dashboard = (props: Props) => {
     let date = new Date()
     let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
 
+    const updateSponsorCode = () => {
+        fetch('/update-sponsor-code', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: orgName,
+            })
+        })
+            .then(() => {
+                handlePopupClose()
+                window.location.reload()})
+    }
+    
     if (isAuthenticated) {
         const getOrg = async() => { 
             if (user) {
@@ -390,7 +406,7 @@ const Dashboard = (props: Props) => {
                                 </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                <Button onClick={handlePopupClose}>Yes</Button> 
+                                <Button onClick={updateSponsorCode}>Yes</Button> 
                                 <Button onClick={handlePopupClose}>No</Button>
                                 
                                 </DialogActions>
