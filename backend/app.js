@@ -668,26 +668,6 @@ function generateRandom() {
     return result
 }
 
-
-function generateNewCodes() {
-    let date = new Date()
-    orgs.find(function(err, results) {
-        async.each(results, function (result, callback) {
-            let lastUpdated = new Date(result.updatedAt)
-            if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
-                // console.log(result.updatedAt)
-                result.sponsorCode = generateRandom()
-                result.save()
-            }
-            
-        });
-    });
-}
-
-// This makes the function run depending on the interval
-// Second parameter represents interval - 60000 ms = 1 min 
-myInterval = setInterval( generateNewCodes,   24 * 60 * 60000); 
-
 app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ sponsorCode: 1, updatedAt: 1 })
