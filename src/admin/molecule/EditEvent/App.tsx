@@ -218,24 +218,16 @@ const EditEvent = (props: Props) => {
                                             }}
                                             sx={{ maxWidth: theme.spacing(40) }} />
 
-                                        {(date_end) ?
-                                            (
-
-                                                <TextField
-                                                    id="date"
-                                                    label="Date End"
-                                                    type="date"
-                                                    value={endDateInput} 
-                                                    onChange={ev => setEndDateInput(ev.target.value)}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    sx={{ maxWidth: theme.spacing(40), mt:theme.spacing(4) }} />
-
-                                            ) : (
-                                                <></>
-                                            )
-                                        }
+                                        <TextField
+                                            id="date"
+                                            label="Date End"
+                                            type="date"
+                                            value={endDateInput !== dateInput ? endDateInput : ''} 
+                                            onChange={ev => setEndDateInput(ev.target.value)}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            sx={{ maxWidth: theme.spacing(40), mt:theme.spacing(4) }} />
 
                                     </Grid>
 
