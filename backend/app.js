@@ -177,7 +177,9 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
             else {
                 const amount = req.params.amount
                 const levels = result[0].levels
-                let currLevel = {}
+                let currLevel = {
+                    name: "",
+                }
 
                 for (let i = 0; i < levels.length; i++) {
                     if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {

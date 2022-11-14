@@ -182,7 +182,7 @@ const Events = (props: Props) => {
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', }}>
                                 <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
-                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName} Sponsor</Typography>
+                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName ? levelName + ' Sponsor' : 'Not yet qualified'}</Typography>
                                 </Paper>
                             </Grid>
 
@@ -349,7 +349,7 @@ const Events = (props: Props) => {
                         </Grid>
                         <Grid item>
                             <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(50), minWidth: theme.spacing(40), minHeight: theme.spacing(15), alignItems:"center" }} elevation={0}>
-                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName ? levelName + ' Sponsor' : 'Not yet qualified'}</Typography>
                             </Paper>
 
                         </Grid>
