@@ -57,32 +57,38 @@ const EditEvent = (props: Props) => {
     const [briefDescInput, setBriefDescInput] = React.useState(props.short_description);
     const [priceInput, setPriceInput] = React.useState(props.price);
     const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
+    const [totalSpotsError, setTotalSpotsError] = React.useState(false);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
     const [generalDonation, setGeneralDonation] = React.useState(props.name === 'General Donation');
 
     const updateEvent = () => {
-        fetch('/update-event', {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: nameInput,
-                id: id,
-                price: priceInput,
-                date: dateInput,
-                endDate: endDateInput,
-                desc: descInput,
-                briefDesc: briefDescInput,
-                totalSpots: generalDonation ? -1 : totalSpotsInput,
-                avgAttendance: avgAttendanceInput,
-                visible: checked
+        if (totalSpotsInput >= num_sponsored) {
+            fetch('/update-event', {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: nameInput,
+                    id: id,
+                    price: priceInput,
+                    date: dateInput,
+                    endDate: endDateInput,
+                    desc: descInput,
+                    briefDesc: briefDescInput,
+                    totalSpots: generalDonation ? -1 : totalSpotsInput,
+                    avgAttendance: avgAttendanceInput,
+                    visible: checked
+                })
             })
-        })
-            .then(() => {
-                handleCloseEvent()
-                window.location.reload()})
+                .then(() => {
+                    handleCloseEvent()
+                    window.location.reload()})
+        }
+        else {
+            setTotalSpotsError(true)
+        }
     };
 
     const deleteEvent = () => {
@@ -265,13 +271,15 @@ const EditEvent = (props: Props) => {
                                         />
                                         <TextField
                                             disabled={generalDonation}
+                                            error={totalSpotsError}
+                                            helperText={totalSpotsError ? "cannot be less than " + num_sponsored : ""}
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                            id="outlined-basic"
+                                            id={totalSpotsError ? "outlined-error-helper-text" : "outlined-basic"}
                                             label="Occurances"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             value={generalDonation ? '-' : totalSpotsInput}
-                                            onChange={ev => { if (num_sponsored <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) }}}
+                                            onChange={ev => setTotalSpotsInput(+ev.target.value)}
                                         />
                                         <TextField
                                             disabled
