@@ -57,7 +57,7 @@ const EditEvent = (props: Props) => {
     const [briefDescInput, setBriefDescInput] = React.useState(props.short_description);
     const [priceInput, setPriceInput] = React.useState(props.price);
     const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
-    const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
+    // const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
 
     const updateEvent = () => {
@@ -76,7 +76,6 @@ const EditEvent = (props: Props) => {
                 desc: descInput,
                 briefDesc: briefDescInput,
                 totalSpots: totalSpotsInput,
-                spotsTaken: spotsTakenInput,
                 avgAttendance: avgAttendanceInput,
                 visible: checked
             })
@@ -275,7 +274,7 @@ const EditEvent = (props: Props) => {
                                             value={priceInput}
                                             onChange={ev => setPriceInput(+ev.target.value)}
                                         />
-                                        <TextField 
+                                        <TextField
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id="outlined-basic"
                                             label="Occurances"
@@ -283,17 +282,16 @@ const EditEvent = (props: Props) => {
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             defaultValue={occurances}
                                             value={totalSpotsInput}
-                                            onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) }}}
+                                            onChange={ev => { if (num_sponsored <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) }}}
                                         />
-                                        <TextField 
+                                        <TextField
+                                            disabled
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id="outlined-basic"
                                             label="Sponsored"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            defaultValue={num_sponsored}
-                                            value={spotsTakenInput}
-                                            onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) }}}
+                                            value={num_sponsored}
                                         />
                                         <TextField
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}

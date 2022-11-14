@@ -92,7 +92,7 @@ const EditEvents = (props: Props) => {
     }, [student_org_name])
 
     const createEvent = () => {
-        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1 && spotsTakenInput <= totalSpotsInput) {
             fetch('/create-event', {
                 method: 'POST',
                 headers: {
@@ -121,6 +121,10 @@ const EditEvents = (props: Props) => {
         else {
             handleOpenNewQuestion()  // keep modal open
             // TODO: error handling
+
+            if (spotsTakenInput > totalSpotsInput) {
+
+            }
         }
     };
 
@@ -284,6 +288,7 @@ const EditEvents = (props: Props) => {
                        
                             <Grid item xs={3}>
                                 <TextField
+                                    required
                                     id="date"
                                     label="Date Start"
                                     type="date"
@@ -309,7 +314,8 @@ const EditEvents = (props: Props) => {
 
 
                             <Grid item xs={5}>
-                                <TextField 
+                                <TextField
+                                    required
                                     sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
                                     id="outlined-basic"
                                     label="Name"
@@ -327,6 +333,7 @@ const EditEvents = (props: Props) => {
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
                                 <TextField
+                                    required
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Price"
@@ -335,6 +342,7 @@ const EditEvents = (props: Props) => {
                                     value={priceInput > -1 ? priceInput : ''}
                                     onChange={ev => setPriceInput(+ev.target.value)} />
                                 <TextField
+                                    required
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Occurances"
