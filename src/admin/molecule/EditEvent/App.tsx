@@ -42,10 +42,13 @@ const EditEvent = (props: Props) => {
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
     const handleCloseEvent = () => setOpenEvent(false);
-
+    const [updateEventFunc, setUpdateEventFunc] = React.useState(false);
     const [checked, setChecked] = React.useState(visible);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
+        
+        setUpdateEventFunc(true)
+        
     };
 
     const [openConfirmation, setOpenConfirmation] = React.useState(false)
@@ -59,8 +62,9 @@ const EditEvent = (props: Props) => {
     const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
     const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
-
+    const isMounted = React.useRef(false);
     const updateEvent = () => {
+        
         fetch('/update-event', {
             method: 'PUT',
             headers: {
@@ -82,9 +86,24 @@ const EditEvent = (props: Props) => {
             })
         })
             .then(() => {
-                handleCloseEvent()
-                window.location.reload()})
+                if( openEvent){
+                    handleCloseEvent()
+                }
+                setUpdateEventFunc(false)
+                window.location.reload()
+                })
+
+                
     };
+    //do not want to run this on initial render, only if the checked state changes
+    React.useEffect(() => {
+        if( updateEventFunc == true){
+            console.log(updateEventFunc)
+            updateEvent();
+        }
+        
+
+      }, [updateEventFunc]); 
 
     const deleteEvent = () => {
         fetch('/delete-event', {
