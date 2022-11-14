@@ -132,11 +132,10 @@ const EditEvents = (props: Props) => {
         else {
             handleOpenNewQuestion()  // keep modal open
 
-            setTotalSpotsError(spotsTakenInput > totalSpotsInput)
+            setTotalSpotsError(totalSpotsInput === -1 || spotsTakenInput > totalSpotsInput)
             setNameError(!nameInput)
             setPriceError(priceInput === -1)
             setDateError(!dateInput)
-            setTotalSpotsError(totalSpotsInput === -1)
         }
     };
 
@@ -359,7 +358,7 @@ const EditEvents = (props: Props) => {
                                 <TextField
                                     required
                                     error={totalSpotsError}
-                                    helperText={totalSpotsError && spotsTakenInput > totalSpotsInput ? "cannot be less than " + spotsTakenInput : ""}
+                                    helperText={totalSpotsError && spotsTakenInput > totalSpotsInput ? "Cannot be less than " + spotsTakenInput : ""}
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Occurances"
