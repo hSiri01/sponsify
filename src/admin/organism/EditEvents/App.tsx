@@ -25,7 +25,13 @@ const EditEvents = (props: Props) => {
 
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
-    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
+    const handleCloseNewQuestion = () => {
+        setNameError(false)
+        setPriceError(false)
+        setDateError(false)
+        setTotalSpotsError(false)
+        setOpenNewQuestion(false)
+    }
 
     const [checked, setChecked] = React.useState(true);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +47,11 @@ const EditEvents = (props: Props) => {
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(-1);
     const [dateInput, setDateInput] = React.useState('');
     const [endDateInput, setEndDateInput] = React.useState('');
+
+    const [nameError, setNameError] = React.useState(false);
+    const [priceError, setPriceError] = React.useState(false);
+    const [dateError, setDateError] = React.useState(false);
+    const [totalSpotsError, setTotalSpotsError] = React.useState(false);
 
     const [events, setEvents] = React.useState<GetAllEvents>([]);
     const [logo, setLogo] = React.useState("")
@@ -92,7 +103,7 @@ const EditEvents = (props: Props) => {
     }, [student_org_name])
 
     const createEvent = () => {
-        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1 && spotsTakenInput <= totalSpotsInput) {
             fetch('/create-event', {
                 method: 'POST',
                 headers: {
@@ -103,7 +114,7 @@ const EditEvents = (props: Props) => {
                     name: nameInput,
                     price: priceInput,
                     date: dateInput ? dateInput : undefined,
-                    endDate: endDateInput ? endDateInput : undefined,
+                    endDate: (endDateInput && endDateInput !== dateInput) ? endDateInput : undefined,
                     desc: descInput,
                     briefDesc: briefDescInput,
                     totalSpots: totalSpotsInput,
@@ -120,7 +131,12 @@ const EditEvents = (props: Props) => {
         }
         else {
             handleOpenNewQuestion()  // keep modal open
-            // TODO: error handling
+
+            setTotalSpotsError(spotsTakenInput > totalSpotsInput)
+            setNameError(!nameInput)
+            setPriceError(priceInput === -1)
+            setDateError(!dateInput)
+            setTotalSpotsError(totalSpotsInput === -1)
         }
     };
 
@@ -218,7 +234,7 @@ const EditEvents = (props: Props) => {
                     {
                     events.map((event: any) =>
                     <>
-                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid item key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             <EditEvent 
                                 name={event.name}
@@ -227,7 +243,7 @@ const EditEvents = (props: Props) => {
                                 long_description={event.desc}
                                 avg_attendance={event.avgAttendance}
                                 num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots > -1 ? event.totalSpots : undefined}
+                                occurances={event.totalSpots}
                                 price={event.price}
                                 date_start={new Date(event.date)}
                                 date_end={event.endDate ? new Date(event.endDate) : undefined}
@@ -284,6 +300,8 @@ const EditEvents = (props: Props) => {
                        
                             <Grid item xs={3}>
                                 <TextField
+                                    required
+                                    error={dateError}
                                     id="date"
                                     label="Date Start"
                                     type="date"
@@ -309,7 +327,9 @@ const EditEvents = (props: Props) => {
 
 
                             <Grid item xs={5}>
-                                <TextField 
+                                <TextField
+                                    required
+                                    error={nameError}
                                     sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
                                     id="outlined-basic"
                                     label="Name"
@@ -327,6 +347,8 @@ const EditEvents = (props: Props) => {
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
                                 <TextField
+                                    required
+                                    error={priceError}
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Price"
@@ -335,6 +357,9 @@ const EditEvents = (props: Props) => {
                                     value={priceInput > -1 ? priceInput : ''}
                                     onChange={ev => setPriceInput(+ev.target.value)} />
                                 <TextField
+                                    required
+                                    error={totalSpotsError}
+                                    helperText={totalSpotsError && spotsTakenInput > totalSpotsInput ? "cannot be less than " + spotsTakenInput : ""}
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Occurances"
