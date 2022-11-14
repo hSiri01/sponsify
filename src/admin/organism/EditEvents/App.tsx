@@ -103,7 +103,7 @@ const EditEvents = (props: Props) => {
                     name: nameInput,
                     price: priceInput,
                     date: dateInput ? dateInput : undefined,
-                    endDate: endDateInput ? endDateInput : undefined,
+                    endDate: (endDateInput && endDateInput !== dateInput) ? endDateInput : undefined,
                     desc: descInput,
                     briefDesc: briefDescInput,
                     totalSpots: totalSpotsInput,
