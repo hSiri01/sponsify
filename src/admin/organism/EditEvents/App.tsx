@@ -222,7 +222,7 @@ const EditEvents = (props: Props) => {
                     {
                     events.map((event: any) =>
                     <>
-                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid item key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             <EditEvent 
                                 name={event.name}
@@ -231,7 +231,7 @@ const EditEvents = (props: Props) => {
                                 long_description={event.desc}
                                 avg_attendance={event.avgAttendance}
                                 num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots > -1 ? event.totalSpots : undefined}
+                                occurances={event.totalSpots}
                                 price={event.price}
                                 date_start={new Date(event.date)}
                                 date_end={event.endDate ? new Date(event.endDate) : undefined}
