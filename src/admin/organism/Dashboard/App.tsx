@@ -44,7 +44,6 @@ const Dashboard = (props: Props) => {
     const [orgName, setOrgName] = React.useState("")
     const [orgShortName, setOrgShortName] = React.useState("")
     const [sponsorCode, setSponsorCode] = React.useState("")
-    const [validUntilDate, setValidUntilDate] = React.useState(new Date())
     const [fundName, setFundName] = React.useState("")
     const [streetAddress, setStreetAddress] = React.useState("")
     const [streetAddress2, setStreetAddress2] = React.useState("")
@@ -60,9 +59,22 @@ const Dashboard = (props: Props) => {
     const handlePopupOpen = () => {setGenerateCodePopup(true);}; 
     const handlePopupClose = () => {setGenerateCodePopup(false);}; //TODO : generate new code + set setGenerateCodePopup false there
         
-    let date = new Date()
-    let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
-
+    const updateSponsorCode = () => {
+        fetch('/update-sponsor-code', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: orgName,
+            })
+        })
+            .then(() => {
+                handlePopupClose()
+                window.location.reload()})
+    }
+    
     if (isAuthenticated) {
         const getOrg = async() => { 
             if (user) {
@@ -338,14 +350,6 @@ const Dashboard = (props: Props) => {
 
                             </Grid>
 
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
-
-                                <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                    Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
-                                </Typography>
-
-                            </Grid>
-
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                                 <Typography variant="body1" sx={{ fontWeight: 700, mt: theme.spacing(2), mb: theme.spacing(3) }}>
@@ -390,7 +394,7 @@ const Dashboard = (props: Props) => {
                                 </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
-                                <Button onClick={handlePopupClose}>Yes</Button> 
+                                <Button onClick={updateSponsorCode}>Yes</Button> 
                                 <Button onClick={handlePopupClose}>No</Button>
                                 
                                 </DialogActions>
