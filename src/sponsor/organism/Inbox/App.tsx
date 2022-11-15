@@ -45,7 +45,7 @@ const Inbox = (props: Props) => {
 
                 <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
                     <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
+                        <div>{'\u00D7'}</div>
                     </Typography>
                 </Grid>
 
