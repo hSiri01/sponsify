@@ -15,6 +15,11 @@ import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { GetAllEvents } from '../../../utils/api-types';
 
 
@@ -32,6 +37,10 @@ const EditEvents = (props: Props) => {
         setTotalSpotsError(false)
         setOpenNewQuestion(false)
     }
+
+    const [resetEvents, setResetEvents] = React.useState(false);
+    const handleOpenResetEvents = () => setResetEvents(true);
+    const handleCloseResetEvents = () => setResetEvents(false);
 
     const [checked, setChecked] = React.useState(true);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,6 +148,23 @@ const EditEvents = (props: Props) => {
         }
     };
 
+    const handleReset = async() => {
+        await fetch('/reset-events', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: student_org_name
+            })
+        })
+            .then(() => {
+                handleCloseResetEvents()
+                window.location.reload()
+            })
+    };
+
     return (
 
         <ThemeProvider theme={theme}>
@@ -167,21 +193,57 @@ const EditEvents = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6),}}>
-                    <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
-                        borderRadius: 0,
-                        pt: theme.spacing(3),
-                        pb: theme.spacing(3),
-                        pl: theme.spacing(8),
-                        pr: theme.spacing(8),
-                        ml: theme.spacing(5),
-                    }}>Create Event</Button>
+                <Grid container xs={12} sx={{ display: 'flex', m: theme.spacing(6) }}>
 
+                    <Grid item>
+                        <Button onClick={handleOpenResetEvents} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(22),
+                        }}>Reset</Button>
+                    </Grid>
+
+                    <Dialog
+                        open={resetEvents}
+                        keepMounted
+                        onClose={handleCloseResetEvents}
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <DialogTitle>{"Reset all events?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                This will set the number of spots that are sponsored to 0 for <b>all events</b>.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseResetEvents}>Cancel</Button> 
+                            <Button onClick={handleResete}>Continue</Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Grid item xs>
+                        <Grid container direction="row-reverse">
+                            <Grid item>
+                                <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    mr: theme.spacing(24),
+                                }}>Add Event</Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    
                 </Grid>
 
 
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(8) }}>
                     <Typography variant="h4">
                         {student_org_short_name} Events
                     </Typography>
@@ -190,6 +252,7 @@ const EditEvents = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
                     <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
+
                             <Grid item xs={1}>
                                 <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5) }}>
                                     DELETE

@@ -364,6 +364,22 @@ app.put('/update-event', (req, res) => {
     }
 })
 
+app.put('/reset-events', async(req, res) => {
+    let returnStatus = '200'
+
+    const update = await events.updateMany(
+        { org: req.body.org, spotsTaken: { $gt : 0 } },
+        { $set: { spotsTaken: 0 } }
+    )
+
+    // console.log(update.modifiedCount)
+
+    if (!update.acknowledged || update.modifiedCount < 1)
+        returnStatus = '400'
+    
+    res.json({ status: returnStatus })
+})
+
 app.delete('/delete-event', (req, res) => {
     const id = req.body.id
 
