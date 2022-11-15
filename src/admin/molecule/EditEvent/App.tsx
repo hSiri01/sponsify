@@ -272,7 +272,7 @@ const EditEvent = (props: Props) => {
                                         <TextField
                                             disabled={generalDonation}
                                             error={totalSpotsError}
-                                            helperText={totalSpotsError ? "cannot be less than " + num_sponsored : ""}
+                                            helperText={totalSpotsError ? "Cannot be less than " + num_sponsored : ""}
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id={totalSpotsError ? "outlined-error-helper-text" : "outlined-basic"}
                                             label="Occurances"
