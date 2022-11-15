@@ -220,7 +220,7 @@ const EditEvents = (props: Props) => {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleCloseResetEvents}>Cancel</Button> 
-                            <Button onClick={handleResete}>Continue</Button>
+                            <Button onClick={handleReset}>Continue</Button>
                         </DialogActions>
                     </Dialog>
 
