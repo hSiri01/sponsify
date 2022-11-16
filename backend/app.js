@@ -796,10 +796,11 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
-        text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request for ' + orgName + ' has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        // html: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
         
         }
+        console.log(msg)
         sgMail
         .send(msg)
         .then((response) => {
@@ -808,7 +809,7 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
             console.log(response[0].headers)
         })
         .catch((error) => {
-            console.error(error)
+            console.error(error.response.body)
         })
 }
 
@@ -819,7 +820,10 @@ app.post("/send-checkout-email", (req, res) => {
 })
 
 app.post("/send-request-created-email", (req, res) => {
-    sendRequestCreatedEmail(req.body.email, "sabrinapena@tamu.edu", req.body.subject, req.body.name);
+    console.log(req.body)
+    const { email, name } = req.body
+    let subject = "Sponsify New User Request - " + name
+    sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
 })
 
 app.post('/create-request', (req, res) => {

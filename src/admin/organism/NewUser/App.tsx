@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Button from '@mui/material/Button';
 import Approval from '../../../assets/images/graphics/approval.svg';
+import {useNavigate} from "react-router-dom"
 
 
 
@@ -17,13 +18,13 @@ interface Props {
 
 const NewUser = (props: Props) => {
 
+    const navigate = useNavigate();
     const [name, setName] = React.useState("")
     const [email, setEmail] = React.useState("")
     const [desc, setDesc] = React.useState("")
     const [subject, setSubject] = React.useState("")
 
     const sendEmail = ()=>{
-        setSubject( 'Sponsify New User Request - ' + name)
         fetch("/send-request-created-email",{
             method:'POST',
             headers:{
@@ -31,7 +32,6 @@ const NewUser = (props: Props) => {
         },
         body:JSON.stringify({
             email,
-            subject,
             name
         })
         }).catch(err=>{
@@ -53,10 +53,11 @@ const NewUser = (props: Props) => {
             })
         })
             .then(() => {
+                sendEmail()
                 // window.location.reload()
             })
         
-        sendEmail()
+        navigate("/request-inbox")
         
     }
     
@@ -141,7 +142,7 @@ const NewUser = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(6), }}>
                     <Button type="submit"  value="Upload" variant="contained" size="large" color="primary" 
-                    onClick={createOrgRequest}
+                    onClick={createOrgRequest }
                     sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
