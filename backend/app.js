@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const requests = require('./request')
 const events = require('./event')
 const orgs = require('./org')
 const sponsors = require('./sponsor')
@@ -644,7 +645,8 @@ app.get('/get-org-from-email/:email', (req, res) => {
                             logo: org.logoImage,
                             address: org.address,
                             sponsorCode: org.sponsorCode,
-                            fundName: org.fundName
+                            fundName: org.fundName,
+                            admin: org.admin
                         }
 
                         // console.log(result)
@@ -789,10 +791,171 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             console.error(error)
         })
 }
+
+function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
 app.post("/send-checkout-email", (req, res) => {
     const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
     sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+})
+
+app.post("/send-request-created-email", (req, res) => {
+    console.log(req.body)
+    const { email, name } = req.body
+    let subject = "Sponsify New User Request - " + name
+    sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
+})
+
+app.get('/get-requests', (req, res) => {
+    requests.find()
+    .exec((err, result) => {
+        if (err) {
+            console.log("Error on get-requests, " + err)
+        }
+        else {
+            res.send(result)
+        }
+    }
+    )
+})
+
+app.post('/create-request', (req, res) => {
+    const newRequest = new requests({
+        name: req.body.name,
+        email: req.body.email,
+        description: req.body.description
+    })
+
+    newRequest.save((err) => {
+        if (err) {
+            console.log('Error on create-request: ' + err)
+            res.json({ status: '500' })
+        }
+        else {
+            console.log('Created new request')
+            res.json({ status: '200' })
+        }
+    })
+})
+
+function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
+app.delete('/delete-request', (req, res) => {
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot delete org request, no id in request body')
+        res.json({ status: '400' })
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            requests.findByIdAndRemove(id, (err, event) => {
+                if (err) {
+                    console.log('Error on delete-request: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully deleted request: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+
+            sendAccessDeniedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Denied")
+
+        }
+        else {
+            console.log('Cannot delete request, invalid id in request body')
+            res.json({ status: '400' })
+        }
+    }
+})
+
+function sendAccessGrantedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
+app.post("/request-to-org", async (req, res) => {
+    const newOrg = new orgs({
+        name: "new",
+        validAdmins: [req.body.email],
+        sponsorCode: generateRandom()
+    })
+
+    newOrg.save((err) => {
+        if (err) {
+            console.log('Error on creating new org: ' + err)
+        }
+        else {
+            console.log('Created new org from request')
+        }
+    })
+
+    sendAccessGrantedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Granted!", req.body.name)
+    requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
+
+
 })
 
 // The "catchall" handler: for any request that doesn't

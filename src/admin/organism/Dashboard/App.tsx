@@ -28,6 +28,9 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 //import Logout from '@mui/icons-material/Logout';
 
@@ -50,6 +53,7 @@ const Dashboard = (props: Props) => {
     const [city, setCity] = React.useState("")
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
+    const [admin, setAdmin] = React.useState(false)
     const logoutRoute = window.location.hostname === "localhost" ? 
     "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
     const { logout } = useAuth0();
@@ -104,6 +108,7 @@ const Dashboard = (props: Props) => {
                             setCity(data.address.city)
                             setState(data.address.state)
                             setZipcode(data.address.zip)
+                            setAdmin(data.admin)
 
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
@@ -630,6 +635,72 @@ const Dashboard = (props: Props) => {
                             </Grid>
                         </Paper>
                     </Link>
+                    {admin ? (
+                        <Link href={'/account-requests'} underline='none'>
+                            <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
+                                    <Grid container>
+                                        <Grid item xs={2}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                sx={{ mr: 2, color: 'black' }}
+                                            >
+                                                <GppMaybeIcon/>
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                Account Requests
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                {'>'}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container>
+                                    <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            color="secondary"
+                                            sx={{ mr: 2, ml: theme.spacing(2) }}
+                                        >
+                                            <ManageAccountsIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                        <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                            View all account requests
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            color="secondary"
+                                            sx={{ mr: 2, ml: theme.spacing(2) }}
+                                        >
+                                            <GroupAddIcon/>
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                        <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                            Grant/Deny Access
+                                        </Typography>
+                                    </Grid>
+
+
+
+                                </Grid>
+                            </Paper>
+                        </Link>
+                    ) : <></>} 
 
                 </Grid>
 
