@@ -12,6 +12,11 @@ const requestSchema = new mongoose.Schema({
     description: {
         type: String,
         default: ""
+    },
+    date: {
+        type: Date,
+        required: true,
+        default: () => Date.now()
     }
 })
 

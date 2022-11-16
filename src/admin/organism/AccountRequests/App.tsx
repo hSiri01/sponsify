@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/system';
 import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
 import Request from '../../molecule/Request/App'
+import { GetRequests } from '../../../utils/api-types';
 
 
 
@@ -17,6 +18,8 @@ const AccountRequests = (props: Props) => {
 
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [logo, setLogo] = React.useState("")
+
+    const [requests, setRequests] =  React.useState<GetRequests>([])
     
     React.useEffect(() => {
         const fetchLogo = async() => {
@@ -30,11 +33,22 @@ const AccountRequests = (props: Props) => {
            }
                
         }
+
+        const getRequests = async() => {
+            try {
+                await fetch("/get-requests")
+                .then((res) => res.json())
+                .then((data1) => setRequests(data1))
+            }
+            catch(e) {
+                console.log("Error fetching requests", (e))
+            }
+        }
         
         fetchLogo() 
+        getRequests()
 
     },[])
-
 
     return (
 
@@ -117,31 +131,22 @@ const AccountRequests = (props: Props) => {
                     </Paper>
                 </Grid>
 
-
-
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
-                    <Request 
-                        org_name="TAMUHack"
-                        org_email="president@tamuhack.com"
-                        purpose='Use the system to track donations toward our student organization. We have been using a manual system so far and want to switch to an automated solution.'
-                        date={new Date(2022, 11, 14)}
-                        />  
-                </Grid>
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Request
-                        org_name="MAES"
-                        org_email="president@maes.com"
-                        purpose='Use the system to track donations toward our student organization. We have been using a manual system so far and want to switch to an automated solution.'
-                        date={new Date(2022, 11, 14)}
-                    />
-                </Grid>
+                <>
+                { requests.map((request) => 
+                    <React.Fragment key={request._id}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+                            <Request 
+                                org_name={request.name}
+                                org_email={request.email}
+                                purpose={request.description}
+                                date={new Date(request.date)}
+                                />  
+                        </Grid>
+                    </React.Fragment >
+                )}
+                </>
 
                
-                
-
-
             </Grid>
             </div>
 

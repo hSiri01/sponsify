@@ -640,7 +640,8 @@ app.get('/get-org-from-email/:email', (req, res) => {
                             logo: org.logoImage,
                             address: org.address,
                             sponsorCode: org.sponsorCode,
-                            fundName: org.fundName
+                            fundName: org.fundName,
+                            admin: org.admin
                         }
 
                         // console.log(result)
@@ -824,6 +825,19 @@ app.post("/send-request-created-email", (req, res) => {
     const { email, name } = req.body
     let subject = "Sponsify New User Request - " + name
     sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
+})
+
+app.get('/get-requests', (req, res) => {
+    requests.find()
+    .exec((err, result) => {
+        if (err) {
+            console.log("Error on get-requests, " + err)
+        }
+        else {
+            res.send(result)
+        }
+    }
+    )
 })
 
 app.post('/create-request', (req, res) => {

@@ -54,6 +54,7 @@ const Dashboard = (props: Props) => {
     const [city, setCity] = React.useState("")
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
+    const [admin, setAdmin] = React.useState(false)
     const logoutRoute = window.location.hostname === "localhost" ? 
     "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
     const { logout } = useAuth0();
@@ -95,6 +96,7 @@ const Dashboard = (props: Props) => {
                             setCity(data.address.city)
                             setState(data.address.state)
                             setZipcode(data.address.zip)
+                            setAdmin(data.admin)
 
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
@@ -629,7 +631,7 @@ const Dashboard = (props: Props) => {
                             </Grid>
                         </Paper>
                     </Link>
-
+                    {admin ? (
                         <Link href={'/account-requests'} underline='none'>
                             <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
                                 <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
@@ -694,6 +696,7 @@ const Dashboard = (props: Props) => {
                                 </Grid>
                             </Paper>
                         </Link>
+                    ) : <></>} 
 
                 </Grid>
 
