@@ -789,10 +789,37 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             console.error(error)
         })
 }
+
+function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request for ' + orgName + ' has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        // html: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
+
 app.post("/send-checkout-email", (req, res) => {
     const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
     sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+})
+
+app.post("/send-request-created-email", (req, res) => {
+    sendRequestCreatedEmail(req.body.email, "sabrinapena@tamu.edu", req.body.subject, req.body.name);
 })
 
 app.post('/create-request', (req, res) => {

@@ -20,8 +20,26 @@ const NewUser = (props: Props) => {
     const [name, setName] = React.useState("")
     const [email, setEmail] = React.useState("")
     const [desc, setDesc] = React.useState("")
+    const [subject, setSubject] = React.useState("")
 
-    const createOrgRequest = () => {
+    const sendEmail = ()=>{
+        setSubject( 'Sponsify New User Request - ' + name)
+        fetch("/send-request-created-email",{
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            email,
+            subject,
+            name
+        })
+        }).catch(err=>{
+            console.log("Error found",err)
+        })
+    }
+
+    const createOrgRequest = async () => {
         fetch('/create-request', {
             method: 'POST',
             headers: {
@@ -35,7 +53,11 @@ const NewUser = (props: Props) => {
             })
         })
             .then(() => {
-                window.location.reload()})
+                // window.location.reload()
+            })
+        
+        sendEmail()
+        
     }
     
     return (
