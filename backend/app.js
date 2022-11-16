@@ -798,7 +798,7 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
         
         }
         console.log(msg)
