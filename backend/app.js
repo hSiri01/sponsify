@@ -859,6 +859,29 @@ app.post('/create-request', (req, res) => {
     })
 })
 
+function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
 app.delete('/delete-request', (req, res) => {
     const id = req.body.id
 
@@ -878,6 +901,9 @@ app.delete('/delete-request', (req, res) => {
                     res.json({ status: '200' })
                 }
             })
+
+            sendAccessDeniedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Denied")
+
         }
         else {
             console.log('Cannot delete request, invalid id in request body')
@@ -885,6 +911,29 @@ app.delete('/delete-request', (req, res) => {
         }
     }
 })
+
+function sendAccessGrantedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
 
 app.post("/request-to-org", async (req, res) => {
     const newOrg = new orgs({
@@ -902,7 +951,8 @@ app.post("/request-to-org", async (req, res) => {
         }
     })
 
-    requests.deleteOne({ email: req.body.email }).then(console.log("Deleted request"))
+    sendAccessGrantedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Granted!", req.body.name)
+    requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
 
 
 })

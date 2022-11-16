@@ -14,6 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 
 interface Props {
+    _id: string
     org_name: string,
     org_email: string, 
     date: Date,
@@ -22,7 +23,41 @@ interface Props {
 
 const Request = (props: Props) => {
 
-    const {org_name, org_email, date, purpose} = props
+    const {_id, org_name, org_email, date, purpose} = props
+
+    const grantAccess = () => {
+        fetch('/request-to-org', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: org_email,
+                name: org_name,
+                id: _id
+            })
+        })
+        
+        console.log("Access granted")
+        
+    }
+
+    const denyAccess = () => {
+        fetch('/delete-request', {
+            method: 'DELETE',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: org_email,
+                id: _id
+            })
+        })
+        
+        console.log("Access denied")
+    }
    
     
     return (
@@ -48,13 +83,13 @@ const Request = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
-                                <IconButton color="primary" aria-label="Enable" sx={{ ml: theme.spacing(10), mb: theme.spacing(2), }}>
+                                <IconButton onClick={grantAccess} color="primary" aria-label="Enable" sx={{ ml: theme.spacing(10), mb: theme.spacing(2), }}>
                                     <CheckIcon />
                                 </IconButton>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
-                                <IconButton color="secondary" aria-label="Deny" sx={{ mb: theme.spacing(2),  color: "#ef5350" }}>
+                                <IconButton onClick={denyAccess} color="secondary" aria-label="Deny" sx={{ mb: theme.spacing(2),  color: "#ef5350" }}>
                                     <ClearIcon />
                                 </IconButton>
                             </Grid>

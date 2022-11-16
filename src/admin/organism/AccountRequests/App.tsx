@@ -48,7 +48,7 @@ const AccountRequests = (props: Props) => {
         fetchLogo() 
         getRequests()
 
-    },[])
+    },[requests])
 
     return (
 
@@ -136,6 +136,7 @@ const AccountRequests = (props: Props) => {
                     <React.Fragment key={request._id}>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
                             <Request 
+                                _id={request._id}
                                 org_name={request.name}
                                 org_email={request.email}
                                 purpose={request.description}
