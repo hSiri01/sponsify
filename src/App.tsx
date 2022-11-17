@@ -19,7 +19,7 @@ import EditLevels from './admin/organism/EditLevels/App';
 import BasicInfo from './admin/organism/BasicInfo/App';
 
 import AdminLogin from './admin/organism/Home/App';
-import CheckBackLater from './sponsor/organism/HowItWorksCopy/App'
+import CheckBackLater from './sponsor/organism/CheckBackLater/App'
 
 import {
   BrowserRouter,

@@ -14,6 +14,9 @@ interface Props {
 const Levels = (props: Props) => {
 
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+
+    const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
     const [logo, setLogo] = React.useState("")
     const [levels, setLevels] = React.useState<GetAllLevels>([])
 
@@ -34,10 +37,14 @@ const Levels = (props: Props) => {
     React.useEffect(() => {
         const fetchLogo = async() => {
            try{
-            //console.log(student_org_name)
+             //console.log(student_org_name)
+             //console.log(student_org_short_name)
              await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data1) => setLogo(data1.logoImage))
+                .then((data1) => {
+                    setLogo(data1.logoImage)
+                    setOrgShortName(data1.shortName)
+                })
            }
            catch(e){
             console.log("Error fetching logo ",(e))
@@ -68,7 +75,9 @@ const Levels = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    wip here <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo ? logo : orgShortName} alt="Sponsify logo" />
+                    
+                
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

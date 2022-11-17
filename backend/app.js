@@ -48,7 +48,8 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error!!\n'))
 
 app.get('/', (req, res) => {
-    res.send('Hello! This is the default route for the backend server.')
+    res.send('Hello! This is the default route for the backend server.');
+    //res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
 })
 
 app.get('/get-all-FAQ/:org', (req, res) => {
@@ -56,7 +57,8 @@ app.get('/get-all-FAQ/:org', (req, res) => {
         .select({ FAQ: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-all-FAQ, " + err)
+                console.log("Error on get-all-FAQ, " + err);
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.send(result[0].FAQ)
@@ -80,7 +82,8 @@ app.put('/update-FAQ', (req, res) => {
         function (error, success) {
             if (error) {
                 console.log("Error", error);
-                res.send('Error')
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+                //res.send('Error')
             } else {
                 console.log(success);
                 res.send('Updated FAQ')
@@ -104,7 +107,8 @@ app.post('/create-FAQ', (req, res) => {
         function (error, success) {
             if (error) {
                 console.log(error);
-                res.send('Error')
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+                //res.send('Error')
             } else {
                 console.log(success);
                 res.send('Created FAQ')
@@ -121,7 +125,8 @@ app.delete('/delete-FAQ', (req, res) => {
         { timestamps: false },
         function (error, success) {
             if (error) {
-                res.send("Error")
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+                //res.send("Error")
             } else {
                 res.send("Deleted FAQ")
             }
@@ -135,6 +140,7 @@ app.get('/get-all-levels/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-levels, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.json(result[0].levels)
@@ -148,6 +154,7 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-level-by-amount, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 const amount = req.params.amount
@@ -186,7 +193,8 @@ app.put('/update-level', (req, res) => {
         function (error, success) {
             if (error) {
                 console.log("Error", error);
-                res.send('Error')
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+                //res.send('Error')
             } else {
                 console.log(success);
                 res.send('Updated sponsorship level')
@@ -211,7 +219,8 @@ app.post('/create-level', async (req, res) => {
         function (error, success) {
             if (error) {
                 console.log(error);
-                res.send('Error')
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+                //res.send('Error')
             } else {
                 console.log(success);
                 res.send('Created sponsorship level')
@@ -227,7 +236,8 @@ app.delete('/delete-level', (req, res) => {
         { timestamps: false },
         function (error, success) {
             if (error) {
-                res.send("Error")
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+                //res.send("Error")
             } else {
                 res.send("Deleted level")
             }
@@ -240,6 +250,7 @@ app.get('/get-enabled-events/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-enabled-events, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.send(result)
@@ -253,6 +264,7 @@ app.get('/get-all-events/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-events, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.send(result)
@@ -280,6 +292,7 @@ app.post('/create-event', async (req, res) => {
     newEvent.save((err) => {
         if (err) {
             console.log('Error on create-event: ' + err)
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             res.json({ status: '500' })
         }
         else {
@@ -317,6 +330,7 @@ app.put('/update-event', (req, res) => {
 
     if (!id) {
         console.log('Cannot update event, no id in request body')
+        res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
         res.json({ status: '400' })
     }
     else {
@@ -342,6 +356,7 @@ app.delete('/delete-event', (req, res) => {
 
     if (!id) {
         console.log('Cannot delete event, no id in request body')
+        res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
         res.json({ status: '400' })
     }
     else {
@@ -349,6 +364,7 @@ app.delete('/delete-event', (req, res) => {
             events.findByIdAndRemove(id, (err, event) => {
                 if (err) {
                     console.log('Error on delete-event: ' + err)
+                    res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
                     res.json({ status: '500' })
                 }
                 else {
@@ -359,6 +375,7 @@ app.delete('/delete-event', (req, res) => {
         }
         else {
             console.log('Cannot delete event, invalid id in request body')
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             res.json({ status: '400' })
         }
     }
@@ -372,6 +389,7 @@ app.get('/verify-sponsor-code/:code', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log('Error on verify-sponsor-code, ' + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
 
             if (result.length == 0) {
@@ -395,6 +413,7 @@ app.post('/checkout-events', (req, res) => {
     newSponsor.save((err) => {
         if (err) {
             console.log('Error on create sponsor, ' + err)
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             res.json({ status: '500' })
         }
         else {
@@ -414,6 +433,7 @@ app.post('/checkout-events', (req, res) => {
     purchase.save((err) => {
         if (err) {
             console.log('Error on creating a purchase: ' + err)
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             res.json({ status: '500' })
         }
         else {
@@ -460,6 +480,7 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-purchased-events, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             res.send(result)
             console.log(result)
@@ -477,7 +498,10 @@ app.post('/create-sponsor', (req,res) => {
         sponsorLevel: req.body.sponsorLevel
     });
     newSponsor.save((err) => {
-        if (err) console.log("Error on create sponsor, " + err);
+        if (err) {
+            console.log("Error on create sponsor, " + err);
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
+        }
         //else it saved
     });
 })
@@ -489,6 +513,7 @@ app.get('/get-all-sponsors/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-sponsors, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             
             let sponsors = []
@@ -508,6 +533,7 @@ app.get('/get-org-info/:org', (req,res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.json(result[0])
@@ -522,6 +548,7 @@ app.put('/update-org-info', (req, res) => {
         (err, event) => {
             if (err) {
                 console.log('Error on update-org-info: ' + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
                 res.json({ status: '500' })
             }
             else {
@@ -564,6 +591,7 @@ app.get('/get-org-from-email/:email', (req, res) => {
         })
         .catch((err) => {
             console.log("Error finding orgs: " + err)
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
         })
 })
 
@@ -604,6 +632,7 @@ app.get('/get-sponsor-code/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-sponsor-code, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.json(result[0])
@@ -638,6 +667,7 @@ app.get('/get-logo/:org', (req,res) => {
         .exec((err, result) => {
             if (err) {
                 //console.log("Error on get-logo, " + err)
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
                 res.send('Error on create-logo')
             }
             else {
@@ -655,6 +685,7 @@ app.post('/create-logo', (req, res) => {
         function (error, success) {
             if (error) {
                 //console.log("Error in create-logo", error);
+                res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
                 res.send('Error on create-logo')
             } else {
                 res.send("Created logo successfully")    
@@ -696,6 +727,7 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
         })
         .catch((error) => {
             console.error(error)
+            res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
         })
 }
 app.post("/send-checkout-email", (req, res) => {
@@ -707,7 +739,7 @@ app.post("/send-checkout-email", (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'cd ..', '/src/sponsor/organism/CheckBackLater'));
 });
 
 app.listen(port, () => {
