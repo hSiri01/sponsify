@@ -1,6 +1,6 @@
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
-import { theme} from '../../../utils/theme';
+import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import IconButton from '@mui/material/IconButton';
@@ -18,45 +18,100 @@ import PageviewIcon from '@mui/icons-material/Pageview';
 import EmailIcon from '@mui/icons-material/Email';
 import MenuBar from '../../molecule/MenuBar/App'
 import { Paper } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
-
+import * as React from 'react';
+import {useNavigate} from "react-router-dom"
+//import Logout from '@mui/icons-material/Logout';
 
 interface Props {
-    // TO DO: Needs to get changed - retrieved from backend (routes)
-    sponsor_code: string,
-    valid_until_date: Date,
-    street_address: string,
-    address_2?: string, 
-    city: string, 
-    state: string, 
-    zip_code: number, 
-    fund_name: string, 
 }
 
 const Dashboard = (props: Props) => {
 
-    const { sponsor_code, valid_until_date, street_address, address_2, city, state, zip_code, fund_name } = props
-    // TO DO: Needs to get changed - retrieved from backend (routes)
-    const student_org_name = "Society of Women Engineers"
-    const student_org_short_name = "SWE"
-    // const student_org_name = "Aggie Women in Computer Science"
-    // const student_org_short_name = "AWiCS"
-    // const student_org_name = "Datathon"
-    // const student_org_short_name = "Datathon"
+    const { isAuthenticated, isLoading, user } = useAuth0()
+    const [validAdmin, setValidAdmin] = React.useState(false)
+    const [notRegistered, setNotRegistered] = React.useState(false)
 
-    const student_org_logo = SWELogo
-    
+    const [logo, setLogo] = React.useState("")
+    const [orgName, setOrgName] = React.useState("")
+    const [orgShortName, setOrgShortName] = React.useState("")
+    const [sponsorCode, setSponsorCode] = React.useState("")
+    const [validUntilDate, setValidUntilDate] = React.useState(new Date())
+    const [fundName, setFundName] = React.useState("")
+    const [streetAddress, setStreetAddress] = React.useState("")
+    const [streetAddress2, setStreetAddress2] = React.useState("")
+    const [city, setCity] = React.useState("")
+    const [state, setState] = React.useState("")
+    const [zipcode, setZipcode] = React.useState(0)
+    const logoutRoute = window.location.hostname === "localhost" ? 
+    "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
+    const { logout } = useAuth0();
+    const navigate = useNavigate();
 
-    localStorage.setItem('org-name', JSON.stringify(student_org_name))
-    localStorage.setItem('org-short-name', JSON.stringify(student_org_short_name))
+    let date = new Date()
+    let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
+
+    if (isAuthenticated) {
+        const getOrg = async() => { 
+            if (user) {
+                await fetch("/get-org-from-email/" + user.email)
+                    .then((res) => res.json()) 
+                    .then((data) => {
+                        // console.log(data)
+
+                        if (data.name === "new") {
+                            localStorage.setItem('org-name', JSON.stringify(data.name))
+                            localStorage.setItem('org-short-name', JSON.stringify(data.shortName))
+                            localStorage.setItem('email', JSON.stringify(user.email))
+                            navigate("/basic-info")
+                        }
+
+                        else if (data.name !== "") 
+                        {
+                            console.log("got valid org!")    
+                            setValidAdmin(true)
+                            setOrgName(data.name)
+                            setOrgShortName(data.shortName)
+                            setLogo(data.logo)
+                            setSponsorCode(data.sponsorCode)
+                            setFundName(data.fundName)
+                            setStreetAddress(data.address.streetAddress)
+                            setStreetAddress2(data.address.streetAddress2)
+                            setCity(data.address.city)
+                            setState(data.address.state)
+                            setZipcode(data.address.zip)
+
+                            localStorage.setItem('org-name', JSON.stringify(orgName))
+                            localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
+                            localStorage.setItem('email', JSON.stringify(user.email))
+
+                        }
+                        else {
+                            console.log("not associated")
+                            setNotRegistered(true)
+                            // TODO: graceful retry process
+                            // logout({ returnTo: process.env.NODE_ENV === "production" ? 
+                            // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
+                            
+                            //if logout and go back to admin page
+                            //logout({ returnTo: logoutRoute })
+                        }
+
+                    })
+            }
+        }
+        
+        getOrg()
+    }
     
     return (
         <ThemeProvider theme={theme}>
 
-            <MenuBar student_org_short_name='swe'/>
-
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
+                {validAdmin && ( <>
+                <MenuBar />
+
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -71,95 +126,95 @@ const Dashboard = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                
- 
-                <Grid item xs={1} sx={{justifyContent: 'center',}}>
-                </Grid> 
 
-                <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5),}}>
+
+                <Grid item xs={1} sx={{ justifyContent: 'center', }}>
+                </Grid>
+
+                <Grid item xs={3} sx={{ justifyContent: 'left', mt: theme.spacing(5), }}>
                     <Link href={'/events-edit'} underline='none'>
-                        <Paper variant="outlined" sx={{border:'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                        <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb:theme.spacing(1) }} >
+                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
+                                <Grid container>
+                                    <Grid item xs={2}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            sx={{ mr: 2, color: 'black' }}
+                                        >
+                                            <AddCircleIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={8}>
+                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                            Create/Edit Events
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                            {'>'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+
                             <Grid container>
-                                <Grid item xs={2}>
+                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
                                     <IconButton
                                         size="large"
                                         aria-label="menu"
-                                        sx={{ mr: 2, color:'black' }}
+                                        color="secondary"
+                                        sx={{ mr: 2, ml: theme.spacing(2) }}
                                     >
-                                        <AddCircleIcon  />
+                                        <AddCircleIcon />
                                     </IconButton>
                                 </Grid>
-                                <Grid item xs={8}>
-                                    <Typography variant="h6" sx={{ mt:theme.spacing(2) }}>
-                                        Create/Edit Events
+                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                        Create Events
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={2}>
-                                    <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
-                                        {'>'}
+
+                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="menu"
+                                        color="secondary"
+                                        sx={{ mr: 2, ml: theme.spacing(2) }}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                        Delete Events
                                     </Typography>
                                 </Grid>
+
+                                <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="menu"
+                                        color="secondary"
+                                        sx={{ mr: 2, ml: theme.spacing(2) }}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                    <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                        Edit Events
+                                    </Typography>
+                                </Grid>
+
                             </Grid>
                         </Paper>
-
-                        <Grid container>
-                            <Grid item xs={2} sx={{mt: theme.spacing(2)}}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="menu"
-                                    color="secondary"
-                                    sx={{ mr: 2,  ml: theme.spacing(2)}}
-                                >
-                                    <AddCircleIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                    Create Events
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={2} sx={{mt: theme.spacing(2)}}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="menu"
-                                    color="secondary"
-                                    sx={{ mr: 2,  ml: theme.spacing(2)}}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                    Delete Events
-                                </Typography>
-                            </Grid>
-
-                            <Grid item xs={2} sx={{mt: theme.spacing(2)}}>
-                                <IconButton
-                                    size="large"
-                                    aria-label="menu"
-                                    color="secondary"
-                                    sx={{ mr: 2,  ml: theme.spacing(2)}}
-                                >
-                                    <EditIcon />
-                                </IconButton>
-                            </Grid>
-                            <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
-                                <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                    Edit Events
-                                </Typography>
-                            </Grid>
-
-                        </Grid>
-                    </Paper>
                     </Link>
 
 
@@ -267,7 +322,7 @@ const Dashboard = (props: Props) => {
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
 
                                 <Typography variant="h6" sx={{ border: 1, borderColor: '#367c63', borderWidth: theme.spacing(1), p: theme.spacing(3), mt: theme.spacing(5) }}>
-                                    {sponsor_code}
+                                    {sponsorCode}
                                 </Typography>
 
                             </Grid>
@@ -295,7 +350,7 @@ const Dashboard = (props: Props) => {
 
 
 
-                <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr:theme.spacing(15) }}>
+                <Grid item xs={3} sx={{ mt: theme.spacing(5), ml: theme.spacing(15), mr: theme.spacing(15) }}>
                     <Link href={'/basic-info'} underline='none'>
                         <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
@@ -469,7 +524,7 @@ const Dashboard = (props: Props) => {
                                     </Grid>
                                     <Grid item xs={8}>
                                         <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                           Purchase History
+                                            Purchase History
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={2}>
@@ -493,7 +548,7 @@ const Dashboard = (props: Props) => {
                                 </Grid>
                                 <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
                                     <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
-                                        View all transactions 
+                                        View all transactions
                                     </Typography>
                                 </Grid>
 
@@ -513,7 +568,7 @@ const Dashboard = (props: Props) => {
                                     </Typography>
                                 </Grid>
 
-                                
+
 
                             </Grid>
                         </Paper>
@@ -522,92 +577,132 @@ const Dashboard = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={3} sx={{ mt: theme.spacing(5) }}>
-                        <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
-                            <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
-                                <Grid container>
-                                    <Grid item xs={2}>
-                                        <IconButton
-                                            size="large"
-                                            aria-label="menu"
-                                            sx={{ mr: 2, color: 'black' }}
-                                        >
-                                            <EmailIcon />
-                                        </IconButton>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                            Email Preview
-                                        </Typography>
-                                    </Grid>
-                                   
-                                </Grid>
-                            </Paper>
-
+                    <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(4), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                        <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
                             <Grid container>
-                                <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
-
-                                {address_2?
-
-                                    (
-                                        <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
-                                        Thank you for sponsoring a {student_org_name} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
-                                        <u><b>To pay with check:</b></u><br />
-                                        - Must be made out to "{student_org_name}"<br />
-                                        - Mail to:<br /><br />
-                                        <b>{student_org_name}<br />
-                                            {street_address}<br />
-                                            {address_2}<br />
-                                            {city}, {state} {zip_code}<br /></b> <br />
-                                        <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
-                                        - Click on the maroon box on the top right side that reads “give now”<br /><br />
-                                        - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                        - It'll show a box that says "enter name or number of fund" - type in <b>{fund_name}</b> for that box<br />
-                                        - The rest of the process consists of entering payment and other information<br /><br />
-
-                                        Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {student_org_name} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
-
-                                        Let us know if you have any questions! <br /><br />
-
-                                        <b>{student_org_name} Officer Team</b>
-
-                                        </Typography>
-                                    ):(
-                                        <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
-                                            Thank you for sponsoring a {student_org_name} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
-                                            <u><b>To pay with check:</b></u><br />
-                                            - Must be made out to "{student_org_name}"<br />
-                                            - Mail to:<br /><br />
-                                            <b>{student_org_name}<br />
-                                                {street_address}<br />
-                                                {city}, {state} {zip_code}<br /></b> <br />
-                                            <u><b>To pay with a credit card:</b></u><br />
-                                            - Go to the <a target="_blank" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
-                                            - Click on the maroon box on the top right side that reads “give now”<br /><br />
-                                            - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
-                                            - It'll show a box that says "enter name or number of fund" - type in <b>{fund_name}</b> for that box<br />
-                                            - The rest of the process consists of entering payment and other information<br /><br />
-
-                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {student_org_name} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
-
-                                            Let us know if you have any questions! <br /><br />
-
-                                            <b>{student_org_name} Officer Team</b>
-
-                                        </Typography>
-                                    ) }
+                                <Grid item xs={2}>
+                                    <IconButton
+                                        size="large"
+                                        aria-label="menu"
+                                        sx={{ mr: 2, color: 'black' }}
+                                    >
+                                        <EmailIcon />
+                                    </IconButton>
                                 </Grid>
+                                <Grid item xs={8}>
+                                    <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                        Email Preview
+                                    </Typography>
+                                </Grid>
+
                             </Grid>
                         </Paper>
 
-                        
+                        <Grid container>
+                            <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+
+                                {streetAddress2?
+
+                                    (
+                                        <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4) }}>
+                                        Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                        <u><b>To pay with check:</b></u><br />
+                                        - Must be made out to "{orgName}"<br />
+                                        - Mail to:<br /><br />
+                                        <b>{orgName}<br />
+                                            {streetAddress}<br />
+                                            {streetAddress2}<br />
+                                            {city}, {state} {zipcode}<br /></b> <br />
+                                        <u><b>To pay with a credit card:</b></u><br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                        - Click on the maroon box on the top right side that reads “give now”<br /><br />
+                                        - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
+                                        - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
+                                        - The rest of the process consists of entering payment and other information<br /><br />
+
+                                        Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+
+                                            Let us know if you have any questions! <br /><br />
+
+                                        <b>{orgName} Officer Team</b>
+
+                                        </Typography>
+                                    ) : (
+                                        <Typography variant="body2" sx={{ fontSize: theme.spacing(3), mt: theme.spacing(2), ml: theme.spacing(4), mr: theme.spacing(4), mb: theme.spacing(3) }}>
+                                            Thank you for sponsoring a {orgName} event at Texas A&M. Attached to this email is the invoice. Below are some payment options.<br /> <br />
+                                            <u><b>To pay with check:</b></u><br />
+                                            - Must be made out to "{orgName}"<br />
+                                            - Mail to:<br /><br />
+                                            <b>{orgName}<br />
+                                                {streetAddress}<br />
+                                                {city}, {state} {zipcode}<br /></b> <br />
+                                            <u><b>To pay with a credit card:</b></u><br />
+                                            - Go to the <a target="_blank" rel="noreferrer" href="https://www.aggienetwork.com/giving/">Texas A&M Foundation website</a> <br />
+                                            - Click on the maroon box on the top right side that reads “give now”<br /><br />
+                                            - This will bring up a three-page sequence for you to enter information.  When you get to "I would like to give to" on the first page, select "An Unlisted Account (Enter Manually)"<br />
+                                            - It'll show a box that says "enter name or number of fund" - type in <b>{fundName}</b> for that box<br />
+                                            - The rest of the process consists of entering payment and other information<br /><br />
+
+                                            Additionally, we ask that you only pay using the above methods. If you must pay us through a different platform, we request that you let us know so we can update our records. Payments made on other platforms do not give {orgName} payee and payment details and we will not be able to recognize your sponsorship unless we receive a notification.<br /><br />
+
+                                            Let us know if you have any questions! <br /><br />
+
+                                            <b>{orgName} Officer Team</b>
+
+                                        </Typography>
+                                    )}
+                            </Grid>
+                        </Grid>
+                    </Paper>
+
+
 
                 </Grid>
 
+                </> )}
 
-                
+                {notRegistered && (
+                    <Grid container sx={{ backgroundColor:"#fff"}}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h5">
+                                Your email is not associated with any student organization.
+                                Logout below and try again!
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Button onClick={() => logout({ returnTo: logoutRoute })} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                }}>Logout</Button>
+                        </Grid>
+                    </Grid>
+                )}
 
+                {isLoading && (
+                    <Grid container sx={{ backgroundColor:"#fff" }}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ maxHeight: theme.spacing(60), display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h4">
+                                ...
+                            </Typography>
+                        </Grid>
+                        
+                    </Grid>
+                )}
             </Grid>
+            
+            
 
         </ThemeProvider>
 

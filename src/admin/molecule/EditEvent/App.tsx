@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
+import CloseIcon from '@mui/icons-material/Close';
 
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import dayjs, { Dayjs } from 'dayjs';
@@ -46,6 +47,10 @@ const EditEvent = (props: Props) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     };
+
+    const [openConfirmation, setOpenConfirmation] = React.useState(false)
+    const handleOpenConfirmation = () => setOpenConfirmation(true)
+    const handleCloseConfirmation = () => setOpenConfirmation(false)
 
     const [nameInput, setNameInput] = React.useState(props.name);
     const [descInput, setDescInput] = React.useState(props.long_description);
@@ -119,7 +124,7 @@ const EditEvent = (props: Props) => {
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             
                             <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
-                                <IconButton color="secondary" aria-label="Edit" onClick={deleteEvent} sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleOpenConfirmation} sx={{ ml: theme.spacing(2), mb: theme.spacing(2) }}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
@@ -193,8 +198,15 @@ const EditEvent = (props: Props) => {
                         }}>
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m:theme.spacing(6)}} >
 
+                                <Grid container sx={{mb: theme.spacing(6), mt:theme.spacing(4)}}>
+                                <Grid item xs={12} sx={{  }}>
+                                        <IconButton color="secondary" aria-label="Edit" onClick={handleCloseEvent} sx={{  }}>
+                                         <CloseIcon />
+                                     </IconButton>
+                                     </Grid>
+                                </Grid>
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-
+                                    
                                     <Grid item xs={3}>
                                         <TextField
                                             id="date"
@@ -271,7 +283,7 @@ const EditEvent = (props: Props) => {
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             defaultValue={occurances}
                                             value={totalSpotsInput}
-                                            onChange={ev => setTotalSpotsInput(+ev.target.value)}
+                                            onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) }}}
                                         />
                                         <TextField 
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
@@ -281,7 +293,7 @@ const EditEvent = (props: Props) => {
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             defaultValue={num_sponsored}
                                             value={spotsTakenInput}
-                                            onChange={ev => setSpotsTakenInput(+ev.target.value)}
+                                            onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) }}}
                                         />
                                         <TextField
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
@@ -339,6 +351,73 @@ const EditEvent = (props: Props) => {
                             </Grid>                           
                         </Box>
                     </Modal>
+
+                    <Modal
+                    open={openConfirmation}
+                    onClose={handleCloseConfirmation}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    disableScrollLock
+                >
+                    <Box sx={{
+                        position: 'absolute' as 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: theme.spacing(200),
+                        minWidth: theme.spacing(150),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(55),
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4
+                    }}>
+                    
+                        <Grid container direction = "column">
+                            <Grid item xs={1} >
+                                    <IconButton color="secondary" aria-label="Edit" onClick={handleCloseConfirmation}>
+                                        <CloseIcon />
+                                    </IconButton>
+                            </Grid>
+
+                            <Grid>
+                                <Typography variant="h6" sx={{
+                                    display: 'flex', justifyContent: 'center', m: theme.spacing(5)
+                                }} > 
+                                Are you sure you want to delete {nameInput}?
+                                </Typography>
+                                
+                            </Grid>
+
+                            <Grid sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
+                                    <Button  
+                                        onClick={handleCloseConfirmation} 
+                                        variant="outlined" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+
+                                    }}>No</Button>
+                                <Button  
+                                        onClick={deleteEvent} 
+                                        variant="contained" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+
+                                    }}>Yes</Button>
+                            </Grid>
+                            
+                        </Grid>
+                    
+                    </Box>
+                </Modal>
                 </Grid>
             </Grid>    
 

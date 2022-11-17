@@ -13,16 +13,16 @@ import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
-
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import { GetAllEvents } from '../../../utils/api-types';
 
 
 interface Props {
-    student_org_logo: string,
 }
 
 const EditEvents = (props: Props) => {
 
-    const { student_org_logo} = props
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
     const handleCloseNewQuestion = () => setOpenNewQuestion(false);
@@ -42,18 +42,36 @@ const EditEvents = (props: Props) => {
     const [dateInput, setDateInput] = React.useState('');
     const [endDateInput, setEndDateInput] = React.useState('');
 
-    const [events, setEvents] = React.useState([{}]);
+    const [events, setEvents] = React.useState<GetAllEvents>([]);
+    const [logo, setLogo] = React.useState("")
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
 
     React.useEffect(() => {
+        const fetchLogo = async() => {
+            try{
+            // console.log(student_org_name)
+            await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+            }
+            catch(e){
+                console.log("Error fetching logo",(e))
+            }
+               
+        }
+        
+        fetchLogo() 
+    },[student_org_name])
+
+    React.useEffect(() => {
         const fetchData = async() => {
-            const data = await fetch("/get-all-events/" + student_org_name)
+            await fetch("/get-all-events/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => {
+                .then((data: GetAllEvents) => {
                     // console.log(data)
                     data.sort(
-                        (objA: any, objB: any) => {
+                        (objA, objB) => {
                             if (objA.name === "General Donation") {
                                 return -1
                             }
@@ -61,7 +79,7 @@ const EditEvents = (props: Props) => {
                                 return 1
                             }
                             else {
-                                return objA.name.toLowerCase().localeCompare(objB.name.toLowerCase())
+                                return objA.name.toLocaleLowerCase().localeCompare(objB.name.toLocaleLowerCase())
                             }
                         }
                     )
@@ -71,7 +89,7 @@ const EditEvents = (props: Props) => {
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name])
 
     const createEvent = () => {
         if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
@@ -111,7 +129,7 @@ const EditEvents = (props: Props) => {
         <ThemeProvider theme={theme}>
 
 
-            <MenuBar student_org_short_name={student_org_short_name}/>
+            <MenuBar />
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -128,7 +146,7 @@ const EditEvents = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -246,6 +264,11 @@ const EditEvents = (props: Props) => {
                     overflow: 'scroll',
                 }}>
                     <Grid container>
+                    <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseNewQuestion} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
                         <Grid item xs={12}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
@@ -258,7 +281,7 @@ const EditEvents = (props: Props) => {
                     <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
 
                         <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-
+                       
                             <Grid item xs={3}>
                                 <TextField
                                     id="date"

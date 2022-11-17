@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid,Link } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Support from '../../../assets/images/graphics/support.svg';
 import { theme} from '../../../utils/theme';
@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from "react-router-dom"
+import { VerifySponsorCode } from '../../../utils/api-types';
 
 
 interface Props {
@@ -36,8 +37,8 @@ const SponsorHome = (props: Props) => {
 
             await fetch("/verify-sponsor-code/" + input)
             .then((res) => res.json())
-            .then((data) => {
-                if (data.name === undefined) {
+            .then((data: VerifySponsorCode) => {
+                if (!('name' in data)) {
                     console.log("invalid")
                     setOpenAlert(true)
                 } else {
@@ -107,6 +108,10 @@ const SponsorHome = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Support} alt="Giving money" />
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mb: theme.spacing(6), mt: theme.spacing(6) }}>
+                    <Link href="/admin-login" color="inherit">Administrator? </Link>
                 </Grid>
             </Grid>
             

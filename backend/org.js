@@ -11,12 +11,16 @@ const orgSchema = new mongoose.Schema({
     },
     address: {
         streetAddress: String,
+        streetAddress2: {
+            type: String,
+            default: ""
+        },
         zip: Number,
         city: String,
         state: String,
         country: String
     },
-    eventCode: {
+    sponsorCode: {
         type: String,
         required: true
     },
@@ -51,7 +55,15 @@ const orgSchema = new mongoose.Schema({
     exampleInvoice: {
         type: String,
         default: ""
-    }
-})
+    }, //adding image logo 
+    logoImage: {
+        type: String,
+        default: ""
+    }, 
+    shortName: {
+        type: String,
+        default: ""
+    },
+}, {timestamps: true})
 
 module.exports = mongoose.model('organizations', orgSchema);

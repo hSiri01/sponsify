@@ -6,30 +6,45 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import Question from '../../molecule/Question/App';
 import Button from '@mui/material/Button';
-import SWELogo from '../../../assets/images/graphics/SWE_logo.png';
+import { GetAllFaq } from '../../../utils/api-types';
 
 interface Props {
 }
 
 const FAQ = (props: Props) => {
 
-    const [faq, setFAQ] = React.useState([{question: '', answer: ''}])
+    const [faq, setFAQ] = React.useState<GetAllFaq>([{question: '', answer: ''}])
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
-
-    // TO DO: Get correct org logo
-    const student_org_logo = SWELogo
+    const [logo, setLogo] = React.useState("")
 
     React.useEffect(() => {
 
         const fetchData = async() => {
-            const data = await fetch("/get-all-FAQ/" + student_org_name)
+            await fetch("/get-all-FAQ/" + student_org_name)
                 .then((res) => res.json())
-                .then((data) => setFAQ(data))
+                .then((data: GetAllFaq) => setFAQ(data))
         }
 
         fetchData()
-    }, [])
+    }, [student_org_name])
+
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+             await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("Error fetching logo ",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
+
+      },[student_org_name])
 
     return (
         <ThemeProvider theme={theme}>
@@ -49,7 +64,7 @@ const FAQ = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={student_org_logo} alt="Sponsify logo" />
+                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -68,8 +83,8 @@ const FAQ = (props: Props) => {
                 </Grid>
 
                 <>
-                    {faq.map((one: any) =>   
-                        <React.Fragment key={one._id}>
+                    {faq.map((one) =>
+                        <React.Fragment key={one.question}>
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
                             <Question question= {one.question}
                                 answer={one.answer}/>
@@ -79,12 +94,15 @@ const FAQ = (props: Props) => {
                     )}
                 </>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
+
+            </Grid>
+            <Grid container >
+                <Grid item  sx={{   margin: theme.spacing(6) }}>
                     <Button 
-                        href="/levels"
-                        variant="contained"
-                        size="large"
-                        color="secondary"
+                            href="/how-it-works" 
+                            variant="contained" 
+                            size="large" 
+                            color="secondary" 
                         sx={{
                             color: 'white',
                             backgroundColor: '#434343',
@@ -98,9 +116,36 @@ const FAQ = (props: Props) => {
                                 color: 'white',
                                 backgroundColor: '#367c63',
                             }
-                        }}>Next</Button>
+                            }}>Back</Button>
                 </Grid>
-
+                <Grid item xs sx={{  margin: theme.spacing(6) }}>
+                    <Grid container direction="row-reverse">
+                        <Grid>
+                            <Button 
+                            href="/levels" 
+                            variant="contained" 
+                            size="large" 
+                            color="secondary" 
+                        sx={{
+                            color: 'white',
+                            backgroundColor: '#434343',
+                            borderRadius: 0,
+                            fontFamily: 'Oxygen',
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            "&:hover": {
+                                color: 'white',
+                                backgroundColor: '#367c63',
+                            }
+                            }}>Next</Button>
+                        </Grid>
+                         
+                    </Grid>
+                   
+                </Grid>
+                
             </Grid>
 
         </ThemeProvider>

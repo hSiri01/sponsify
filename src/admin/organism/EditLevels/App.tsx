@@ -11,22 +11,24 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import InputAdornment from '@mui/material/InputAdornment';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import { GetAllLevels } from '../../../utils/api-types';
 
-interface Props {
-    student_org_logo: string
-  
+interface Props {  
 }
 
 const EditLevels = (props: Props) => {
     
-    const { student_org_logo } = props
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
-    const [levels, setLevels] = React.useState([{}])
+    const [levels, setLevels] = React.useState<GetAllLevels>([])
     const [levelName, setLevelName] = React.useState('')
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
     const [des, setDes] = React.useState('')
+    
+    const [logo, setLogo] = React.useState("")
     const [color, setColor] = React.useState('#909090')
 
     const handleOpenNewLevel = () => setOpenNewLevel(true);
@@ -38,16 +40,34 @@ const EditLevels = (props: Props) => {
         const fetchData = async() => {
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json()) 
-                .then((data) => {
-                    data.sort((a:any, b:any) => (a.minAmount < b.minAmount) ? 1 : -1)
+                .then((data: GetAllLevels) => {
+                    data.sort((a, b) => (a.minAmount < b.minAmount) ? 1 : -1)
                     setLevels(data)
                 })
 
         }
         fetchData()
+        
+    }, [student_org_name, levels])
+   
+    React.useEffect(() => {
+        const fetchLogo = async() => {
+           try{
+            //console.log(student_org_name)
+             await fetch("/get-logo/" + student_org_name)
+                .then((res) => res.json()) 
+                .then((data1) => setLogo(data1.logoImage))
+           }
+           catch(e){
+            console.log("Error fetching logo ",(e))
+           }
+               
+        }
+        
+        fetchLogo() 
 
-    }, [levels])
-
+      },[student_org_name])
+      
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )
     }
@@ -93,10 +113,10 @@ const EditLevels = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
+            
+            <MenuBar />
 
-            <MenuBar student_org_short_name={'swe'}/>
-
-            <Grid container sx={{ backgroundColor:"#f3f3f3", height: '100vh'}}>
+            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
@@ -111,13 +131,13 @@ const EditLevels = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={''} alt="Sponsify logo" />
+                   { logo && <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10), }}  src= {logo} alt="Organization Logo" />}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', maxHeight: theme.spacing(13), mr: theme.spacing(10)}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', maxHeight: theme.spacing(13), mb: theme.spacing(5), mr: theme.spacing(10)}}>
                     <Button onClick={handleOpenNewLevel} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
@@ -173,6 +193,13 @@ const EditLevels = (props: Props) => {
                     overflow: 'scroll',
                 }}>
                     <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
+                        
+                        <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseNewLevel} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
+                        
                         <Grid item xs={1}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
@@ -192,7 +219,7 @@ const EditLevels = (props: Props) => {
                             defaultValue={''} onChange={handleMaxChange()} variant="outlined" />
                         </Grid>
 
-                        <Grid item xs={3} sx={{
+                        <Grid item xs={2} sx={{
                             display: 'flex', justifyContent: 'left', mt: theme.spacing(5)
                         }}>
                             <TextField

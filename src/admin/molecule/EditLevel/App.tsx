@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 interface Props {
@@ -27,6 +28,7 @@ const EditLevel = (props: Props) => {
 
     const {id, student_org_name, level, lowerbound, upperbound, description, hexcode} = props
     const [openLevel, setOpenLevel] = React.useState(false);
+    const [openConfirmation, setOpenConfirmation] = React.useState(false)
     const [levelName, setLevelName] = React.useState('')
     const [minAmount, setMinAmount] = React.useState('')
     const [maxAmount, setMaxAmount] = React.useState('')
@@ -64,7 +66,14 @@ const EditLevel = (props: Props) => {
         setOpenLevel(true)
     };
 
+    const handleOpenConfirmation = () => {
+        setLevelName(level)
+        setOpenConfirmation(true)
+    }
+    
     const handleCloseLevel = () => setOpenLevel(false);
+
+    const handleCloseConfirmation = () => setOpenConfirmation(false);
 
     const handleUpdateLevel = async () => {
         const requestOptions = {
@@ -100,15 +109,16 @@ const EditLevel = (props: Props) => {
             .then((res) => console.log(res)) 
 
         handleCloseLevel()
+        handleCloseConfirmation()
     }
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  margin: "auto" }}>
+            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  margin: "auto", m: theme.spacing(2) }}>
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', margin: "auto" }}>
                        
-                        <IconButton onClick={handleDeleteLevel} color="secondary" aria-label="Edit" >
+                        <IconButton onClick={handleOpenConfirmation} color="secondary" aria-label="Edit" >
                             <DeleteIcon />
                         </IconButton>
 
@@ -187,6 +197,11 @@ const EditLevel = (props: Props) => {
                 }}>
                     
                     <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
+                    <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleCloseLevel} sx={{  }}>
+                                    <CloseIcon />
+                                </IconButton>
+                        </Grid>
                         <Grid item xs={1}>
                             <Typography variant="h5" sx={{
                                 display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
@@ -233,7 +248,7 @@ const EditLevel = (props: Props) => {
                     </Grid>
                     <Grid container >
                             <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'left', mt: theme.spacing(20),  }}>
-                                <IconButton onClick={handleDeleteLevel} color="secondary" aria-label="Edit" size = "large">
+                                <IconButton onClick={handleOpenConfirmation} color="secondary" aria-label="Edit" size = "large">
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
@@ -241,7 +256,6 @@ const EditLevel = (props: Props) => {
                             <Grid item  xs={6} sx={{
                                 display: 'flex', justifyContent: 'right',  mt: theme.spacing(20) }}>
                                 <Button  
-                                // href="/"
                                     onClick={handleUpdateLevel} 
                                     variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
@@ -258,6 +272,74 @@ const EditLevel = (props: Props) => {
                     
                     </Box>
                 </Modal>
+
+                <Modal
+                    open={openConfirmation}
+                    onClose={handleCloseConfirmation}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    disableScrollLock
+                >
+                    <Box sx={{
+                        position: 'absolute' as 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        maxWidth: theme.spacing(200),
+                        minWidth: theme.spacing(150),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(55),
+                        bgcolor: 'background.paper',
+                        boxShadow: 24,
+                        p: 4
+                    }}>
+                    
+                        <Grid container direction = "column">
+                            <Grid item xs={1} >
+                                    <IconButton color="secondary" aria-label="Edit" onClick={handleCloseConfirmation}>
+                                        <CloseIcon />
+                                    </IconButton>
+                            </Grid>
+
+                            <Grid>
+                                <Typography variant="h6" sx={{
+                                    display: 'flex', justifyContent: 'center', mt: theme.spacing(3)
+                                }} > 
+                                Are you sure you want to delete {levelName}?
+                                </Typography>
+                                
+                            </Grid>
+
+                            <Grid sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
+                                    <Button  
+                                        onClick={handleCloseConfirmation} 
+                                        variant="outlined" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+
+                                    }}>No</Button>
+                                <Button  
+                                        onClick={handleDeleteLevel} 
+                                        variant="contained" size="large" color="primary" sx={{
+                                        borderRadius: 0,
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        ml: theme.spacing(5),
+
+                                    }}>Yes</Button>
+                            </Grid>
+                            
+                        </Grid>
+                    
+                    </Box>
+                </Modal>
+                
 
 
         </ThemeProvider>

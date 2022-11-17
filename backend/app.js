@@ -1,7 +1,7 @@
-require('dotenv').config();
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const events = require('./event');
+const events = require('./event')
 const orgs = require('./org')
 const sponsors = require('./sponsor')
 const purchases = require('./purchase')
@@ -9,9 +9,28 @@ const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
 const sponsor = require('./sponsor');
-const port = process.env.PORT || 5000;
+var cors = require('cors');
+var async = require('async');
+app.use(cors())
 
+
+const port = process.env.PORT || 5000;
+const sgMail = require('@sendgrid/mail')
+var cors = require('cors');
+app.use(cors())
+
+//adding routes for image upload
+var fs = require('fs');
+var multer = require('multer');
+const { sub } = require('date-fns');
+
+//adding routes for image upload
+var fs = require('fs');
+var multer = require('multer');
+const { BedtimeOffRounded } = require('@mui/icons-material');
+app.use("/images", express.static("./images"));
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}))
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
@@ -22,6 +41,7 @@ mongoose.connect(
         useUnifiedTopology: true
     }
 )
+
 
 // Access database connection
 const db = mongoose.connection;
@@ -45,16 +65,18 @@ app.get('/get-all-FAQ/:org', (req, res) => {
         )
 })
 
-app.get('/update-FAQ', (req, res) => {
+app.put('/update-FAQ', (req, res) => {
     // res.send('This route will update an FAQ')
     var freq = {
         "FAQ.$.question": req.body.question,
-        "FAQ.$.answer": req.body.answer
+        "FAQ.$.answer": req.body.answer,
+        
     }
 
     orgs.findOneAndUpdate(
         { "FAQ._id": req.body.FAQId },
         { $set: freq },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log("Error", error);
@@ -67,16 +89,18 @@ app.get('/update-FAQ', (req, res) => {
     );
 })
 
-app.get('/create-FAQ', (req, res) => {
+app.post('/create-FAQ', (req, res) => {
     // res.send('This route will create a new FAQ')
     var freq = {
         question: req.body.question,
-        answer: req.body.answer
+        answer: req.body.answer,
+        organization : req.body.organization
     };
 
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $push: { FAQ: freq } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log(error);
@@ -89,11 +113,12 @@ app.get('/create-FAQ', (req, res) => {
     );
 })
 
-app.get('/delete-FAQ', (req, res) => {
+app.delete('/delete-FAQ', (req, res) => {
     // res.send('This route will delete an FAQ')
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $pull: { FAQ: { _id: req.body.FAQId } } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 res.send("Error")
@@ -152,9 +177,12 @@ app.put('/update-level', (req, res) => {
         "levels.$.description": req.body.description
     }
 
+    console.log(req.body)
+
     orgs.findOneAndUpdate(
         { "levels._id": req.body.levelId },
         { $set: level },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log("Error", error);
@@ -179,6 +207,7 @@ app.post('/create-level', async (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $push: { levels: level } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 console.log(error);
@@ -195,6 +224,7 @@ app.delete('/delete-level', (req, res) => {
     orgs.findOneAndUpdate(
         { name: req.body.organization },
         { $pull: { levels: { _id: req.body.levelId } } },
+        { timestamps: false },
         function (error, success) {
             if (error) {
                 res.send("Error")
@@ -334,21 +364,20 @@ app.delete('/delete-event', (req, res) => {
     }
 })
 
-app.get('/get-org/:code', (req, res) => {
+app.get('/verify-sponsor-code/:code', (req, res) => {
     // h2kd93n5hs(j
 
-    orgs.find({ eventCode: req.params.code })
+    orgs.find({ sponsorCode: req.params.code })
         .select({ name: 1, shortName: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log('Error on get-org, ' + err)
+                console.log('Error on verify-sponsor-code, ' + err)
             }
 
             if (result.length == 0) {
                 res.json({})
             } else {
                 res.json(result[0])
-                console.log(result[0])
             }
         })
 })
@@ -412,8 +441,34 @@ app.post('/checkout-events', (req, res) => {
     // TODO: generate invoice and send follow-up email
 })
 
-app.post('/create-sponsor', (req, res) => {
+app.get('/get-all-purchased-events/:org', (req, res) => {
 
+    // events.find({ spotsTaken: { $gt: 0 }, "sponsors.0": { $exists: true }, org: req.params.org })
+    //     .populate("sponsors")
+    //     .exec((err, result) => {
+    //         if (err) {
+    //             console.log("Error on get-all-purchased-events, " + err)
+    //         }
+    //         res.send(result)
+    //         console.log(result)
+    //     }
+    //     )
+
+    purchases.find({org: req.params.org })
+        .populate("events")
+        .populate("sponsorID")
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-all-purchased-events, " + err)
+            }
+            res.send(result)
+            console.log(result)
+        }
+        )
+})
+
+app.post('/create-sponsor', (req,res) => {
+    
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -427,8 +482,29 @@ app.post('/create-sponsor', (req, res) => {
     });
 })
 
-app.get('/get-org-info/:org', (req, res) => {
+app.get('/get-all-sponsors/:org', (req, res) => {
+    purchases.find({ org: req.params.org })
+        .populate("sponsorID")
+        .select({company:1, sponsorLevel:1, totalAmount:1})
+        .exec((err, result) => {
+            if (err) {
+                console.log("Error on get-all-sponsors, " + err)
+            }
+            
+            let sponsors = []
+            for (let i = 0; i < result.length; i++) 
+            {
+                console.log(result[i])
+                sponsors.push({sponsorLevel:result[i].sponsorID.sponsorLevel, company:result[i].sponsorID.company, totalAmount:result[i].totalAmount, _id:result[i].sponsorID._id})
+            }
+            console.log(sponsors)
+            res.json(sponsors)
+        })
+})
+
+app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
+        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
@@ -439,39 +515,95 @@ app.get('/get-org-info/:org', (req, res) => {
         })
 })
 
-app.get('/update-org-info', (req, res) => {
+app.put('/update-org-info', (req, res) => {
+    orgs.findOneAndUpdate(
+        { validAdmins: req.body.email },
+        { name: req.body.name, fundName: req.body.fundName, address: req.body.address, shortName: req.body.shortName },
+        (err, event) => {
+            if (err) {
+                console.log('Error on update-org-info: ' + err)
+                res.json({ status: '500' })
+            }
+            else {
+                console.log('Successfully updated org info: \n' + event)
+                res.json({ status: '200' })
+            }
+        }
+    )
+})
 
-    const id = req.body.id
-    if (!id) {
-        console.log('Cannot update org, no id in request body')
-        res.json({ status: '400' })
-    }
-    else {
-        if (mongoose.Types.ObjectId.isValid(id)) {
+app.get('/get-org-from-email/:email', (req, res) => {
+    let result = { name: "" }
 
-            orgs.findByIdAndUpdate(id, { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address } }, (err, event) => {
-                if (err) {
-                    console.log('Error on update-org-info: ' + err)
-                }
-                else {
-                    console.log('Successfully updated org info: \n' + event)
+    orgs.find({})
+        .then(allOrgs => {
+            allOrgs.forEach(org => {
+                // console.log(org.validAdmins)
+                for (let i = 0; i < org.validAdmins.length; i++) 
+                {
+                    if (org.validAdmins[i] === req.params.email) 
+                    {
+                        result = { 
+                            name: org.name,
+                            shortName: org.shortName,
+                            logo: org.logoImage,
+                            address: org.address,
+                            sponsorCode: org.sponsorCode,
+                            fundName: org.fundName
+                        }
+
+                        // console.log(result)
+                        return res.json(result)
+                    }
                 }
             })
-        }
-        else {
-            console.log('Cannot update org-info, invalid id in request body')
-        }
+            
+            if (result.name === "") {
+                res.json(result)
+            }
+        })
+        .catch((err) => {
+            console.log("Error finding orgs: " + err)
+        })
+})
+
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$^&*()';
+function generateRandom() {
+    let result = '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 12; i++ ) {
+        result += characters.charAt(Math.floor(Math.random()  * charactersLength));
     }
 
+    return result
+}
 
-})
 
-app.get('/get-valid-admins/:org', (req, res) => {
+function generateNewCodes() {
+    let date = new Date()
+    orgs.find(function(err, results) {
+        async.each(results, function (result, callback) {
+            let lastUpdated = new Date(result.updatedAt)
+            if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
+                console.log(result.updatedAt)
+                result.sponsorCode = generateRandom()
+                result.save()
+            }
+            
+        });
+    });
+}
+
+// This makes the function run depending on the interval
+// Second parameter represents interval - 60000 ms = 1 min 
+myInterval = setInterval( generateNewCodes,   24 * 60 * 60000); 
+
+app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
-        .select({ validAdmins: 1 })
+        .select({ sponsorCode: 1, updatedAt: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-valid-admins, " + err)
+                console.log("Error on get-sponsor-code, " + err)
             }
             else {
                 res.json(result[0])
@@ -479,34 +611,97 @@ app.get('/get-valid-admins/:org', (req, res) => {
         })
 })
 
-app.get('/get-event-code/:org', (req, res) => {
+
+//Setting multer for storing uploaded files
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+var upload = multer({ storage: storage, 
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(png|jpg)$/)) { 
+           // upload only png and jpg format
+           return cb(new Error('Please upload a Image'))
+         }
+       cb(undefined, true)
+    } 
+});
+
+
+app.get('/get-logo/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ eventCode: 1 })
+    .select({logoImage : 1, _id : 0},)
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-event-code, " + err)
+                //console.log("Error on get-logo, " + err)
+                res.send('Error on create-logo')
             }
             else {
+                //console.log("Logo url recevied", result[0])
                 res.json(result[0])
             }
         })
 })
 
-app.get('/get-logo/:org', (req, res) => {
-    orgs.find({ name: req.params.org })
-        .select({ logoImage: 1 })
-        .exec((err, result) => {
-            if (err) {
-                console.log("Error on get-logo, " + err)
+app.post('/create-logo', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.organization },
+        { $set: {logoImage: req.body.logoImage}},
+        { timestamps: false },
+        function (error, success) {
+            if (error) {
+                //console.log("Error in create-logo", error);
+                res.send('Error on create-logo')
+            } else {
+                res.send("Created logo successfully")    
             }
-            else {
-                res.json(result[0])
-            }
-        })
+        }
+    );
 })
 
-app.get('/verify-sponsor-code', (req, res) => {
-    res.send('Verify sponsor code')
+
+app.get('/get-org', (req,res) => {
+    res.send('Get org')
+})
+
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2){
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        
+        
+        templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
+        dynamicTemplateData: {
+            orgName : orgName,
+            shortOrgName : shortorgName,
+            orgAddress1 : orgAddress,
+            items : messageInput, 
+            totalCost : "$" + total,
+            orgFundName : orgFundName,
+            orgAddress2 : orgAddress2
+            },
+        }
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
+app.post("/send-checkout-email", (req, res) => {
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
+    const name = firstNameInput + " " + lastNameInput;
+    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
 })
 
 // The "catchall" handler: for any request that doesn't
