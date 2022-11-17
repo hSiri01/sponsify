@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
@@ -22,6 +22,16 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Link from '@mui/material/Link';
 import * as React from 'react';
 import {useNavigate} from "react-router-dom"
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+
 //import Logout from '@mui/icons-material/Logout';
 
 interface Props {
@@ -37,21 +47,38 @@ const Dashboard = (props: Props) => {
     const [orgName, setOrgName] = React.useState("")
     const [orgShortName, setOrgShortName] = React.useState("")
     const [sponsorCode, setSponsorCode] = React.useState("")
-    const [validUntilDate, setValidUntilDate] = React.useState(new Date())
     const [fundName, setFundName] = React.useState("")
     const [streetAddress, setStreetAddress] = React.useState("")
     const [streetAddress2, setStreetAddress2] = React.useState("")
     const [city, setCity] = React.useState("")
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
+    const [admin, setAdmin] = React.useState(false)
     const logoutRoute = window.location.hostname === "localhost" ? 
     "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
     const { logout } = useAuth0();
     const navigate = useNavigate();
 
-    let date = new Date()
-    let valid_until_date = (date.getMonth()+1 >= 11 || date.getMonth()+1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
-
+    const [generateGenerateCodePopup, setGenerateCodePopup] = React.useState(false)
+    const handlePopupOpen = () => {setGenerateCodePopup(true);}; 
+    const handlePopupClose = () => {setGenerateCodePopup(false);}; //TODO : generate new code + set setGenerateCodePopup false there
+        
+    const updateSponsorCode = () => {
+        fetch('/update-sponsor-code', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: orgName,
+            })
+        })
+            .then(() => {
+                handlePopupClose()
+                window.location.reload()})
+    }
+    
     if (isAuthenticated) {
         const getOrg = async() => { 
             if (user) {
@@ -81,6 +108,7 @@ const Dashboard = (props: Props) => {
                             setCity(data.address.city)
                             setState(data.address.state)
                             setZipcode(data.address.zip)
+                            setAdmin(data.admin)
 
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
@@ -327,14 +355,6 @@ const Dashboard = (props: Props) => {
 
                             </Grid>
 
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
-
-                                <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                    Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
-                                </Typography>
-
-                            </Grid>
-
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                                 <Typography variant="body1" sx={{ fontWeight: 700, mt: theme.spacing(2), mb: theme.spacing(3) }}>
@@ -342,6 +362,48 @@ const Dashboard = (props: Props) => {
                                 </Typography>
 
                             </Grid>
+                            
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: "auto" }}>
+                                    <Button 
+                                    onClick={handlePopupOpen}
+                                    variant="contained" 
+                                    size="large" 
+                                    color="secondary" 
+                                sx={{
+                                    
+                                    color: 'white',
+                                    mb: theme.spacing(2),
+                                    backgroundColor: '#434343',
+                                    borderRadius: 0,
+                                    fontFamily: 'Oxygen',
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    "&:hover": {
+                                        color: 'white',
+                                        backgroundColor: '#367c63',
+                                    }
+                                    }}>Generate New Code</Button>
+                            </Grid>
+                            <Dialog
+                                open={generateGenerateCodePopup}
+                                keepMounted
+                                onClose={handlePopupClose}
+                                aria-describedby="alert-dialog-slide-description"
+                            >
+                                <DialogTitle>{"Are you sure you want to generate a new code?"}</DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                    Generating a new code will delete the current code. Click yes below if you wish to do this, and make sure to send the new code to your sponsors! If not, click no. 
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button onClick={updateSponsorCode}>Yes</Button> 
+                                <Button onClick={handlePopupClose}>No</Button>
+                                
+                                </DialogActions>
+                            </Dialog>
 
                         </Grid>
                     </Paper>
@@ -573,6 +635,72 @@ const Dashboard = (props: Props) => {
                             </Grid>
                         </Paper>
                     </Link>
+                    {admin ? (
+                        <Link href={'/account-requests'} underline='none'>
+                            <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
+                                    <Grid container>
+                                        <Grid item xs={2}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                sx={{ mr: 2, color: 'black' }}
+                                            >
+                                                <GppMaybeIcon/>
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                Account Requests
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                {'>'}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container>
+                                    <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            color="secondary"
+                                            sx={{ mr: 2, ml: theme.spacing(2) }}
+                                        >
+                                            <ManageAccountsIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                        <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                            View all account requests
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            color="secondary"
+                                            sx={{ mr: 2, ml: theme.spacing(2) }}
+                                        >
+                                            <GroupAddIcon/>
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                        <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                            Grant/Deny Access
+                                        </Typography>
+                                    </Grid>
+
+
+
+                                </Grid>
+                            </Paper>
+                        </Link>
+                    ) : <></>} 
 
                 </Grid>
 

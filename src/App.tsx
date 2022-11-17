@@ -18,7 +18,8 @@ import PurchaseHistory from './admin/organism/PurchaseHistory/App';
 import EditLevels from './admin/organism/EditLevels/App';
 import BasicInfo from './admin/organism/BasicInfo/App';
 import NewUser from './admin/organism/NewUser/App'
-
+import AccountRequests from './admin/organism/AccountRequests/App';
+import RequestInbox from './admin/organism/Inbox/App'
 
 import AdminLogin from './admin/organism/Home/App';
 import CheckBackLater from './sponsor/organism/CheckBackLater/App'
@@ -28,6 +29,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
+
 
 const App: React.FC = () => {
   return (
@@ -54,7 +56,8 @@ const App: React.FC = () => {
             <Route path="/summary" element={<PurchaseHistory />} />
             <Route path="/basic-info" element={<BasicInfo />} />
             <Route path="/new-user" element={<NewUser />} />
-
+            <Route path="/account-requests" element={<AccountRequests />} />
+            <Route path="/request-inbox" element={<RequestInbox />} />
           </Routes>
 
         </BrowserRouter>

@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const requests = require('./request')
 const events = require('./event')
 const orgs = require('./org')
 const sponsors = require('./sponsor')
@@ -142,6 +143,31 @@ app.get('/get-all-levels/:org', (req, res) => {
         })
 })
 
+async function getLevelNameByAmount(org, amount) {
+    let level = []
+    await orgs.find({ name: org })
+    .select({ levels: 1 })
+    .exec().then((result) => {
+            const levels = result[0].levels
+            let currLevel = {}
+
+            for (let i = 0; i < levels.length; i++) {
+                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                    currLevel = levels[i]
+                }
+                else if (amount >= levels[i].minAmount && !levels[i].maxAmount) {
+                    currLevel = levels[i]
+                }
+            }
+
+            level = currLevel
+            
+    })
+
+    return level.name
+
+}
+
 app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ levels: 1 })
@@ -152,7 +178,9 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
             else {
                 const amount = req.params.amount
                 const levels = result[0].levels
-                let currLevel = {}
+                let currLevel = {
+                    name: "",
+                }
 
                 for (let i = 0; i < levels.length; i++) {
                     if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
@@ -265,7 +293,7 @@ app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,
         date: req.body.date + 'T06:00:00.000+00:00',
-        endDate: req.body.endDate + 'T06:00:00.000+00:00',
+        endDate: (req.body.endDate && req.body.endDate != req.body.date) ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
         price: req.body.price,
         desc: req.body.desc,
         briefDesc: req.body.briefDesc,
@@ -337,6 +365,22 @@ app.put('/update-event', (req, res) => {
     }
 })
 
+app.put('/reset-events', async(req, res) => {
+    let returnStatus = '200'
+
+    const update = await events.updateMany(
+        { org: req.body.org, spotsTaken: { $gt : 0 } },
+        { $set: { spotsTaken: 0 } }
+    )
+
+    // console.log(update.modifiedCount)
+
+    if (!update.acknowledged || update.modifiedCount < 1)
+        returnStatus = '400'
+    
+    res.json({ status: returnStatus })
+})
+
 app.delete('/delete-event', (req, res) => {
     const id = req.body.id
 
@@ -389,7 +433,7 @@ app.post('/checkout-events', (req, res) => {
         lastName: req.body.lastName,
         company: req.body.company,
         email: req.body.email,
-        sponsorLevel: req.body.sponsorLevel
+        sponsorLevel: req.body.sponsorLevel ? req.body.sponsorLevel : 'Not qualified'
     })
 
     newSponsor.save((err) => {
@@ -400,13 +444,14 @@ app.post('/checkout-events', (req, res) => {
         else {
             console.log('New sponsor created, id: ' + newSponsor._id)
         }
-    });
+    })
 
     // create a purchase
     const purchase = new purchases({
         sponsorID: newSponsor._id,
         events: req.body.events,
         totalAmount: req.body.totalAmount,
+        donationAmount: req.body.donationAmount ? req.body.donationAmount : undefined,
         dateSponsored: Date.now(),
         org: req.body.org
     })
@@ -437,23 +482,9 @@ app.post('/checkout-events', (req, res) => {
     }
 
     res.json(resStatus)
-
-    // TODO: generate invoice and send follow-up email
 })
 
 app.get('/get-all-purchased-events/:org', (req, res) => {
-
-    // events.find({ spotsTaken: { $gt: 0 }, "sponsors.0": { $exists: true }, org: req.params.org })
-    //     .populate("sponsors")
-    //     .exec((err, result) => {
-    //         if (err) {
-    //             console.log("Error on get-all-purchased-events, " + err)
-    //         }
-    //         res.send(result)
-    //         console.log(result)
-    //     }
-    //     )
-
     purchases.find({org: req.params.org })
         .populate("events")
         .populate("sponsorID")
@@ -461,10 +492,77 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
             if (err) {
                 console.log("Error on get-all-purchased-events, " + err)
             }
+
             res.send(result)
             console.log(result)
+        })
+})
+
+app.delete('/delete-event-from-purchase', async (req, res) => {
+
+    // Remove event id, decrease total amount of purchase
+    await purchases.findOneAndUpdate(
+        { _id: req.body.purchaseId },
+        { 
+            $pull: { events: req.body.eventId},
+            $inc: { totalAmount: -1*req.body.eventPrice }
         }
-        )
+    ).then(console.log("Done")) 
+
+    // Decrement number of spots taken from event
+    // Remove sponsor
+    await events.findOneAndUpdate(
+        { _id: req.body.eventId },
+        { 
+            $inc: { spotsTaken: -1 },
+            $pull: { sponsors: req.body.sponsorId}
+        }
+    ).then("Dec spots taken & removed sponsor from event")
+
+
+    // change sponsor level
+    var newLevel = await getLevelNameByAmount(req.body.name, req.body.totalAmount-req.body.eventPrice)
+    await sponsors.findOneAndUpdate(
+        { _id: req.body.sponsorId},
+        { sponsorLevel: newLevel }
+    ).then(console.log("Updated sponsor level"))
+    
+    // check if events array from purchase is empty
+    await purchases.find({ _id: req.body.purchaseId }, { events: 1 })
+        .exec(async(err, result) => {
+            if (err) {
+                console.log("Error on get-all-sponsors, " + err)
+            }
+            
+            if (result[0].events.length == 0) {
+
+                // remove purchase
+                purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
+                    if (err) {
+                        console.log('Error on delete-purchase: ' + err)
+                        // res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Successfully deleted purchase: \n' + purchase)
+                        // res.json({ status: '200' })
+                    }
+                })
+
+                // remove sponsor
+                sponsors.findByIdAndRemove(req.body.sponsorId, (err, purchase) => {
+                    if (err) {
+                        console.log('Error on delete-sponsor: ' + err)
+                        // res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Successfully deleted sponsor: \n' + purchase)
+                        res.json({ status: '200' })
+                    }
+                })
+            }
+        })
+
+
 })
 
 app.post('/create-sponsor', (req,res) => {
@@ -494,10 +592,8 @@ app.get('/get-all-sponsors/:org', (req, res) => {
             let sponsors = []
             for (let i = 0; i < result.length; i++) 
             {
-                console.log(result[i])
                 sponsors.push({sponsorLevel:result[i].sponsorID.sponsorLevel, company:result[i].sponsorID.company, totalAmount:result[i].totalAmount, _id:result[i].sponsorID._id})
             }
-            console.log(sponsors)
             res.json(sponsors)
         })
 })
@@ -549,7 +645,8 @@ app.get('/get-org-from-email/:email', (req, res) => {
                             logo: org.logoImage,
                             address: org.address,
                             sponsorCode: org.sponsorCode,
-                            fundName: org.fundName
+                            fundName: org.fundName,
+                            admin: org.admin
                         }
 
                         // console.log(result)
@@ -578,26 +675,6 @@ function generateRandom() {
     return result
 }
 
-
-function generateNewCodes() {
-    let date = new Date()
-    orgs.find(function(err, results) {
-        async.each(results, function (result, callback) {
-            let lastUpdated = new Date(result.updatedAt)
-            if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
-                console.log(result.updatedAt)
-                result.sponsorCode = generateRandom()
-                result.save()
-            }
-            
-        });
-    });
-}
-
-// This makes the function run depending on the interval
-// Second parameter represents interval - 60000 ms = 1 min 
-myInterval = setInterval( generateNewCodes,   24 * 60 * 60000); 
-
 app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ sponsorCode: 1, updatedAt: 1 })
@@ -609,6 +686,22 @@ app.get('/get-sponsor-code/:org', (req, res) => {
                 res.json(result[0])
             }
         })
+})
+
+app.put('/update-sponsor-code', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.org },
+        { sponsorCode: generateRandom() },
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Updated sponsorship level')
+            }
+        }
+    );
 })
 
 
@@ -698,10 +791,171 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             console.error(error)
         })
 }
+
+function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
 app.post("/send-checkout-email", (req, res) => {
     const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
     sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+})
+
+app.post("/send-request-created-email", (req, res) => {
+    console.log(req.body)
+    const { email, name } = req.body
+    let subject = "Sponsify New User Request - " + name
+    sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
+})
+
+app.get('/get-requests', (req, res) => {
+    requests.find()
+    .exec((err, result) => {
+        if (err) {
+            console.log("Error on get-requests, " + err)
+        }
+        else {
+            res.send(result)
+        }
+    }
+    )
+})
+
+app.post('/create-request', (req, res) => {
+    const newRequest = new requests({
+        name: req.body.name,
+        email: req.body.email,
+        description: req.body.description
+    })
+
+    newRequest.save((err) => {
+        if (err) {
+            console.log('Error on create-request: ' + err)
+            res.json({ status: '500' })
+        }
+        else {
+            console.log('Created new request')
+            res.json({ status: '200' })
+        }
+    })
+})
+
+function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
+app.delete('/delete-request', (req, res) => {
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot delete org request, no id in request body')
+        res.json({ status: '400' })
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            requests.findByIdAndRemove(id, (err, event) => {
+                if (err) {
+                    console.log('Error on delete-request: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully deleted request: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+
+            sendAccessDeniedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Denied")
+
+        }
+        else {
+            console.log('Cannot delete request, invalid id in request body')
+            res.json({ status: '400' })
+        }
+    }
+})
+
+function sendAccessGrantedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
+app.post("/request-to-org", async (req, res) => {
+    const newOrg = new orgs({
+        name: "new",
+        validAdmins: [req.body.email],
+        sponsorCode: generateRandom()
+    })
+
+    newOrg.save((err) => {
+        if (err) {
+            console.log('Error on creating new org: ' + err)
+        }
+        else {
+            console.log('Created new org from request')
+        }
+    })
+
+    sendAccessGrantedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Granted!", req.body.name)
+    requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
+
+
 })
 
 // The "catchall" handler: for any request that doesn't
