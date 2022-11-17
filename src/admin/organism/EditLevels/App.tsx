@@ -265,6 +265,18 @@ const EditLevels = (props: Props) => {
                     boxShadow: 24,
                     p: 4,
                     overflow: 'scroll',
+                    [theme.breakpoints.down('md')]: {
+                        maxWidth: theme.spacing(120),
+                        minWidth: theme.spacing(120),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
+                    },
+                    [theme.breakpoints.down('sm')]: {
+                        maxWidth: theme.spacing(80),
+                        minWidth: theme.spacing(80),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
+                    },
                 }}>
                     <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
                         
@@ -283,13 +295,32 @@ const EditLevels = (props: Props) => {
                         </Grid>
 
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
+                            <TextField sx={{ 
+                                minWidth: theme.spacing(15), 
+                                mt: theme.spacing(5),
+                                }} 
+                                id="outlined-basic" 
+                                label="Level Name" 
                             defaultValue={''} onChange={handleNameChange()} variant="outlined" />
                         </Grid>
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
+                            <TextField 
+                            sx={{ 
+                                minWidth: theme.spacing(15), 
+                                mr: theme.spacing(5),
+                                [theme.breakpoints.down('sm')]: {
+                                    maxWidth: theme.spacing(30),
+                                    minWidth: theme.spacing(30),
+                                }, 
+                            }} id="outlined-basic" label="Lower bound cost of level" 
                             defaultValue={''} onChange={handleMinChange()} variant="outlined" />
-                            <TextField sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" 
+                            <TextField sx={{ 
+                                minWidth: theme.spacing(15), 
+                                [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(30),
+                                        minWidth: theme.spacing(30),
+                                    },
+                            }} id="outlined-basic" label="Upper bound cost of level" 
                             defaultValue={''} onChange={handleMaxChange()} variant="outlined" />
                         </Grid>
 
@@ -302,8 +333,20 @@ const EditLevels = (props: Props) => {
                                 label="Description of level benefits, details, etc."
                                 minRows={3}
                                 multiline={true}
-                                defaultValue={''} onChange={handleDesChange()}
-                                style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                defaultValue={''} 
+                                onChange={handleDesChange()}
+                                sx={{ 
+                                    minWidth: theme.spacing(150), 
+                                    fontFamily: "Poppins", 
+                                    fontSize: theme.spacing(4),
+                                    [theme.breakpoints.down('md')]: {
+                                        minWidth: theme.spacing(100),
+                                        maxWidth: theme.spacing(100),
+                                    },
+                                    [theme.breakpoints.down('sm')]: {
+                                        minWidth: theme.spacing(70),
+                                        maxWidth: theme.spacing(70),
+                                    }, }}
                             />
                         </Grid>
                         <Grid item xs={2 }>

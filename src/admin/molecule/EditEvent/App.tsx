@@ -207,6 +207,7 @@ const EditEvent = (props: Props) => {
                             boxShadow: 24,
                             p: 4,
                             overflow: 'scroll',
+                            
                         }}>
                             <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m:theme.spacing(6)}} >
 
@@ -326,14 +327,15 @@ const EditEvent = (props: Props) => {
 
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Grid item xs={10}>
-                                    <TextareaAutosize
+                                    <TextField
                                         aria-label="empty textarea"
                                         placeholder="Empty"
+                                        multiline
                                         defaultValue={long_description}
                                         value={descInput}
                                         onChange={ev => {setDescInput(ev.target.value)}}
                                         minRows={8}
-                                        style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                        sx={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                                     />
                                     </Grid>
                                 </Grid>
@@ -382,7 +384,21 @@ const EditEvent = (props: Props) => {
                         minHeight: theme.spacing(55),
                         bgcolor: 'background.paper',
                         boxShadow: 24,
-                        p: 4
+                        p: 4,
+                        [theme.breakpoints.down('md')]: {
+                            maxWidth: theme.spacing(120),
+                            minWidth: theme.spacing(120),
+                            maxHeight: theme.spacing(100),
+                            minHeight: theme.spacing(100),
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            left: '25%',
+                            top: '25%',
+                            maxWidth: theme.spacing(80),
+                            minWidth: theme.spacing(80),
+                            maxHeight: theme.spacing(100),
+                            minHeight: theme.spacing(100),
+                        },
                     }}>
                     
                         <Grid container direction = "column">
@@ -622,14 +638,15 @@ const EditEvent = (props: Props) => {
 
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Grid item xs={10}>
-                                        <TextareaAutosize
+                                        <TextField
                                             aria-label="empty textarea"
                                             placeholder="Empty"
                                             defaultValue={long_description}
                                             value={descInput}
                                             onChange={ev => { setDescInput(ev.target.value) }}
                                             minRows={8}
-                                            style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                            multiline
+                                            sx={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -678,7 +695,21 @@ const EditEvent = (props: Props) => {
                                 minHeight: theme.spacing(55),
                                 bgcolor: 'background.paper',
                                 boxShadow: 24,
-                                p: 4
+                                p: 4,
+                                [theme.breakpoints.down('md')]: {
+                                    maxWidth: theme.spacing(120),
+                                    minWidth: theme.spacing(120),
+                                    maxHeight: theme.spacing(100),
+                                    minHeight: theme.spacing(100),
+                                },
+                                [theme.breakpoints.down('sm')]: {
+                                    left: '25%',
+                                    top: '25%',
+                                    maxWidth: theme.spacing(80),
+                                    minWidth: theme.spacing(80),
+                                    maxHeight: theme.spacing(100),
+                                    minHeight: theme.spacing(100),
+                                },
                             }}>
 
                                 <Grid container direction="column">
@@ -799,6 +830,20 @@ const EditEvent = (props: Props) => {
                                 boxShadow: 24,
                                 p: 4,
                                 overflow: 'scroll',
+                                [theme.breakpoints.down('md')]: {
+                                    maxWidth: theme.spacing(120),
+                                    minWidth: theme.spacing(120),
+                                    maxHeight: theme.spacing(100),
+                                    minHeight: theme.spacing(100),
+                                },
+                                [theme.breakpoints.down('sm')]: {
+                                    left: '25%',
+                                    top: '25%',
+                                    maxWidth: theme.spacing(80),
+                                    minWidth: theme.spacing(80),
+                                    maxHeight: theme.spacing(100),
+                                    minHeight: theme.spacing(100),
+                                },
                             }}>
                                 <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
 
@@ -810,8 +855,11 @@ const EditEvent = (props: Props) => {
                                         </Grid>
                                     </Grid>
                                     <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                        <Grid item xs={1}>
 
-                                        <Grid item xs={3}>
+                                        </Grid>
+
+                                        <Grid item xs={4}>
                                             <TextField
                                                 id="date"
                                                 label="Date Start"
@@ -843,6 +891,9 @@ const EditEvent = (props: Props) => {
                                                     <></>
                                                 )
                                             }
+
+                                        </Grid>
+                                        <Grid item xs={5}>
 
                                         </Grid>
 
@@ -918,14 +969,15 @@ const EditEvent = (props: Props) => {
 
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                                     <Grid item xs={10}>
-                                        <TextareaAutosize
+                                        <TextField
                                             aria-label="empty textarea"
                                             placeholder="Empty"
                                             defaultValue={long_description}
                                             value={descInput}
                                             onChange={ev => { setDescInput(ev.target.value) }}
+                                            multiline
                                             minRows={8}
-                                            style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                            sx={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
                                         />
                                     </Grid>
                                 </Grid>

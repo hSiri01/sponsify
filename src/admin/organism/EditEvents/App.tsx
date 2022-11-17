@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
@@ -384,6 +383,20 @@ const EditEvents = (props: Props) => {
                     boxShadow: 24,
                     p: 4,
                     overflow: 'scroll',
+                    [theme.breakpoints.down('md')]: {
+                        maxWidth: theme.spacing(120),
+                        minWidth: theme.spacing(120),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
+                    },
+                    [theme.breakpoints.down('sm')]: {
+                        left: '25%',
+                        top:'25%',
+                        maxWidth: theme.spacing(80),
+                        minWidth: theme.spacing(80),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
+                    },
                 }}>
                     <Grid container>
                     <Grid item xs={12} sx={{ mt: theme.spacing(2) }}>
@@ -400,11 +413,33 @@ const EditEvents = (props: Props) => {
                         </Grid>
                     </Grid>
 
-                    <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(250), minWidth: theme.spacing(200), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+                    <Paper variant="outlined" sx={{ 
+                        borderStyle: "none none solid none", 
+                        borderWidth: theme.spacing(.5), 
+                        borderRadius: 0, 
+                        borderColor: "#c2c2c2", 
+                        maxWidth: theme.spacing(250), 
+                        minWidth: theme.spacing(200), 
+                        minHeight: theme.spacing(20), 
+                        m: theme.spacing(6),
+                        [theme.breakpoints.down('md')]: {
+                            maxWidth: theme.spacing(110),
+                            minWidth: theme.spacing(110),
+                            maxHeight: theme.spacing(100),
+                            minHeight: theme.spacing(100),
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            left: '25%',
+                            top: '25%',
+                            maxWidth: theme.spacing(70),
+                            minWidth: theme.spacing(70),
+                            maxHeight: theme.spacing(140),
+                            minHeight: theme.spacing(140),
+                        }, }} >
 
-                        <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid container sx={{display:'flex', justifyContent:'center' }}>
                        
-                            <Grid item xs={3}>
+                            <Grid item sm={6} xs={12}>
                                 <TextField
                                     id="date"
                                     label="Date Start"
@@ -414,8 +449,20 @@ const EditEvents = (props: Props) => {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    sx={{ maxWidth: theme.spacing(40) }} />
+                                    sx={{ 
+                                        maxWidth: theme.spacing(40), 
+                                        ml:"60%", 
+                                        mb: theme.spacing(4),
+                                        [theme.breakpoints.down('md')]: {
+                                            ml: "10%",
+                                        },
+                                        [theme.breakpoints.down('sm')]: {
+                                            ml: "15%",
+                                        },
+                                     }} />
+                            </Grid>
 
+                            <Grid item sm={6} xs={12}>
                                 <TextField
                                     id="date"
                                     label="Date End"
@@ -425,62 +472,137 @@ const EditEvents = (props: Props) => {
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
-                                    sx={{ maxWidth: theme.spacing(40), mt: theme.spacing(4) }} />
-
+                                    sx={{ 
+                                        maxWidth: theme.spacing(40), 
+                                        mb: theme.spacing(4),
+                                        [theme.breakpoints.down('sm')]: {
+                                            ml: "15%",
+                                        },
+                                }} />
                             </Grid>
 
-
-                            <Grid item xs={5}>
+                            
+                            <Grid item xs={12}>
                                 <TextField 
-                                    sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
+                                    sx={{ 
+                                        minWidth: theme.spacing(80), 
+                                        mb:theme.spacing(4), 
+                                        ml:"32%",
+                                        [theme.breakpoints.down('md')]: {
+                                            ml: "10%",
+                                        },
+                                        [theme.breakpoints.down('sm')]: {
+                                            ml: "3%",
+                                            minWidth: theme.spacing(60)
+                                        },
+                                }}
                                     id="outlined-basic"
                                     label="Name"
                                     variant="outlined"
                                     value={nameInput}
                                     onChange={ev => setNameInput(ev.target.value)}  />
-                                <TextField 
-                                    sx={{ minWidth: theme.spacing(100), mb: theme.spacing(2) }}
-                                    id="outlined-basic"
-                                    label="Short Description"
-                                    variant="outlined"
-                                    value={briefDescInput}
-                                    onChange={ev => setBriefDescInput(ev.target.value)} />
                             </Grid>
 
-                            <Grid item xs={4} sx={{ textAlign: "right" }}>
-                                <TextField
-                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                    id="outlined-basic"
-                                    label="Price"
-                                    variant="outlined"
-                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                    value={priceInput > -1 ? priceInput : ''}
-                                    onChange={ev => setPriceInput(+ev.target.value)} />
-                                <TextField
-                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                    id="outlined-basic"
-                                    label="Occurances"
-                                    variant="outlined"
-                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                    value={totalSpotsInput > -1 ? totalSpotsInput : ''}
-                                    onChange={ev => setTotalSpotsInput(+ev.target.value)} />
-                                <TextField
-                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                    id="outlined-basic"
-                                    label="Sponsored"
-                                    variant="outlined"
-                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                    value={spotsTakenInput > -1 ? spotsTakenInput : ''}
-                                    onChange={ev => setSpotsTakenInput(+ev.target.value)} />
-                                <TextField
-                                    sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                    id="outlined-basic"
-                                    label="Avg Attendance"
-                                    variant="outlined"
-                                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                    value={avgAttendanceInput > -1 ? avgAttendanceInput : ''}
-                                    onChange={ev => setAvgAttendanceInput(+ev.target.value)} />
-                            </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        sx={{ 
+                                            minWidth: theme.spacing(100), 
+                                            mb: theme.spacing(4),
+                                            ml:'28%',
+                                            [theme.breakpoints.down('md')]: {
+                                                ml: "2%",
+                                            },
+                                            [theme.breakpoints.down('sm')]: {
+                                                ml: "0%",
+                                                minWidth: theme.spacing(70)
+                                            }, 
+                                        }}
+                                        id="outlined-basic"
+                                        label="Short Description"
+                                        variant="outlined"
+                                        value={briefDescInput}
+                                        onChange={ev => setBriefDescInput(ev.target.value)} />
+                                </Grid>
+
+                               
+
+                                <Grid item md={2} sm={6} xs={12} sx={{
+                                  }}>
+                                    <TextField
+                                        sx={{ 
+                                            maxWidth: theme.spacing(40), 
+                                            mb: theme.spacing(2), 
+                                            mr: theme.spacing(2),
+                                            [theme.breakpoints.down('md')]: {
+                                                ml: "10%",
+                                            }, 
+                                            [theme.breakpoints.down('sm')]: {
+                                                ml: "15%",
+                                            },
+                                        }}
+                                        id="outlined-basic"
+                                        label="Price"
+                                        variant="outlined"
+                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                        value={priceInput > -1 ? priceInput : ''}
+                                        onChange={ev => setPriceInput(+ev.target.value)} />
+
+                                </Grid>
+
+                                <Grid item md={2} sm={6} xs={12} sx={{
+                                }}>
+                                    <TextField
+                                        sx={{ 
+                                            maxWidth: theme.spacing(40), 
+                                            mb: theme.spacing(2), 
+                                            mr: theme.spacing(2),
+                                            [theme.breakpoints.down('sm')]: {
+                                                ml: "15%",
+                                            }, }}
+                                        id="outlined-basic"
+                                        label="Occurances"
+                                        variant="outlined"
+                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                        value={totalSpotsInput > -1 ? totalSpotsInput : ''}
+                                        onChange={ev => setTotalSpotsInput(+ev.target.value)} />
+                                </Grid>
+                                
+                                <Grid item md={2} sm={6} xs={12} sx={{
+                                }}>
+                                    <TextField
+                                        sx={{
+                                            maxWidth: theme.spacing(40),
+                                            mb: theme.spacing(2),
+                                            mr: theme.spacing(2),
+                                            [theme.breakpoints.down('sm')]: {
+                                                ml: "15%",
+                                            },
+                                        }}
+                                        id="outlined-basic"
+                                        label="Sponsored"
+                                        variant="outlined"
+                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                        value={spotsTakenInput > -1 ? spotsTakenInput : ''}
+                                        onChange={ev => setSpotsTakenInput(+ev.target.value)} />
+                                </Grid>
+
+                                
+                                <Grid item md={2} sm={6} xs={12} sx={{
+                                }}>
+                                    <TextField
+                                        sx={{ 
+                                            maxWidth: theme.spacing(40), 
+                                            mb: theme.spacing(2),
+                                            [theme.breakpoints.down('sm')]: {
+                                                ml: "15%",
+                                            }, }}
+                                        id="outlined-basic"
+                                        label="Avg Attendance"
+                                        variant="outlined"
+                                        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                                        value={avgAttendanceInput > -1 ? avgAttendanceInput : ''}
+                                        onChange={ev => setAvgAttendanceInput(+ev.target.value)} />
+                                </Grid>
 
 
                         </Grid>
@@ -488,13 +610,24 @@ const EditEvents = (props: Props) => {
 
                     <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Grid item xs={10}>
-                            <TextareaAutosize
+                            <TextField
+                                multiline
                                 aria-label="empty textarea"
                                 placeholder='Long Description'
                                 value={descInput}
                                 onChange={ev => setDescInput(ev.target.value)}
                                 minRows={8}
-                                style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                sx={{ 
+                                    minWidth: theme.spacing(200), 
+                                    fontFamily: "Poppins", 
+                                    fontSize: theme.spacing(4),
+                                    [theme.breakpoints.down('md')]: {
+                                        minWidth: theme.spacing(100),
+                                    },
+                                    [theme.breakpoints.down('sm')]: {
+                                        minWidth: theme.spacing(70),
+                                    },
+                                 }}
                             />
                         </Grid>
                     </Grid>
@@ -502,7 +635,7 @@ const EditEvents = (props: Props) => {
 
                     <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
 
-                        <Grid item xs={1}>
+                        <Grid item md={1} xs={2}>
                             <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                         </Grid>
 
@@ -511,7 +644,7 @@ const EditEvents = (props: Props) => {
                                 onChange={handleChange} />
                         </Grid>
 
-                        <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
+                        <Grid item sx={{ pt: theme.spacing(3) }} md={2} xs={4}>
                             <Button /*href="/"*/ onClick={createEvent} variant="contained" size="large" color="primary" sx={{
                                 borderRadius: 0,
                                 pt: theme.spacing(3),
@@ -519,6 +652,7 @@ const EditEvents = (props: Props) => {
                                 pl: theme.spacing(8),
                                 pr: theme.spacing(8),
                                 ml: theme.spacing(5),
+                               
                             }}>Add</Button>
                         </Grid>
 
