@@ -323,7 +323,12 @@ const EditEvents = (props: Props) => {
 
                     <MediaQuery maxWidth={749}>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
-                            <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
+                            <Paper variant="outlined" sx={{ 
+                                backgroundColor: 'transparent', 
+                                borderWidth: theme.spacing(0), 
+                                maxWidth: theme.spacing(80),
+                                 minWidth: theme.spacing(80), 
+                                 minHeight: theme.spacing(10) }} >
                                 <Grid container>
                                     <Grid item xs={12}>
                                         <Typography variant="body2" sx={{ color: "#979797", ml: "49%", mt: theme.spacing(5) }}>
@@ -390,8 +395,8 @@ const EditEvents = (props: Props) => {
                         minHeight: theme.spacing(100),
                     },
                     [theme.breakpoints.down('sm')]: {
-                        left: '25%',
-                        top:'25%',
+                        left: '50%',
+                        top:'50%',
                         maxWidth: theme.spacing(80),
                         minWidth: theme.spacing(80),
                         maxHeight: theme.spacing(100),
@@ -429,8 +434,7 @@ const EditEvents = (props: Props) => {
                             minHeight: theme.spacing(100),
                         },
                         [theme.breakpoints.down('sm')]: {
-                            left: '25%',
-                            top: '25%',
+                     
                             maxWidth: theme.spacing(70),
                             minWidth: theme.spacing(70),
                             maxHeight: theme.spacing(140),

@@ -385,20 +385,7 @@ const EditEvent = (props: Props) => {
                         bgcolor: 'background.paper',
                         boxShadow: 24,
                         p: 4,
-                        [theme.breakpoints.down('md')]: {
-                            maxWidth: theme.spacing(120),
-                            minWidth: theme.spacing(120),
-                            maxHeight: theme.spacing(100),
-                            minHeight: theme.spacing(100),
-                        },
-                        [theme.breakpoints.down('sm')]: {
-                            left: '25%',
-                            top: '25%',
-                            maxWidth: theme.spacing(80),
-                            minWidth: theme.spacing(80),
-                            maxHeight: theme.spacing(100),
-                            minHeight: theme.spacing(100),
-                        },
+                        
                     }}>
                     
                         <Grid container direction = "column">
@@ -820,8 +807,6 @@ const EditEvent = (props: Props) => {
                                     minHeight: theme.spacing(100),
                                 },
                                 [theme.breakpoints.down('sm')]: {
-                                    left: '25%',
-                                    top: '25%',
                                     maxWidth: theme.spacing(80),
                                     minWidth: theme.spacing(80),
                                     maxHeight: theme.spacing(100),
@@ -841,8 +826,6 @@ const EditEvent = (props: Props) => {
                                         minHeight: theme.spacing(150),
                                     },
                                     [theme.breakpoints.down('sm')]: {
-                                        left: '25%',
-                                        top: '25%',
                                         maxWidth: theme.spacing(70),
                                         minWidth: theme.spacing(70),
                                         maxHeight: theme.spacing(170),
@@ -1073,7 +1056,11 @@ const EditEvent = (props: Props) => {
                                 minHeight: theme.spacing(55),
                                 bgcolor: 'background.paper',
                                 boxShadow: 24,
-                                p: 4
+                                p: 4,
+                                [theme.breakpoints.down('sm')]: {
+                                    minWidth: theme.spacing(70),
+                                    maxWidth: theme.spacing(70),
+                                },
                             }}>
 
                                 <Grid container direction="column">

@@ -424,7 +424,10 @@ const EditLevel = (props: Props) => {
                         minHeight: theme.spacing(55),
                         bgcolor: 'background.paper',
                         boxShadow: 24,
-                        p: 4
+                        p: 4,
+                        [theme.breakpoints.down('sm')]: {
+                            minWidth: theme.spacing(80),
+                        },
                     }}>
                     
                         <Grid container direction = "column">
