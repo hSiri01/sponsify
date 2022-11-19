@@ -15,6 +15,11 @@ import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { GetAllEvents } from '../../../utils/api-types';
 
 
@@ -25,7 +30,17 @@ const EditEvents = (props: Props) => {
 
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
-    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
+    const handleCloseNewQuestion = () => {
+        setNameError(false)
+        setPriceError(false)
+        setDateError(false)
+        setTotalSpotsError(false)
+        setOpenNewQuestion(false)
+    }
+
+    const [resetEvents, setResetEvents] = React.useState(false);
+    const handleOpenResetEvents = () => setResetEvents(true);
+    const handleCloseResetEvents = () => setResetEvents(false);
 
     const [checked, setChecked] = React.useState(true);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,6 +56,11 @@ const EditEvents = (props: Props) => {
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(-1);
     const [dateInput, setDateInput] = React.useState('');
     const [endDateInput, setEndDateInput] = React.useState('');
+
+    const [nameError, setNameError] = React.useState(false);
+    const [priceError, setPriceError] = React.useState(false);
+    const [dateError, setDateError] = React.useState(false);
+    const [totalSpotsError, setTotalSpotsError] = React.useState(false);
 
     const [events, setEvents] = React.useState<GetAllEvents>([]);
     const [logo, setLogo] = React.useState("")
@@ -92,7 +112,7 @@ const EditEvents = (props: Props) => {
     }, [student_org_name])
 
     const createEvent = () => {
-        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1 && spotsTakenInput <= totalSpotsInput) {
             fetch('/create-event', {
                 method: 'POST',
                 headers: {
@@ -103,7 +123,7 @@ const EditEvents = (props: Props) => {
                     name: nameInput,
                     price: priceInput,
                     date: dateInput ? dateInput : undefined,
-                    endDate: endDateInput ? endDateInput : undefined,
+                    endDate: (endDateInput && endDateInput !== dateInput) ? endDateInput : undefined,
                     desc: descInput,
                     briefDesc: briefDescInput,
                     totalSpots: totalSpotsInput,
@@ -120,8 +140,29 @@ const EditEvents = (props: Props) => {
         }
         else {
             handleOpenNewQuestion()  // keep modal open
-            // TODO: error handling
+
+            setTotalSpotsError(totalSpotsInput === -1 || spotsTakenInput > totalSpotsInput)
+            setNameError(!nameInput)
+            setPriceError(priceInput === -1)
+            setDateError(!dateInput)
         }
+    };
+
+    const handleReset = async() => {
+        await fetch('/reset-events', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: student_org_name
+            })
+        })
+            .then(() => {
+                handleCloseResetEvents()
+                window.location.reload()
+            })
     };
 
     return (
@@ -152,21 +193,57 @@ const EditEvents = (props: Props) => {
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6),}}>
-                    <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
-                        borderRadius: 0,
-                        pt: theme.spacing(3),
-                        pb: theme.spacing(3),
-                        pl: theme.spacing(8),
-                        pr: theme.spacing(8),
-                        ml: theme.spacing(5),
-                    }}>Create Event</Button>
+                <Grid container xs={12} sx={{ display: 'flex', m: theme.spacing(6) }}>
 
+                    <Grid item>
+                        <Button onClick={handleOpenResetEvents} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(22),
+                        }}>Reset</Button>
+                    </Grid>
+
+                    <Dialog
+                        open={resetEvents}
+                        keepMounted
+                        onClose={handleCloseResetEvents}
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <DialogTitle>{"Reset all events?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                This will set the number of spots that are sponsored to 0 for <b>all events</b>.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseResetEvents}>Cancel</Button> 
+                            <Button onClick={handleReset}>Continue</Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Grid item xs>
+                        <Grid container direction="row-reverse">
+                            <Grid item>
+                                <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    mr: theme.spacing(24),
+                                }}>Add Event</Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    
                 </Grid>
 
 
-
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(8) }}>
                     <Typography variant="h4">
                         {student_org_short_name} Events
                     </Typography>
@@ -175,6 +252,7 @@ const EditEvents = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
                     <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
+
                             <Grid item xs={1}>
                                 <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5) }}>
                                     DELETE
@@ -218,7 +296,7 @@ const EditEvents = (props: Props) => {
                     {
                     events.map((event: any) =>
                     <>
-                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Grid item key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                             <EditEvent 
                                 name={event.name}
@@ -227,7 +305,7 @@ const EditEvents = (props: Props) => {
                                 long_description={event.desc}
                                 avg_attendance={event.avgAttendance}
                                 num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots > -1 ? event.totalSpots : undefined}
+                                occurances={event.totalSpots}
                                 price={event.price}
                                 date_start={new Date(event.date)}
                                 date_end={event.endDate ? new Date(event.endDate) : undefined}
@@ -284,6 +362,8 @@ const EditEvents = (props: Props) => {
                        
                             <Grid item xs={3}>
                                 <TextField
+                                    required
+                                    error={dateError}
                                     id="date"
                                     label="Date Start"
                                     type="date"
@@ -309,7 +389,9 @@ const EditEvents = (props: Props) => {
 
 
                             <Grid item xs={5}>
-                                <TextField 
+                                <TextField
+                                    required
+                                    error={nameError}
                                     sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4) }}
                                     id="outlined-basic"
                                     label="Name"
@@ -327,6 +409,8 @@ const EditEvents = (props: Props) => {
 
                             <Grid item xs={4} sx={{ textAlign: "right" }}>
                                 <TextField
+                                    required
+                                    error={priceError}
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Price"
@@ -335,6 +419,9 @@ const EditEvents = (props: Props) => {
                                     value={priceInput > -1 ? priceInput : ''}
                                     onChange={ev => setPriceInput(+ev.target.value)} />
                                 <TextField
+                                    required
+                                    error={totalSpotsError}
+                                    helperText={totalSpotsError && spotsTakenInput > totalSpotsInput ? "Cannot be less than " + spotsTakenInput : ""}
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
                                     label="Occurances"

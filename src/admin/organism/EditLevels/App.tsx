@@ -21,6 +21,7 @@ interface Props {
 const EditLevels = (props: Props) => {
     
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState<GetAllLevels>([])
     const [levelName, setLevelName] = React.useState('')
@@ -147,6 +148,12 @@ const EditLevels = (props: Props) => {
                         ml: theme.spacing(5),
                     }}>Add Level</Button>
 
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                    <Typography variant="h4">
+                        {student_org_short_name} Levels
+                    </Typography>
                 </Grid>
 
                 <>

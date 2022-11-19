@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Button from '@mui/material/Button';
 import Approval from '../../../assets/images/graphics/approval.svg';
+import {useNavigate} from "react-router-dom"
 
 
 
@@ -16,8 +17,50 @@ interface Props {
 }
 
 const NewUser = (props: Props) => {
-    
 
+    const navigate = useNavigate();
+    const [name, setName] = React.useState("")
+    const [email, setEmail] = React.useState("")
+    const [desc, setDesc] = React.useState("")
+    const [subject, setSubject] = React.useState("")
+
+    const sendEmail = ()=>{
+        fetch("/send-request-created-email",{
+            method:'POST',
+            headers:{
+                "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            email,
+            name
+        })
+        }).catch(err=>{
+            console.log("Error found",err)
+        })
+    }
+
+    const createOrgRequest = async () => {
+        fetch('/create-request', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                description: desc
+            })
+        })
+            .then(() => {
+                sendEmail()
+                // window.location.reload()
+            })
+        
+        navigate("/request-inbox")
+        
+    }
+    
     return (
         <ThemeProvider theme={theme}>
 
@@ -52,6 +95,7 @@ const NewUser = (props: Props) => {
                         aria-label="empty textfield"
                         variant="outlined"
                         autoComplete="off"
+                        onChange={(e) => setName(e.target.value)}
                         />
                         
                 </Grid>
@@ -65,6 +109,7 @@ const NewUser = (props: Props) => {
                         label="Organization Email"
                         variant="outlined"
                         autoComplete="off"
+                        onChange={(e) => setEmail(e.target.value)}
                     />
 
                     
@@ -91,11 +136,14 @@ const NewUser = (props: Props) => {
                         placeholder='Purpose of using our application'
                         minRows={8}
                         style={{ minWidth: theme.spacing(200), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                        onChange={(e)=> setDesc(e.target.value)}
                     />
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(6), }}>
-                    <Button type="submit"  value="Upload" variant="contained" size="large" color="primary" sx={{
+                    <Button type="submit"  value="Upload" variant="contained" size="large" color="primary" 
+                    onClick={createOrgRequest }
+                    sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
