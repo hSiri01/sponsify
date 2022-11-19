@@ -289,6 +289,26 @@ app.get('/get-all-events/:org', (req, res) => {
         )
 })
 
+app.get('/check-event-availability/:id', (req, res) => {
+        events.find({_id: req.params.id})
+            .exec((err, result) => {
+            if (err) {
+                console.log("Error on check-event-availability, " + err)
+            }
+            else {
+                if (result[0].spotsTaken >= result[0].totalSpots) {
+                    response = false
+                    res.send({ cleared: false})
+                } else {
+                    res.send({ cleared: true})
+                }
+                // res.send(result)
+            }
+        }
+        )
+    
+})
+
 app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,

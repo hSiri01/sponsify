@@ -69,6 +69,12 @@ const Inbox = (props: Props) => {
                     </Typography>
                 </Grid>
 
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(0) }}>
+                        <Typography variant="h6" sx={{ fontFamily: "Oxygen"}}>
+                            If it's not in your inbox, try checking your spam
+                    </Typography>
+                </Grid>
+
                
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(15) }} src={ThankYou} alt="Giving money" />
