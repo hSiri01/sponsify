@@ -18,7 +18,11 @@ import CartItem from '../../molecule/CartItem/App'
 import { useNavigate } from "react-router-dom"
 import { useCart } from '../../../contexts/Cart';
 import { GetEnabledEvents, GetLevelByAmount } from '../../../utils/api-types';
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 interface Props {
 }
 
@@ -44,6 +48,10 @@ const Events = (props: Props) => {
     const [total, setTotal] = React.useState(0);
     const [logo, setLogo] = React.useState("")
 
+    const [errorBox, setErrorBox]  = React.useState(false);
+      const handleErrorClose = () => {
+        setErrorBox(false);
+      };
     React.useEffect(() => {
         const fetchData = async () => {
             let res = await fetch("/get-enabled-events/" + student_org_name)
@@ -100,6 +108,7 @@ const Events = (props: Props) => {
         if (cart.at(0)) {
             navigate("/checkout")
         }
+        else setErrorBox(true)
     }
 
     return (
@@ -117,7 +126,29 @@ const Events = (props: Props) => {
                         <ShoppingCartIcon />
                     </IconButton>
                 </Grid>
-
+                <Dialog
+                    open={errorBox}
+                    onClose={handleErrorClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>
+                        You must add an item to your cart before checking out. 
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleErrorClose} variant="contained" size="large" color="secondary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                }}>Okay</Button>
+                    </DialogActions>
+                </Dialog>
                 <Modal
                     open={openInfo}
                     onClose={handleCloseInfo}
