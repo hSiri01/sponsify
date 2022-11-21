@@ -35,7 +35,6 @@ const EditLevels = (props: Props) => {
     const [logo, setLogo] = React.useState("")
     const [color, setColor] = React.useState('#909090')
 
-<<<<<<< HEAD
     const [descriptionError, setDescriptionError] = React.useState(false)
     const [levelNameError, setLevelNameError] = React.useState(false)
     const [minAmountError, setMinAmountError] = React.useState(false)
@@ -52,11 +51,6 @@ const EditLevels = (props: Props) => {
         setMaxAmountError(false)
         setColorError(false)
     }
-=======
-    const handleOpenNewLevel = () => setOpenNewLevel(true)
-
-    const handleCloseNewLevel = () => setOpenNewLevel(false)
->>>>>>> f43ed1388108f9ba82c407808848991827a8e8a3
 
 
     React.useEffect(() => {
