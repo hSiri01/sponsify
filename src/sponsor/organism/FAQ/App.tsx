@@ -7,6 +7,8 @@ import { ThemeProvider } from '@mui/system';
 import Question from '../../molecule/Question/App';
 import Button from '@mui/material/Button';
 import { GetAllFaq } from '../../../utils/api-types';
+import MediaQuery from 'react-responsive'
+
 
 interface Props {
 }
@@ -50,25 +52,83 @@ const FAQ = (props: Props) => {
         <ThemeProvider theme={theme}>
 
             <Grid container>
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                <MediaQuery minWidth={1200}>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(30),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={500} maxWidth={1199}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(20),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery maxWidth={499}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(15),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">

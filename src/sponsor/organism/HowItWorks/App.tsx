@@ -24,17 +24,23 @@ const HowItWorks = (props: Props) => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(6) }}>
-                        <Typography variant="h6" sx={{ fontFamily: "Oxygen"}}>
+                <Grid item sm={12} sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(6) }}>
+                        <Typography variant="h6" sx={{ 
+                            fontFamily: "Oxygen",
+                            [theme.breakpoints.down('sm')]: {
+                                textAlign:'center'
+                            },
+
+                            }}>
                             Follow the steps to<b style={{ color: "#4baa89"}}> understand the process</b>
                     </Typography>
                 </Grid>
 
-                <Grid item xs={1} sx={{margin: theme.spacing(6) }}>
+                <Grid item md={1} xs={12} sx={{margin: theme.spacing(6) }}>
                 </Grid>
 
                 
-                <Grid item xs={5} sx={{margin: theme.spacing(6) }}>
+                <Grid item xs={12} md={5} sx={{margin: theme.spacing(6) }}>
                     <ol>
                         <li style={{paddingLeft:theme.spacing(5)}}>Select an <b style={{ color: "#4baa89" }}> event</b></li>
                         <li style={{ paddingLeft: theme.spacing(5), marginTop: theme.spacing(4) }}>Click the <b style={{ color: "#4baa89" }}>drop down button</b> to get more information</li>
@@ -47,7 +53,7 @@ const HowItWorks = (props: Props) => {
                     </ol>
                 </Grid>
 
-                <Grid item xs={12} sm={4} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
+                <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Question} alt="Giving money" />
                 </Grid>
 

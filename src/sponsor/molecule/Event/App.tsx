@@ -10,6 +10,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useCart } from '../../../contexts/Cart';
+import MediaQuery from 'react-responsive'
 
 
 
@@ -88,6 +89,7 @@ const Event = (props: OrgEvent) => {
     return (
         <ThemeProvider theme={theme}>
             <Grid container>
+                <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Paper variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
@@ -212,8 +214,294 @@ const Event = (props: OrgEvent) => {
                         </Box>
                     </Modal>
                 </Grid>
-            </Grid>    
+                </MediaQuery>
 
+                <MediaQuery minWidth={750} maxWidth={1349}>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Paper variant="outlined" sx={{ 
+                            borderWidth: theme.spacing(.5), 
+                            borderRadius: 0, 
+                            borderColor: "#c2c2c2", 
+                            maxWidth: theme.spacing(180), 
+                            minWidth: theme.spacing(180), 
+                            minHeight: theme.spacing(20), 
+                            mt: theme.spacing(4) 
+                            }} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(3) }}>
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(2) }}>
+                                    <Checkbox checked={checked}
+                                        onChange={handleChange} />
+                                </Grid>
+
+                                <Grid item xs={2} sx={{  }}>
+                                    <Date date_1={date_start} date_2={date_end} />
+                                </Grid>
+
+                                <Grid item xs={4} sx={{pl: theme.spacing(8), pr: theme.spacing(8)}}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{avg_attendance}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{occurances}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9) }}>
+                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
+                                        {'>'}
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+
+                        </Paper>
+
+                        <Modal
+                            open={openEvent}
+                            onClose={handleCloseEvent}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            disableScrollLock
+                        >
+                            <Box sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxWidth: theme.spacing(200),
+                                minWidth: theme.spacing(200),
+                                maxHeight: theme.spacing(100),
+                                minHeight: theme.spacing(100),
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                overflow: 'scroll',
+                            }}>
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+
+                                    <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+
+
+                                        <Grid item xs={3} sx={{ pr: theme.spacing(15) }}>
+                                            <Date date_1={date_start} date_2={date_end} />
+                                        </Grid>
+
+                                        <Grid item xs={5}>
+                                            <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                            <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                        </Grid>
+
+                                        <Grid item xs={4} sx={{ textAlign: "right" }}>
+                                            <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
+                                            <Typography sx={{}} variant="body1">Occurances: {occurances}</Typography>
+                                        </Grid>
+
+
+
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Grid item xs={10}>
+                                        <Typography dangerouslySetInnerHTML={{ __html: long_description }} variant="body1" />
+                                    </Grid>
+                                </Grid>
+
+                                {occurances > 1 ?
+                                    (
+                                        <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
+                                            <Grid item xs={3}>
+                                                <TextField onChange={handleQuantityChange} sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(5) }} id="outlined-basic" label="Quantity" variant="outlined" defaultValue={cart.filter(e => e.id === props.id)[0]?.quantity} />
+                                            </Grid>
+
+                                            <Grid item xs={1}>
+                                                <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
+                                            </Grid>
+                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                                <Checkbox checked={checked}
+                                                    onChange={handleChange} />
+                                            </Grid>
+                                        </Grid>
+                                    ) : (
+                                        <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
+
+                                            <Grid item xs={1}>
+                                                <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
+                                            </Grid>
+                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                                <Checkbox checked={checked}
+                                                    onChange={handleChange} />
+                                            </Grid>
+                                        </Grid>
+                                    )}
+
+
+
+
+                            </Box>
+                        </Modal>
+                    </Grid>
+                </MediaQuery>
+           
+                <MediaQuery maxWidth={749}>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Paper variant="outlined" sx={{ 
+                            borderWidth: theme.spacing(.5), 
+                            borderRadius: 0, 
+                            borderColor: "#c2c2c2", 
+                            maxWidth: theme.spacing(80), 
+                            minWidth: theme.spacing(80), 
+                            minHeight: theme.spacing(20), 
+                            mt: theme.spacing(4) 
+                            }} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', }}>
+                                <Grid item xs={1} sx={{ pr: theme.spacing(5) }}>
+                                    <Checkbox checked={checked}
+                                        onChange={handleChange} />
+                                </Grid>
+                                <Grid item xs={12} sx={{}}>
+                                </Grid>
+
+                                <Grid item xs={3} sx={{}}>
+                                </Grid>
+
+                                <Grid item xs={5} sx={{ }}>
+                                    <Date date_1={date_start} date_2={date_end} />
+                                </Grid>
+
+                                <Grid item xs={3} sx={{}}>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{pl: theme.spacing(8), pr: theme.spacing(8), mt: theme.spacing(5)}}>
+                                    <Typography sx={{ 
+                                        fontWeight: "600",
+                                        textAlign: 'center'
+                                        }} variant="body1">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ marginTop: theme.spacing(5) }}>
+                                    <Typography sx={{ 
+                                        fontWeight: "600",
+                                        textAlign: 'center'
+                                         }} variant="body1">Attendance: {avg_attendance}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ }}>
+                                    <Typography sx={{ fontWeight: "600", textAlign: 'center' }} variant="body1">Occurances: {occurances}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ }}>
+                                    <Typography sx={{ color: "#367c63", fontWeight: "600", textAlign: 'center' }} variant="body1">${price}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ marginTop: theme.spacing(1.5), display:'flex', justifyContent:'center'}}>
+                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
+                                        {'>'}
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+
+                        </Paper>
+
+                        <Modal
+                            open={openEvent}
+                            onClose={handleCloseEvent}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            disableScrollLock
+                        >
+                            <Box sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                maxWidth: theme.spacing(200),
+                                minWidth: theme.spacing(200),
+                                maxHeight: theme.spacing(100),
+                                minHeight: theme.spacing(100),
+                                bgcolor: 'background.paper',
+                                boxShadow: 24,
+                                p: 4,
+                                overflow: 'scroll',
+                            }}>
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+
+                                    <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+
+
+                                        <Grid item xs={3} sx={{ pr: theme.spacing(15) }}>
+                                            <Date date_1={date_start} date_2={date_end} />
+                                        </Grid>
+
+                                        <Grid item xs={5}>
+                                            <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                            <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                        </Grid>
+
+                                        <Grid item xs={4} sx={{ textAlign: "right" }}>
+                                            <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
+                                            <Typography sx={{}} variant="body1">Occurances: {occurances}</Typography>
+                                        </Grid>
+
+
+
+                                    </Grid>
+                                </Paper>
+
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Grid item xs={10}>
+                                        <Typography dangerouslySetInnerHTML={{ __html: long_description }} variant="body1" />
+                                    </Grid>
+                                </Grid>
+
+                                {occurances > 1 ?
+                                    (
+                                        <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
+                                            <Grid item xs={3}>
+                                                <TextField onChange={handleQuantityChange} sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(5) }} id="outlined-basic" label="Quantity" variant="outlined" defaultValue={cart.filter(e => e.id === props.id)[0]?.quantity} />
+                                            </Grid>
+
+                                            <Grid item xs={1}>
+                                                <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
+                                            </Grid>
+                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                                <Checkbox checked={checked}
+                                                    onChange={handleChange} />
+                                            </Grid>
+                                        </Grid>
+                                    ) : (
+                                        <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
+
+                                            <Grid item xs={1}>
+                                                <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
+                                            </Grid>
+                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                                <Checkbox checked={checked}
+                                                    onChange={handleChange} />
+                                            </Grid>
+                                        </Grid>
+                                    )}
+
+
+
+
+                            </Box>
+                        </Modal>
+                    </Grid>
+                </MediaQuery>
+           
+           
+            </Grid> 
         </ThemeProvider>
 
 
