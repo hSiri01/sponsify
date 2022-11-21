@@ -14,14 +14,17 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { GetAllLevels } from '../../../utils/api-types';
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface Props {  
 }
 
 const EditLevels = (props: Props) => {
     
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""')
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""')
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState<GetAllLevels>([])
     const [levelName, setLevelName] = React.useState('')
@@ -32,9 +35,9 @@ const EditLevels = (props: Props) => {
     const [logo, setLogo] = React.useState("")
     const [color, setColor] = React.useState('#909090')
 
-    const handleOpenNewLevel = () => setOpenNewLevel(true);
+    const handleOpenNewLevel = () => setOpenNewLevel(true)
 
-    const handleCloseNewLevel = () => setOpenNewLevel(false);
+    const handleCloseNewLevel = () => setOpenNewLevel(false)
 
 
     React.useEffect(() => {
@@ -114,7 +117,9 @@ const EditLevels = (props: Props) => {
 
     return (
         <ThemeProvider theme={theme}>
-            
+
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
@@ -272,6 +277,32 @@ const EditLevels = (props: Props) => {
 
                 </Box>
             </Modal>
+            </>
+            )}
+
+            {(!isLoading && !isAuthenticated) && (
+            <Grid container sx={{ backgroundColor:"#fff"}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                </Grid>
+                
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Typography variant="h5">
+                        Login below to access Sponsify
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(5),
+                        }}>Login</Button>
+                </Grid>
+            </Grid> 
+            )}
 
         </ThemeProvider>
 

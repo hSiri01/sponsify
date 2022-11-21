@@ -14,8 +14,8 @@ interface Props {
 const FAQ = (props: Props) => {
 
     const [faq, setFAQ] = React.useState<GetAllFaq>([{question: '', answer: ''}])
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
     const [logo, setLogo] = React.useState("")
 
     React.useEffect(() => {

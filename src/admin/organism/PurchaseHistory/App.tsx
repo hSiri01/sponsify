@@ -7,10 +7,11 @@ import { ThemeProvider } from '@mui/system';
 import MenuBar from '../../molecule/MenuBar/App'
 import Transaction from '../../molecule/Transaction/App';
 import { Paper } from '@mui/material';
+import Button from '@mui/material/Button';
 import LevelSponsors from '../../molecule/LevelSponsors/App';
 import { Event, Sponsor } from '../../../utils/mongodb-types';
 import { GetAllLevels, GetAllPurchasedEvents, GetAllSponsors } from '../../../utils/api-types';
-
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface Props {
@@ -18,7 +19,9 @@ interface Props {
 
 const PurchaseHistory = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const [logo, setLogo] = React.useState("")
     
     React.useEffect(() => {
@@ -92,7 +95,8 @@ const PurchaseHistory = (props: Props) => {
 
         <ThemeProvider theme={theme}>
 
-
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
@@ -283,7 +287,32 @@ const PurchaseHistory = (props: Props) => {
 
             </Grid>
 
+            </>
+            )}
 
+            {(!isLoading && !isAuthenticated) && (
+                <Grid container sx={{ backgroundColor:"#fff"}}>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                    </Grid>
+                    
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Typography variant="h5">
+                            Login below to access Sponsify
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                                borderRadius: 0,
+                                pt: theme.spacing(3),
+                                pb: theme.spacing(3),
+                                pl: theme.spacing(8),
+                                pr: theme.spacing(8),
+                                ml: theme.spacing(5),
+                            }}>Login</Button>
+                    </Grid>
+                </Grid> 
+            )}
 
         </ThemeProvider>
 

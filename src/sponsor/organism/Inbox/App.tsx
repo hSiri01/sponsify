@@ -12,7 +12,7 @@ interface Props {
 
 const Inbox = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const [logo, setLogo] = React.useState("") 
     React.useEffect(() => {
         const fetchLogo = async() => {

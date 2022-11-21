@@ -34,7 +34,7 @@ interface Props {
 const Transaction = (props: Props) => {
 
     const {company_name, rep_name, rep_email, date_start, date_end, event_name, short_description, purchase_date, price} = props
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const [openConfirmation, setOpenConfirmation] = React.useState(false)
 
     const handleOpenConfirmation = () => setOpenConfirmation(true)
