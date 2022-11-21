@@ -276,8 +276,8 @@ const Event = (props: OrgEvent) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                maxWidth: theme.spacing(200),
-                                minWidth: theme.spacing(200),
+                                maxWidth: theme.spacing(178),
+                                minWidth: theme.spacing(178),
                                 maxHeight: theme.spacing(100),
                                 minHeight: theme.spacing(100),
                                 bgcolor: 'background.paper',
@@ -285,7 +285,7 @@ const Event = (props: OrgEvent) => {
                                 p: 4,
                                 overflow: 'scroll',
                             }}>
-                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(170), minWidth: theme.spacing(170), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
 
                                     <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
 
@@ -425,8 +425,8 @@ const Event = (props: OrgEvent) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                maxWidth: theme.spacing(200),
-                                minWidth: theme.spacing(200),
+                                maxWidth: theme.spacing(80),
+                                minWidth: theme.spacing(80),
                                 maxHeight: theme.spacing(100),
                                 minHeight: theme.spacing(100),
                                 bgcolor: 'background.paper',
@@ -434,21 +434,24 @@ const Event = (props: OrgEvent) => {
                                 p: 4,
                                 overflow: 'scroll',
                             }}>
-                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(70), minWidth: theme.spacing(70), minHeight: theme.spacing(20), m: theme.spacing(6) }} >
 
                                     <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
 
-
-                                        <Grid item xs={3} sx={{ pr: theme.spacing(15) }}>
+                                        <Grid item xs={4}>
+                                        </Grid>
+                                        <Grid item xs={5} sx={{}}>
                                             <Date date_1={date_start} date_2={date_end} />
                                         </Grid>
-
-                                        <Grid item xs={5}>
-                                            <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
-                                            <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                        <Grid item xs={3}>
                                         </Grid>
 
-                                        <Grid item xs={4} sx={{ textAlign: "right" }}>
+                                        <Grid item xs={12} sx={{mt: theme.spacing(5)}}>
+                                            <Typography sx={{ fontWeight: "600", textAlign:'center' }} variant="h6">{name}</Typography>
+                                            <Typography sx={{ color: "#979797", textAlign:'center' }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                        </Grid>
+
+                                        <Grid item xs={12} sx={{ textAlign: "center" }}>
                                             <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
                                             <Typography sx={{}} variant="body1">Occurances: {occurances}</Typography>
                                         </Grid>
@@ -459,7 +462,7 @@ const Event = (props: OrgEvent) => {
                                 </Paper>
 
                                 <Grid container sx={{ display: 'flex', justifyContent: 'center' }}>
-                                    <Grid item xs={10}>
+                                    <Grid item xs={11}>
                                         <Typography dangerouslySetInnerHTML={{ __html: long_description }} variant="body1" />
                                     </Grid>
                                 </Grid>
@@ -467,14 +470,14 @@ const Event = (props: OrgEvent) => {
                                 {occurances > 1 ?
                                     (
                                         <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
-                                            <Grid item xs={3}>
+                                            <Grid item xs={4}>
                                                 <TextField onChange={handleQuantityChange} sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(5) }} id="outlined-basic" label="Quantity" variant="outlined" defaultValue={cart.filter(e => e.id === props.id)[0]?.quantity} />
                                             </Grid>
 
-                                            <Grid item xs={1}>
-                                                <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
+                                            <Grid item xs={3}>
+                                                <Typography sx={{ pt: theme.spacing(5), textAlign:'center' }} variant="body1">SELECT</Typography>
                                             </Grid>
-                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
                                                 <Checkbox checked={checked}
                                                     onChange={handleChange} />
                                             </Grid>
@@ -482,10 +485,10 @@ const Event = (props: OrgEvent) => {
                                     ) : (
                                         <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
 
-                                            <Grid item xs={1}>
+                                            <Grid item xs={3}>
                                                 <Typography sx={{ pt: theme.spacing(5) }} variant="body1">SELECT</Typography>
                                             </Grid>
-                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
+                                            <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
                                                 <Checkbox checked={checked}
                                                     onChange={handleChange} />
                                             </Grid>

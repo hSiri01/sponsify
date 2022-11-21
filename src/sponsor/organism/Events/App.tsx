@@ -188,7 +188,8 @@ const Events = (props: Props) => {
                         <Grid container>
                             {cart.map(item => (
                                 <Grid item key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                    <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
+                                    <CartItem name={item.name} date_start={item.date_start} 
+                                    date_end={item.date_end} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
                                 </Grid>
                             ))}
 
@@ -315,6 +316,7 @@ const Events = (props: Props) => {
                     </Typography>
                 </Grid>
 
+                <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
                     <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
@@ -356,6 +358,51 @@ const Events = (props: Props) => {
                         </Grid>
                     </Paper>
                 </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={750} maxWidth={1349}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
+                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0), maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10) }} >
+                        <Grid container>
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5), fontSize:theme.spacing(3) }}>
+                                    SELECT
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                                    <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(20), mt: theme.spacing(5), fontSize: theme.spacing(3) }}>
+                                    DATE
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={3}>
+                                    <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(20), mt: theme.spacing(5), fontSize: theme.spacing(3) }}>
+                                    EVENT NAME
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                                    <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(20), fontSize: theme.spacing(3), textAlign: 'center' }}>
+                                    AVG ATTENDANCE
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={1}>
+                                    <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(10), fontSize: theme.spacing(3) }}>
+                                    OCCURANCES
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={1}>
+                                    <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(18), fontSize: theme.spacing(3) }}>
+                                    PRICE
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
+                </MediaQuery>
 
                 <>
                     {events.map((event: any) =>   
