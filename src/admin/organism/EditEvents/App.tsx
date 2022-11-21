@@ -12,6 +12,7 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
 import Checkbox from '@mui/material/Checkbox';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
@@ -27,6 +28,8 @@ interface Props {
 }
 
 const EditEvents = (props: Props) => {
+
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
@@ -63,17 +66,17 @@ const EditEvents = (props: Props) => {
     const [totalSpotsError, setTotalSpotsError] = React.useState(false);
 
     const [events, setEvents] = React.useState<GetAllEvents>([]);
-    const [logo, setLogo] = React.useState("")
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const [logo, setLogo] = React.useState("");
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     React.useEffect(() => {
         const fetchLogo = async() => {
             try{
-            // console.log(student_org_name)
-            await fetch("/get-logo/" + student_org_name)
-                .then((res) => res.json()) 
-                .then((data1) => setLogo(data1.logoImage))
+                // console.log(student_org_name)
+                await fetch("/get-logo/" + student_org_name)
+                    .then((res) => res.json()) 
+                    .then((data1) => setLogo(data1.logoImage))
             }
             catch(e){
                 console.log("Error fetching logo",(e))
@@ -165,11 +168,14 @@ const EditEvents = (props: Props) => {
             })
     };
 
+    console.log(isAuthenticated)
+
     return (
 
         <ThemeProvider theme={theme}>
 
-
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
@@ -293,32 +299,30 @@ const EditEvents = (props: Props) => {
                 </Grid>
 
                 <>
-                    {
-                    events.map((event: any) =>
-                    <>
-                        <Grid item key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    {events.map((event: any) =>
+                        (<React.Fragment key={event._id}>
+                            <Grid item /* key={event._id} */ xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                            <EditEvent 
-                                name={event.name}
-                                id={event._id}
-                                short_description={event.briefDesc}
-                                long_description={event.desc}
-                                avg_attendance={event.avgAttendance}
-                                num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots}
-                                price={event.price}
-                                date_start={new Date(event.date)}
-                                date_end={event.endDate ? new Date(event.endDate) : undefined}
-                                visible={event.visible}
-                            />
+                                <EditEvent
+                                    name={event.name}
+                                    id={event._id}
+                                    short_description={event.briefDesc}
+                                    long_description={event.desc}
+                                    avg_attendance={event.avgAttendance}
+                                    num_sponsored={event.spotsTaken}
+                                    occurances={event.totalSpots}
+                                    price={event.price}
+                                    date_start={new Date(event.date)}
+                                    date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                    visible={event.visible}
+                                />
 
-                        </Grid>
-                    </>
+                            </Grid>
+                        </React.Fragment>)
                     )}
                 </>
 
             </Grid>
-
 
             <Modal
                 open={openNewQuestion}
@@ -493,10 +497,34 @@ const EditEvents = (props: Props) => {
 
                 </Box>
             </Modal>
+            </>
+            )}
+
+            {(!isLoading && !isAuthenticated) && (
+            <Grid container sx={{ backgroundColor:"#fff"}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                </Grid>
+                
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Typography variant="h5">
+                        Login below to access Sponsify
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(5),
+                        }}>Login</Button>
+                </Grid>
+            </Grid> 
+            )}
 
         </ThemeProvider>
-
-
     )
 }
 

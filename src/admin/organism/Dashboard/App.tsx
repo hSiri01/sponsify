@@ -32,14 +32,12 @@ import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
-//import Logout from '@mui/icons-material/Logout';
-
 interface Props {
 }
 
 const Dashboard = (props: Props) => {
 
-    const { isAuthenticated, isLoading, user } = useAuth0()
+    const { isAuthenticated, isLoading, user, loginWithRedirect, logout } = useAuth0()
     const [validAdmin, setValidAdmin] = React.useState(false)
     const [notRegistered, setNotRegistered] = React.useState(false)
 
@@ -55,8 +53,7 @@ const Dashboard = (props: Props) => {
     const [zipcode, setZipcode] = React.useState(0)
     const [admin, setAdmin] = React.useState(false)
     const logoutRoute = window.location.hostname === "localhost" ? 
-    "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login" 
-    const { logout } = useAuth0();
+    "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login"
     const navigate = useNavigate();
 
     const [generateGenerateCodePopup, setGenerateCodePopup] = React.useState(false)
@@ -113,17 +110,10 @@ const Dashboard = (props: Props) => {
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
                             localStorage.setItem('email', JSON.stringify(user.email))
-
                         }
                         else {
                             console.log("not associated")
                             setNotRegistered(true)
-                            // TODO: graceful retry process
-                            // logout({ returnTo: process.env.NODE_ENV === "production" ? 
-                            // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
-                            
-                            //if logout and go back to admin page
-                            //logout({ returnTo: logoutRoute })
                         }
 
                     })
@@ -798,7 +788,7 @@ const Dashboard = (props: Props) => {
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
                             <Typography variant="h5">
                                 Your email is not associated with any student organization.
-                                Logout below and try again!
+                                Click below to try again!
                             </Typography>
                         </Grid>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
@@ -809,7 +799,7 @@ const Dashboard = (props: Props) => {
                                     pl: theme.spacing(8),
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
-                                }}>Logout</Button>
+                                }}>Login</Button>
                         </Grid>
                     </Grid>
                 )}
@@ -826,6 +816,30 @@ const Dashboard = (props: Props) => {
                             </Typography>
                         </Grid>
                         
+                    </Grid>
+                )}
+
+                {!isLoading && !isAuthenticated && (
+                    <Grid container sx={{ backgroundColor:"#fff"}}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h5">
+                                Login below to access Sponsify
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                }}>Login</Button>
+                        </Grid>
                     </Grid>
                 )}
             </Grid>
