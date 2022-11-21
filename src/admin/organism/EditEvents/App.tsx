@@ -167,6 +167,30 @@ const EditEvents = (props: Props) => {
                 window.location.reload()
             })
     };
+    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setPriceInput(Number(event.target.value))
+        }
+    };
+    const handleTotalSpotsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setTotalSpotsInput(Number(event.target.value))
+        }
+    };
+    const handleAvgAttendanceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setAvgAttendanceInput(Number(event.target.value))
+        }
+    };
+    const handleSpotsTakenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setSpotsTakenInput(Number(event.target.value))
+        }
+    };
 
     console.log(isAuthenticated)
 
@@ -421,7 +445,7 @@ const EditEvents = (props: Props) => {
                                     variant="outlined"
                                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                     value={priceInput > -1 ? priceInput : ''}
-                                    onChange={ev => setPriceInput(+ev.target.value)} />
+                                    onChange={handlePriceChange} />
                                 <TextField
                                     required
                                     error={totalSpotsError}
@@ -431,8 +455,8 @@ const EditEvents = (props: Props) => {
                                     label="Occurances"
                                     variant="outlined"
                                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                    value={totalSpotsInput > -1 ? totalSpotsInput : ''}
-                                    onChange={ev => setTotalSpotsInput(+ev.target.value)} />
+                                    value={ (totalSpotsInput > -1 ) ? totalSpotsInput : ''}
+                                    onChange={handleTotalSpotsChange} />
                                 <TextField
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
@@ -440,7 +464,7 @@ const EditEvents = (props: Props) => {
                                     variant="outlined"
                                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                     value={spotsTakenInput > -1 ? spotsTakenInput : ''}
-                                    onChange={ev => setSpotsTakenInput(+ev.target.value)} />
+                                    onChange={handleSpotsTakenChange} />
                                 <TextField
                                     sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                     id="outlined-basic"
@@ -448,7 +472,7 @@ const EditEvents = (props: Props) => {
                                     variant="outlined"
                                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                     value={avgAttendanceInput > -1 ? avgAttendanceInput : ''}
-                                    onChange={ev => setAvgAttendanceInput(+ev.target.value)} />
+                                    onChange={handleAvgAttendanceChange} />
                             </Grid>
 
 

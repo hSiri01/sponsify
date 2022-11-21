@@ -104,6 +104,25 @@ const EditEvent = (props: Props) => {
         })
             .then(() => window.location.reload())
     };
+    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setPriceInput(Number(event.target.value))
+        }
+    };
+    const handleTotalSpotsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setTotalSpotsInput(Number(event.target.value))
+        }
+    };
+    const handleAvgAttendanceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setAvgAttendanceInput(Number(event.target.value))
+        }
+    };
+   
 
     const startmonth = (date_start.getMonth()+1 < 10) ? ("0" + (date_start.getMonth()+1).toString()) : date_start.getMonth()+1
     const startdate = (date_start.getDate() < 10) ? ("0" + date_start.getDate().toString()) : date_start.getDate() 
@@ -267,7 +286,7 @@ const EditEvent = (props: Props) => {
                                             variant="outlined" 
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             value={generalDonation ? '-' : priceInput}
-                                            onChange={ev => setPriceInput(+ev.target.value)}
+                                            onChange={handlePriceChange /*ev => setPriceInput(+ev.target.value)*/}
                                         />
                                         <TextField
                                             disabled={generalDonation}
@@ -278,8 +297,8 @@ const EditEvent = (props: Props) => {
                                             label="Occurances"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            value={generalDonation ? '-' : totalSpotsInput}
-                                            onChange={ev => setTotalSpotsInput(+ev.target.value)}
+                                            value={generalDonation ? '-' : totalSpotsInput  }
+                                            onChange={ handleTotalSpotsChange}
                                         />
                                         <TextField
                                             disabled
@@ -298,7 +317,7 @@ const EditEvent = (props: Props) => {
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             value={generalDonation ? '-' : avgAttendanceInput}
-                                            onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                            onChange={handleAvgAttendanceChange}
                                         />
                                     </Grid>
 
