@@ -35,6 +35,11 @@ const EditLevel = (props: Props) => {
     const [des, setDes] = React.useState('')
     const [color, setColor] = React.useState('')
 
+    const [descriptionError, setDescriptionError] = React.useState(false)
+    const [levelNameError, setLevelNameError] = React.useState(false)
+    const [minAmountError, setMinAmountError] = React.useState(false)
+    const [colorError,setColorError] = React.useState(false)
+    const [maxAmountError, setMaxAmountError] = React.useState(false)
     const handleNameChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setLevelName(event.target.value )
     }
@@ -44,6 +49,7 @@ const EditLevel = (props: Props) => {
     }
 
     const handleMaxAmountChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("Handling max amount change")
         setMaxAmount(event.target.value )
     }
 
@@ -71,28 +77,48 @@ const EditLevel = (props: Props) => {
         setOpenConfirmation(true)
     }
     
-    const handleCloseLevel = () => setOpenLevel(false);
+    const handleCloseLevel = () => {
+        setOpenLevel(false);
+        setLevelNameError(false)
+        setDescriptionError(false)
+        setMinAmountError( false )
+        setMaxAmountError(false)
+        setColorError(false)
+    }
 
     const handleCloseConfirmation = () => setOpenConfirmation(false);
 
     const handleUpdateLevel = async () => {
-        const requestOptions = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                levelId: id,
-                minAmount: minAmount,
-                maxAmount: maxAmount,
-                name: levelName,
-                color: color,
-                description: des
-            })
+        if ((maxAmount ? (Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0 ? true : false) && (Number(maxAmount) > Number(minAmount))): true) && Number.isFinite(Number(minAmount)) && levelName.length > 0 && des.length > 0 && Number(minAmount) >= 0 && color ) {
+            const requestOptions = {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    levelId: id,
+                    minAmount: minAmount,
+                    maxAmount: maxAmount,
+                    name: levelName,
+                    color: color,
+                    description: des
+                })
+            }
+    
+            await fetch("/update-level", requestOptions)
+                .then((res) => console.log(res)) 
+    
+            handleCloseLevel()
         }
+        else{
 
-        await fetch("/update-level", requestOptions)
-            .then((res) => console.log(res)) 
-
-        handleCloseLevel()
+            setLevelNameError(!levelName)
+            setDescriptionError(!des)                
+            setMinAmountError((Number.isFinite(Number(minAmount)) ? (Number(minAmount) >= 0 ? false : true) : true ) )
+            setMaxAmountError(maxAmount ?  (( Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0) && (Number(maxAmount) > Number(minAmount)) ) ? false : true): false)
+            setColorError(!color)
+        }
+            
+        
+        
     }
 
     const handleDeleteLevel = async () => {
@@ -211,13 +237,13 @@ const EditLevel = (props: Props) => {
                         </Grid>
 
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
+                            <TextField required error={levelNameError}  sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
                             value={levelName} onChange={handleNameChange()}  variant="outlined" />
                         </Grid>
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
+                            <TextField required  error={minAmountError} sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
                             value={minAmount} onChange={handleMinAmountChange()} variant="outlined" />
-                            <TextField sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" variant="outlined" 
+                            <TextField error={maxAmountError} sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" variant="outlined" 
                             value={maxAmount} onChange={handleMaxAmountChange()} />
                         </Grid>
 
@@ -225,6 +251,9 @@ const EditLevel = (props: Props) => {
                             display: 'flex', justifyContent: 'left', mt: theme.spacing(5)
                         }}>
                             <TextField
+                                required
+                                error = {descriptionError}
+                              
                                 aria-label="empty textarea"
                                 label="Description of level benefits, details, etc."
                                 minRows={3}
@@ -236,7 +265,7 @@ const EditLevel = (props: Props) => {
                         </Grid>
 
                         <Grid item xs={2}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" variant="outlined" 
+                            <TextField required error={colorError} sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" variant="outlined" 
                             value={color} onChange={handleColorChange()} 
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">

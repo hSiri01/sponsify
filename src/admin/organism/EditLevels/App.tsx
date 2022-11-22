@@ -14,14 +14,17 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { GetAllLevels } from '../../../utils/api-types';
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface Props {  
 }
 
 const EditLevels = (props: Props) => {
     
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""')
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""')
     const [openNewLevel, setOpenNewLevel] = React.useState(false);
     const [levels, setLevels] = React.useState<GetAllLevels>([])
     const [levelName, setLevelName] = React.useState('')
@@ -32,9 +35,22 @@ const EditLevels = (props: Props) => {
     const [logo, setLogo] = React.useState("")
     const [color, setColor] = React.useState('#909090')
 
+    const [descriptionError, setDescriptionError] = React.useState(false)
+    const [levelNameError, setLevelNameError] = React.useState(false)
+    const [minAmountError, setMinAmountError] = React.useState(false)
+    const [colorError,setColorError] = React.useState(false)
+    const [maxAmountError, setMaxAmountError] = React.useState(false)
+
     const handleOpenNewLevel = () => setOpenNewLevel(true);
 
-    const handleCloseNewLevel = () => setOpenNewLevel(false);
+    const handleCloseNewLevel = () => {
+        setOpenNewLevel(false);
+        setLevelNameError(false)
+        setDescriptionError(false)
+        setMinAmountError( false )
+        setMaxAmountError(false)
+        setColorError(false)
+    }
 
 
     React.useEffect(() => {
@@ -90,7 +106,7 @@ const EditLevels = (props: Props) => {
     }
 
     const handleCreateLevel = async () => {
-        if (minAmount.length > 0 && levelName.length > 0 && des.length > 0) {
+        if ((maxAmount ? (Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0 ? true : false) && (Number(maxAmount) > Number(minAmount))): true) && Number.isFinite(Number(minAmount)) && levelName.length > 0 && des.length > 0 && Number(minAmount) >= 0 && color ) {
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -109,12 +125,21 @@ const EditLevels = (props: Props) => {
     
             handleCloseNewLevel()
         }
+        else{
+            setLevelNameError(!levelName)
+            setDescriptionError(!des)                
+            setMinAmountError((Number.isFinite(Number(minAmount)) ? (Number(minAmount) >= 0 ? false : true) : true ) )
+            setMaxAmountError(maxAmount ?  (( Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0) && (Number(maxAmount) > Number(minAmount)) ) ? false : true): false)
+            setColorError(!color)
+        }
      
     }
 
     return (
         <ThemeProvider theme={theme}>
-            
+
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
@@ -216,13 +241,13 @@ const EditLevels = (props: Props) => {
                         </Grid>
 
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
+                            <TextField required error={levelNameError} sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
                             defaultValue={''} onChange={handleNameChange()} variant="outlined" />
                         </Grid>
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
+                            <TextField required error={minAmountError}  sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
                             defaultValue={''} onChange={handleMinChange()} variant="outlined" />
-                            <TextField sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" 
+                            <TextField error={maxAmountError}  sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" 
                             defaultValue={''} onChange={handleMaxChange()} variant="outlined" />
                         </Grid>
 
@@ -230,6 +255,9 @@ const EditLevels = (props: Props) => {
                             display: 'flex', justifyContent: 'left', mt: theme.spacing(5)
                         }}>
                             <TextField
+                                required 
+                                error = {descriptionError}
+                               
                                 aria-label="empty textarea"
                                 // label="Description"
                                 label="Description of level benefits, details, etc."
@@ -240,7 +268,7 @@ const EditLevels = (props: Props) => {
                             />
                         </Grid>
                         <Grid item xs={2 }>
-                            <TextField sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" 
+                            <TextField required error={colorError}  sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Hexcode of level" 
                             value={color} onChange={handleColorChange()} 
                             InputProps={{
                                 endAdornment: <InputAdornment position="end">
@@ -272,6 +300,32 @@ const EditLevels = (props: Props) => {
 
                 </Box>
             </Modal>
+            </>
+            )}
+
+            {(!isLoading && !isAuthenticated) && (
+            <Grid container sx={{ backgroundColor:"#fff"}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                </Grid>
+                
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Typography variant="h5">
+                        Login below to access Sponsify
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(5),
+                        }}>Login</Button>
+                </Grid>
+            </Grid> 
+            )}
 
         </ThemeProvider>
 

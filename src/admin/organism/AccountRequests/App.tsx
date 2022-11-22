@@ -16,29 +16,31 @@ interface Props {
 
 const AccountRequests = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""')
+    // TODO: get this dynamically using route or other method
+    const [superAdmin, setSuperAdmin] = React.useState(student_org_name === "Society of Women Engineers")
     const [logo, setLogo] = React.useState("")
 
     const [requests, setRequests] =  React.useState<GetRequests>([])
     
     React.useEffect(() => {
         const fetchLogo = async() => {
-           try{
-             await fetch("/get-logo/" + student_org_name)
-                .then((res) => res.json()) 
-                .then((data1) => setLogo(data1.logoImage))
-           }
-           catch(e){
-            console.log("Error fetching logo ",(e))
-           }
+            try {
+                await fetch("/get-logo/" + student_org_name)
+                    .then((res) => res.json()) 
+                    .then((data1) => setLogo(data1.logoImage))
+                }
+            catch(e){
+                console.log("Error fetching logo ",(e))
+            }
                
         }
 
         const getRequests = async() => {
             try {
                 await fetch("/get-requests")
-                .then((res) => res.json())
-                .then((data1) => setRequests(data1))
+                    .then((res) => res.json())
+                    .then((data1) => setRequests(data1))
             }
             catch(e) {
                 console.log("Error fetching requests", (e))
@@ -58,8 +60,9 @@ const AccountRequests = (props: Props) => {
                 minWidth: "100vw",
                 minHeight: "100vh",
             }}>
-
-
+            
+            {superAdmin && (
+            <>
             <MenuBar />
 
             <Grid container>
@@ -149,8 +152,11 @@ const AccountRequests = (props: Props) => {
 
                
             </Grid>
-            </div>
 
+            </>
+            )}
+
+            </div>
 
         </ThemeProvider>
 

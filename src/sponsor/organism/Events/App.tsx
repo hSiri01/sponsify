@@ -29,8 +29,8 @@ interface Props {
 const Events = (props: Props) => {
     
     const navigate = useNavigate();
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);

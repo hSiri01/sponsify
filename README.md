@@ -44,3 +44,29 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Creating super admin command
+1. Go to mongoDB shell
+2. Make sure to be in correct database
+3. Enter the following command and change to corresponding organization name and email address
+```
+    db.organizations.insertOne({
+        name: "changeName",
+        logoImage: "",
+        address: {
+            streetAddress: "",
+            streetAddress2: "",
+            city: "",
+            state: "",
+            zip: ""
+        },
+        validAdmins: ["changeEmail"],
+        levels: [],
+        events: [],
+        fundName: "",
+        FAQ: [],
+        shortName: "",
+        sponsorCode: "12345678",
+        admin: true
+    })
+```
