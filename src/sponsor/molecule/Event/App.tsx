@@ -35,11 +35,12 @@ const Event = (props: OrgEvent) => {
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
     const handleCloseEvent = () => setOpenEvent(false);
-
-    const [checked, setChecked] = React.useState(false);
-
     const { addToCart, removeFromCart, cart } = useCart();
+    const [checked, setChecked] = React.useState(cart.find(e => e.id == props.id)? true : false);
     
+    
+   
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
         if (event.target.checked)
@@ -79,6 +80,7 @@ const Event = (props: OrgEvent) => {
                     date_end: date_end,
                     id: props.id
                 })
+                
                 return;
             }
         }

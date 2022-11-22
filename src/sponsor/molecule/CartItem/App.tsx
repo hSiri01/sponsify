@@ -21,7 +21,7 @@ export type CartItemType = {
 const CartItem = (props: CartItemType) => {
 
     const {name, short_description, price, quantity, date_start, date_end} = props
-
+    
     const { removeFromCart } = useCart()
 
     return (
@@ -31,9 +31,10 @@ const CartItem = (props: CartItemType) => {
                     <Paper variant="outlined" sx={{ borderStyle:"none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             
-
+                            
                             <Grid item xs={3} sx={{pr:theme.spacing(15)}}>
-                                <Date date_1={date_start} date_2={date_end}/>
+                               
+                                <Date date_1={ date_start} date_2={date_end}/>
                             </Grid>
 
                             <Grid item xs={5}>
