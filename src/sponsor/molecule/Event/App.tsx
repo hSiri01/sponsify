@@ -102,7 +102,7 @@ const Event = (props: OrgEvent) => {
     return (
         <ThemeProvider theme={theme}>
             
-            {(total_spots === spots_taken) ? (
+            {(total_spots <= spots_taken) ? (
               <Grid container >
                 <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Paper ref={ref} variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4)}} >
