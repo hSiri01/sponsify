@@ -34,6 +34,8 @@ const Checkout = (props: Props) => {
     const handleOpenInfo = () => setOpenInfo(true);
     const handleCloseInfo = () => setOpenInfo(false);
 
+    const { clearCart, cart } = useCart()
+
     const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
         const fetchLogo = async() => {
@@ -64,7 +66,7 @@ const Checkout = (props: Props) => {
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
 
-    const { cart } = useCart();
+    
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     var cartMessage : string = ""
     const [orgAddress1, setOrgAddress1] = React.useState('');
@@ -161,7 +163,7 @@ const Checkout = (props: Props) => {
                     org: student_org_name
                 })
             })
-
+            clearCart()
             sendEmail()
             navigate("/inbox")
         }
@@ -298,6 +300,13 @@ const Checkout = (props: Props) => {
 
                 {cart.map(item => {
                     cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quanitity:   </b>" +  item.quantity + "<br>"
+                    if( typeof item.date_start === "string"){
+                        //change the string to a date format
+                        item.date_start = new Date(item.date_start)
+                        if( item.date_end && typeof item.date_end === "string"){
+                            item.date_end = new Date(item.date_end)
+                        }
+                    }
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />

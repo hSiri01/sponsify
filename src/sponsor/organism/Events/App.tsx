@@ -200,12 +200,22 @@ const Events = (props: Props) => {
                         </Typography>
 
                         <Grid container>
-                            {cart.map(item => (
-                                <Grid item key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                    <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
-                                </Grid>
-                            ))}
-
+                            {cart.map(item => {
+                                {console.log(item.name )}
+                                if( typeof item.date_start === "string"){
+                                    //change the string to a date format
+                                    console.log("Changing string to date")
+                                    item.date_start = new Date(item.date_start)
+                                    if( item.date_end && typeof item.date_end === "string"){
+                                        item.date_end = new Date(item.date_end)
+                                    }
+                                }
+                                return (
+                                    <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                        <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
+                                    </Grid>
+                                )
+                            })}
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
                                 <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
                             </Grid>
