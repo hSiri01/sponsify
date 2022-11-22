@@ -299,11 +299,9 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 {cart.map(item => {
-                    {console.log(item.name )}
                     cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quanitity:   </b>" +  item.quantity + "<br>"
                     if( typeof item.date_start === "string"){
                         //change the string to a date format
-                        console.log("Changing string to date")
                         item.date_start = new Date(item.date_start)
                         if( item.date_end && typeof item.date_end === "string"){
                             item.date_end = new Date(item.date_end)

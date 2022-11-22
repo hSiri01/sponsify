@@ -18,13 +18,11 @@ export const useCart = () => React.useContext(CartContext)
 const localStorageCart = JSON.parse(localStorage.getItem('cart') || "[]")
 
 const CartProvider = ({ children }: Props) => {
-    console.log("Getting local storage ",JSON.parse(localStorage.getItem('cart') || "[]"))
     const [cart, setCart] = React.useState<CartItemType[]>(localStorageCart)
 
     const addToCart = (item: CartItemType) => {
         console.log(cart.filter(e => e.id !== item.id).concat([item]))
         setCart(existingCart => existingCart.filter(e => e.id !== item.id).concat([item]))
-        
     }
 
     const removeFromCart = (id: string) => setCart(existingCart => existingCart.filter(e => e.id !== id))

@@ -80,7 +80,6 @@ const Event = (props: OrgEvent) => {
                     date_end: date_end,
                     id: props.id
                 })
-                
                 return;
             }
         }
