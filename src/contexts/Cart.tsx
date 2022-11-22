@@ -34,7 +34,6 @@ const CartProvider = ({ children }: Props) => {
     React.useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart))
         console.log("CartContext", cart)
-        
     }, [cart, setCart])
 
     return (

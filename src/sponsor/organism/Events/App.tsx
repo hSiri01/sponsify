@@ -200,13 +200,6 @@ const Events = (props: Props) => {
                         </Typography>
 
                         <Grid container>
-                            
-                            {/* {cart.map(item => (
-                                
-                                <Grid item key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                    <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
-                                </Grid>
-                            ))} */}
                             {cart.map(item => {
                                 {console.log(item.name )}
                                 if( typeof item.date_start === "string"){
