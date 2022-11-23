@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { GetAllFaq } from '../../../utils/api-types';
 import MediaQuery from 'react-responsive'
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface Props {
@@ -21,8 +22,11 @@ interface Props {
 
 const EditFAQ = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
+
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const [org, setOrg] = React.useState('')
     const [FAQ, setFAQ] = React.useState<GetAllFaq>([])
@@ -100,6 +104,8 @@ const EditFAQ = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <div style={{
@@ -227,7 +233,6 @@ const EditFAQ = (props: Props) => {
 
             </Grid>
 
-
             <Modal
                 open={openNewQuestion}
                 onClose={handleCloseNewQuestion}
@@ -328,7 +333,34 @@ const EditFAQ = (props: Props) => {
 
                 </Box>
             </Modal>
+            
+            {(!isLoading && !isAuthenticated) && (
+            <Grid container sx={{ backgroundColor:"#fff"}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                </Grid>
+                
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Typography variant="h5">
+                        Login below to access Sponsify
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(5),
+                        }}>Login</Button>
+                </Grid>
+            </Grid> 
+            )}
+
             </div>
+            </>
+            )}
 
         </ThemeProvider>
 

@@ -9,6 +9,7 @@ import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
 import MediaQuery from 'react-responsive'
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface Props {
@@ -18,9 +19,11 @@ interface Props {
 
 const BasicInfo = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
-    const user_email = JSON.parse(localStorage.getItem('email') || '{}');
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
+    const user_email = JSON.parse(localStorage.getItem('email') || '""');
     
     const [orgName, setOrgName] = React.useState(student_org_name)
     const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
@@ -131,6 +134,8 @@ const BasicInfo = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <div style={{
@@ -450,8 +455,32 @@ const BasicInfo = (props: Props) => {
             </Grid>
             </div>
 
+            </>
+            )}
 
-            
+            {(!isLoading && !isAuthenticated) && (
+                <Grid container sx={{ backgroundColor:"#fff"}}>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                    </Grid>
+                    
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Typography variant="h5">
+                            Login below to access Sponsify
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                                borderRadius: 0,
+                                pt: theme.spacing(3),
+                                pb: theme.spacing(3),
+                                pl: theme.spacing(8),
+                                pr: theme.spacing(8),
+                                ml: theme.spacing(5),
+                            }}>Login</Button>
+                    </Grid>
+                </Grid> 
+            )}
 
         </ThemeProvider>
 

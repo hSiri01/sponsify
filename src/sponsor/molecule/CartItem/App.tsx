@@ -22,7 +22,7 @@ export type CartItemType = {
 const CartItem = (props: CartItemType) => {
 
     const {name, short_description, price, quantity, date_start, date_end} = props
-
+    
     const { removeFromCart } = useCart()
 
     return (

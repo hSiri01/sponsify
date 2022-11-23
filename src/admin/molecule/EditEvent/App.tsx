@@ -58,33 +58,38 @@ const EditEvent = (props: Props) => {
     const [briefDescInput, setBriefDescInput] = React.useState(props.short_description);
     const [priceInput, setPriceInput] = React.useState(props.price);
     const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
-    const [spotsTakenInput, setSpotsTakenInput] = React.useState(props.num_sponsored);
+    const [totalSpotsError, setTotalSpotsError] = React.useState(false);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
+    const [generalDonation, setGeneralDonation] = React.useState(props.name === 'General Donation');
 
     const updateEvent = () => {
-        fetch('/update-event', {
-            method: 'PUT',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: nameInput,
-                id: id,
-                price: priceInput,
-                date: dateInput,
-                endDate: endDateInput,
-                desc: descInput,
-                briefDesc: briefDescInput,
-                totalSpots: totalSpotsInput,
-                spotsTaken: spotsTakenInput,
-                avgAttendance: avgAttendanceInput,
-                visible: checked
+        if (totalSpotsInput >= num_sponsored) {
+            fetch('/update-event', {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: nameInput,
+                    id: id,
+                    price: priceInput,
+                    date: dateInput,
+                    endDate: endDateInput,
+                    desc: descInput,
+                    briefDesc: briefDescInput,
+                    totalSpots: generalDonation ? -1 : totalSpotsInput,
+                    avgAttendance: avgAttendanceInput,
+                    visible: checked
+                })
             })
-        })
-            .then(() => {
-                handleCloseEvent()
-                window.location.reload()})
+                .then(() => {
+                    handleCloseEvent()
+                    window.location.reload()})
+        }
+        else {
+            setTotalSpotsError(true)
+        }
     };
 
     const deleteEvent = () => {
@@ -100,6 +105,25 @@ const EditEvent = (props: Props) => {
         })
             .then(() => window.location.reload())
     };
+    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setPriceInput(Number(event.target.value))
+        }
+    };
+    const handleTotalSpotsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setTotalSpotsInput(Number(event.target.value))
+        }
+    };
+    const handleAvgAttendanceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setAvgAttendanceInput(Number(event.target.value))
+        }
+    };
+   
 
     const startmonth = (date_start.getMonth()+1 < 10) ? ("0" + (date_start.getMonth()+1).toString()) : date_start.getMonth()+1
     const startdate = (date_start.getDate() < 10) ? ("0" + date_start.getDate().toString()) : date_start.getDate() 
@@ -150,7 +174,7 @@ const EditEvent = (props: Props) => {
                             </Grid>
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
                             {
-                                occurances ? (
+                                occurances > -1 ? (
                                     occurances === num_sponsored ? (
                                         <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}/{occurances}</Typography>
 
@@ -224,7 +248,6 @@ const EditEvent = (props: Props) => {
                                             id="date"
                                             label="Date Start"
                                             type="date"
-                                            defaultValue={date_start_format}
                                             value={dateInput} 
                                             onChange={ev => setDateInput(ev.target.value)}
                                             InputLabelProps={{
@@ -232,36 +255,27 @@ const EditEvent = (props: Props) => {
                                             }}
                                             sx={{ maxWidth: theme.spacing(40) }} />
 
-                                        {(date_end) ?
-                                            (
-
-                                                <TextField
-                                                    id="date"
-                                                    label="Date End"
-                                                    type="date"
-                                                    defaultValue={date_end_format}
-                                                    value={endDateInput} 
-                                                    onChange={ev => setEndDateInput(ev.target.value)}
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                    }}
-                                                    sx={{ maxWidth: theme.spacing(40), mt:theme.spacing(4) }} />
-
-                                            ) : (
-                                                <></>
-                                            )
-                                        }
+                                        <TextField
+                                            id="date"
+                                            label="Date End"
+                                            type="date"
+                                            value={endDateInput !== dateInput ? endDateInput : ''} 
+                                            onChange={ev => setEndDateInput(ev.target.value)}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                            sx={{ maxWidth: theme.spacing(40), mt:theme.spacing(4) }} />
 
                                     </Grid>
 
                                    
                                     <Grid item xs={5}>
                                         <TextField 
+                                            disabled={generalDonation}
                                             sx={{ minWidth: theme.spacing(80), mb: theme.spacing(4)}} 
                                             id="outlined-basic" 
                                             label="Name" 
                                             variant="outlined" 
-                                            defaultValue={name} 
                                             value={nameInput} 
                                             onChange={ev => setNameInput(ev.target.value)}
                                         />
@@ -270,52 +284,52 @@ const EditEvent = (props: Props) => {
                                             id="outlined-basic" 
                                             label="Short Description" 
                                             variant="outlined" 
-                                            defaultValue={short_description} 
                                             value={briefDescInput} 
                                             onChange={ev => setBriefDescInput(ev.target.value)}
                                         />
                                     </Grid>
 
                                     <Grid item xs={4} sx={{ textAlign: "right" }}>
-                                        <TextField 
+                                        <TextField
+                                            disabled={generalDonation}
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id="outlined-basic" 
                                             label="Price" 
                                             variant="outlined" 
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            defaultValue={price}
-                                            value={priceInput}
-                                            onChange={ev => setPriceInput(+ev.target.value)}
+                                            value={generalDonation ? '-' : priceInput}
+                                            onChange={handlePriceChange /*ev => setPriceInput(+ev.target.value)*/}
                                         />
-                                        <TextField 
+                                        <TextField
+                                            disabled={generalDonation}
+                                            error={totalSpotsError}
+                                            helperText={totalSpotsError ? "Cannot be less than " + num_sponsored : ""}
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                            id="outlined-basic"
+                                            id={totalSpotsError ? "outlined-error-helper-text" : "outlined-basic"}
                                             label="Occurances"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            defaultValue={occurances}
-                                            value={totalSpotsInput}
-                                            onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) }}}
+                                            value={generalDonation ? '-' : totalSpotsInput  }
+                                            onChange={ handleTotalSpotsChange}
                                         />
-                                        <TextField 
+                                        <TextField
+                                            disabled
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id="outlined-basic"
                                             label="Sponsored"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            defaultValue={num_sponsored}
-                                            value={spotsTakenInput}
-                                            onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) }}}
+                                            value={num_sponsored}
                                         />
                                         <TextField
+                                            disabled={generalDonation}
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id="outlined-basic"
                                             label="Avg Attendance"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                            defaultValue={avg_attendance}
-                                            value={avgAttendanceInput}
-                                            onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                            value={generalDonation ? '-' : avgAttendanceInput}
+                                            onChange={handleAvgAttendanceChange}
                                         />
                                     </Grid>
 

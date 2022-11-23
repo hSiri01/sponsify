@@ -14,7 +14,7 @@ interface Props {
 
 const Levels = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const [logo, setLogo] = React.useState("")
     const [levels, setLevels] = React.useState<GetAllLevels>([])
 

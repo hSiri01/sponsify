@@ -7,11 +7,13 @@ import { ThemeProvider } from '@mui/system';
 import MenuBar from '../../molecule/MenuBar/App'
 import Transaction from '../../molecule/Transaction/App';
 import { Paper } from '@mui/material';
+import Button from '@mui/material/Button';
 import LevelSponsors from '../../molecule/LevelSponsors/App';
 import { Event, Sponsor } from '../../../utils/mongodb-types';
 import { GetAllLevels, GetAllPurchasedEvents, GetAllSponsors } from '../../../utils/api-types';
 import MediaQuery from 'react-responsive'
 
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface Props {
@@ -19,7 +21,9 @@ interface Props {
 
 const PurchaseHistory = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0()
+
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const [logo, setLogo] = React.useState("")
     
     React.useEffect(() => {
@@ -65,7 +69,7 @@ const PurchaseHistory = (props: Props) => {
             await fetch("/get-all-sponsors/" + student_org_name)
                 .then((res) => res.json())
                 .then((data2: GetAllSponsors) => {
-                    console.log(data2)
+                    // console.log(data2)
                     setSponsors(data2)
 
                     let total_sponsored = data2.reduce((accumulator, current) => accumulator + current.totalAmount, 0)
@@ -78,7 +82,7 @@ const PurchaseHistory = (props: Props) => {
             await fetch("/get-all-levels/" + student_org_name)
                 .then((res) => res.json())
                 .then((data3: GetAllLevels) => {
-                    console.log(data3)
+                    // console.log(data3)
                     setLevels(data3)
                 }
             )
@@ -93,6 +97,8 @@ const PurchaseHistory = (props: Props) => {
 
         <ThemeProvider theme={theme}>
 
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <div style={{
@@ -248,16 +254,22 @@ const PurchaseHistory = (props: Props) => {
 
                 <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
-                    <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
+                    <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(350), minWidth: theme.spacing(340), minHeight: theme.spacing(10) }} >
                         <Grid container>
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(3) }}>
+                                    DELETE
+                                </Typography>
+                            </Grid>
+
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", textAlign: 'left', mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", textAlign: 'left', mt: theme.spacing(5), ml: theme.spacing(7) }}>
                                     COMPANY NAME
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={2}>
-                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(16), mt: theme.spacing(5) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(10), mt: theme.spacing(5) }}>
                                     COMPANY REP
                                 </Typography>
                             </Grid>
@@ -275,13 +287,13 @@ const PurchaseHistory = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={1}>
-                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(12) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(3) }}>
                                     DATE
                                 </Typography>
                             </Grid>
 
                             <Grid item xs={1}>
-                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(30) }}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(8) }}>
                                     PRICE
                                 </Typography>
                             </Grid>
@@ -382,7 +394,7 @@ const PurchaseHistory = (props: Props) => {
                     {purchases.map((purchase) => {
                         // FIXME: Change keying for outer purchase fragment
                         let sponsor = purchase.sponsorID as Sponsor
-                        console.log(purchase)
+                        // console.log(purchase)
                         return <React.Fragment key={purchase._id}>
                         {purchase.events && 
                             purchase.events.map((e) => {
@@ -392,13 +404,18 @@ const PurchaseHistory = (props: Props) => {
                                 <React.Fragment key={event._id}>
                                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                                        <Transaction company_name={sponsor.company}
+                                        <Transaction 
+                                            totalAmount={purchase.totalAmount}
+                                            purchaseId={purchase._id}
+                                            eventId={event._id}
+                                            sponsorId={sponsor._id}
+                                            company_name={sponsor.company}
                                             rep_name={sponsor.firstName + " " + sponsor.lastName}
                                             rep_email={sponsor.email}
                                             event_name={event.name}
                                             short_description={event.briefDesc}
                                             purchase_date={new Date(purchase.dateSponsored)}
-                                            price={event.price}
+                                            price={(event.price === -1 && purchase.donationAmount) ? purchase.donationAmount : event.price}
                                             date_start={new Date(event.date)}
                                             date_end={event.endDate ? new Date(event.endDate) : undefined}
                                         />
@@ -419,9 +436,34 @@ const PurchaseHistory = (props: Props) => {
 
             </Grid>
 
-            </div>
+            {(!isLoading && !isAuthenticated) && (
+                <Grid container sx={{ backgroundColor:"#fff"}}>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                    </Grid>
+                    
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Typography variant="h5">
+                            Login below to access Sponsify
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                                borderRadius: 0,
+                                pt: theme.spacing(3),
+                                pb: theme.spacing(3),
+                                pl: theme.spacing(8),
+                                pr: theme.spacing(8),
+                                ml: theme.spacing(5),
+                            }}>Login</Button>
+                    </Grid>
+                </Grid> 
+            )}
 
+                    </div>
 
+                </>
+            )}
 
         </ThemeProvider>
 

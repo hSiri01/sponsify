@@ -14,7 +14,7 @@ interface Props {
 
 const Inbox = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const [logo, setLogo] = React.useState("") 
     React.useEffect(() => {
         const fetchLogo = async() => {
@@ -126,6 +126,12 @@ const Inbox = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(6) }}>
                         <Typography variant="h6" sx={{ fontFamily: "Oxygen"}}>
                             Confirmation and payment options have<b style={{ color: "#4baa89"}}> been emailed</b>
+                    </Typography>
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(0) }}>
+                        <Typography variant="h6" sx={{ fontFamily: "Oxygen"}}>
+                            If it's not in your inbox, try checking your spam
                     </Typography>
                 </Grid>
 

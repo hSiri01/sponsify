@@ -20,14 +20,19 @@ import { useCart } from '../../../contexts/Cart';
 import { GetEnabledEvents, GetLevelByAmount } from '../../../utils/api-types';
 import MediaQuery from 'react-responsive'
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 interface Props {
 }
 
 const Events = (props: Props) => {
     
     const navigate = useNavigate();
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || "' '");
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
@@ -45,6 +50,10 @@ const Events = (props: Props) => {
     const [total, setTotal] = React.useState(0);
     const [logo, setLogo] = React.useState("")
 
+    const [errorBox, setErrorBox]  = React.useState(false);
+      const handleErrorClose = () => {
+        setErrorBox(false);
+      };
     React.useEffect(() => {
         const fetchData = async () => {
             let res = await fetch("/get-enabled-events/" + student_org_name)
@@ -101,6 +110,7 @@ const Events = (props: Props) => {
         if (cart.at(0)) {
             navigate("/checkout")
         }
+        else setErrorBox(true)
     }
 
     return (
@@ -118,7 +128,29 @@ const Events = (props: Props) => {
                         <ShoppingCartIcon />
                     </IconButton>
                 </Grid>
-
+                <Dialog
+                    open={errorBox}
+                    onClose={handleErrorClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>
+                        You must add an item to your cart before checking out. 
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleErrorClose} variant="contained" size="large" color="secondary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                }}>Okay</Button>
+                    </DialogActions>
+                </Dialog>
                 <Modal
                     open={openInfo}
                     onClose={handleCloseInfo}
@@ -186,13 +218,21 @@ const Events = (props: Props) => {
                         </Typography>
 
                         <Grid container>
-                            {cart.map(item => (
-                                <Grid item key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                    <CartItem name={item.name} date_start={item.date_start} 
-                                    date_end={item.date_end} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
-                                </Grid>
-                            ))}
-
+                            {cart.map(item => {
+                                if( typeof item.date_start === "string"){
+                                    //change the string to a date format
+                                    console.log("Changing string to date")
+                                    item.date_start = new Date(item.date_start)
+                                    if( item.date_end && typeof item.date_end === "string"){
+                                        item.date_end = new Date(item.date_end)
+                                    }
+                                }
+                                return (
+                                    <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                        <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
+                                    </Grid>
+                                )
+                            })}
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
                                 <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
                             </Grid>
@@ -200,7 +240,7 @@ const Events = (props: Props) => {
 
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', }}>
                                 <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(40), minWidth: theme.spacing(40), minHeight: theme.spacing(10) }} elevation={0}>
-                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName} Sponsor</Typography>
+                                    <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center' }}>{levelName ? levelName + ' Sponsor' : 'Not yet qualified'}</Typography>
                                 </Paper>
                             </Grid>
 
@@ -425,6 +465,8 @@ const Events = (props: Props) => {
                                     price={event.price}
                                     date_start={new Date(event.date)}
                                     date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                    total_spots = {event.totalSpots}
+                                    spots_taken = {event.spotsTaken}
                                 />
                             )}
 
@@ -471,7 +513,7 @@ const Events = (props: Props) => {
                         </Grid>
                         <Grid item>
                             <Paper sx={{ borderRadius: 0, background: `${levelColor}`, maxWidth: theme.spacing(50), minWidth: theme.spacing(40), minHeight: theme.spacing(15), alignItems:"center" }} elevation={0}>
-                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName} {levelName ? 'Sponsor' : ''}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(4), textAlign: 'center' }}>{levelName ? levelName + ' Sponsor' : 'Not yet qualified'}</Typography>
                             </Paper>
 
                         </Grid>

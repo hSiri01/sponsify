@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import { theme } from '../../../utils/theme';
 import Typography from '@mui/material/Typography';
@@ -24,13 +24,22 @@ import * as React from 'react';
 import { useNavigate } from "react-router-dom"
 import MediaQuery from 'react-responsive'
 
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import GppMaybeIcon from '@mui/icons-material/GppMaybe';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 interface Props {
 }
 
 const Dashboard = (props: Props) => {
 
-    const { isAuthenticated, isLoading, user } = useAuth0()
+    const { isAuthenticated, isLoading, user, loginWithRedirect, logout } = useAuth0()
     const [validAdmin, setValidAdmin] = React.useState(false)
     const [notRegistered, setNotRegistered] = React.useState(false)
 
@@ -38,21 +47,37 @@ const Dashboard = (props: Props) => {
     const [orgName, setOrgName] = React.useState("")
     const [orgShortName, setOrgShortName] = React.useState("")
     const [sponsorCode, setSponsorCode] = React.useState("")
-    const [validUntilDate, setValidUntilDate] = React.useState(new Date())
     const [fundName, setFundName] = React.useState("")
     const [streetAddress, setStreetAddress] = React.useState("")
     const [streetAddress2, setStreetAddress2] = React.useState("")
     const [city, setCity] = React.useState("")
     const [state, setState] = React.useState("")
     const [zipcode, setZipcode] = React.useState(0)
-    const logoutRoute = window.location.hostname === "localhost" ?
-        "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login"
-    const { logout } = useAuth0();
+    const [admin, setAdmin] = React.useState(false)
+    const logoutRoute = window.location.hostname === "localhost" ? 
+    "http://localhost:3000/admin-login" : "https://sponsify-app.herokuapp.com/admin-login"
     const navigate = useNavigate();
 
-    let date = new Date()
-    let valid_until_date = (date.getMonth() + 1 >= 11 || date.getMonth() + 1 < 5) ? (new Date(date.getFullYear() + 1, 5, 1)) : (new Date(date.getFullYear(), 11, 1))
-
+    const [generateGenerateCodePopup, setGenerateCodePopup] = React.useState(false)
+    const handlePopupOpen = () => {setGenerateCodePopup(true);}; 
+    const handlePopupClose = () => {setGenerateCodePopup(false);}; //TODO : generate new code + set setGenerateCodePopup false there
+        
+    const updateSponsorCode = () => {
+        fetch('/update-sponsor-code', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: orgName,
+            })
+        })
+            .then(() => {
+                handlePopupClose()
+                window.location.reload()})
+    }
+    
     if (isAuthenticated) {
         const getOrg = async () => {
             if (user) {
@@ -81,11 +106,11 @@ const Dashboard = (props: Props) => {
                             setCity(data.address.city)
                             setState(data.address.state)
                             setZipcode(data.address.zip)
+                            setAdmin(data.admin)
 
                             localStorage.setItem('org-name', JSON.stringify(orgName))
                             localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
                             localStorage.setItem('email', JSON.stringify(user.email))
-
                         }
                         else {
                             console.log("not associated")
@@ -93,7 +118,6 @@ const Dashboard = (props: Props) => {
                             // TODO: graceful retry process
                             // logout({ returnTo: process.env.NODE_ENV === "production" ? 
                             // "https://sponsify-app.herokuapp.com/dashboard" : "http://localhost:3000/dashboard" })
-
                             //if logout and go back to admin page
                             //logout({ returnTo: logoutRoute })
                         }
@@ -187,6 +211,48 @@ const Dashboard = (props: Props) => {
                                     x
                                 </Typography>
                             </Grid>
+                            
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: "auto" }}>
+                                    <Button 
+                                    onClick={handlePopupOpen}
+                                    variant="contained" 
+                                    size="large" 
+                                    color="secondary" 
+                                sx={{
+                                    
+                                    color: 'white',
+                                    mb: theme.spacing(2),
+                                    backgroundColor: '#434343',
+                                    borderRadius: 0,
+                                    fontFamily: 'Oxygen',
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    "&:hover": {
+                                        color: 'white',
+                                        backgroundColor: '#367c63',
+                                    }
+                                    }}>Generate New Code</Button>
+                            </Grid>
+                            <Dialog
+                                open={generateGenerateCodePopup}
+                                keepMounted
+                                onClose={handlePopupClose}
+                                aria-describedby="alert-dialog-slide-description"
+                            >
+                                <DialogTitle>{"Are you sure you want to generate a new code?"}</DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                    Generating a new code will delete the current code. Click yes below if you wish to do this, and make sure to send the new code to your sponsors! If not, click no. 
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button onClick={updateSponsorCode}>Yes</Button> 
+                                <Button onClick={handlePopupClose}>No</Button>
+                                
+                                </DialogActions>
+                            </Dialog>
 
                             <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
@@ -602,10 +668,9 @@ const Dashboard = (props: Props) => {
                                             </Typography>
                                         </Grid>
 
-                                    </Grid>
-                                </Paper>
-                            </Link>
-
+                                    </Grid >
+                                </Paper >
+                            </Link >
                             <Link href={'/faq-edit'} underline='none'>
                                 <Paper variant="outlined" sx={{ 
                                     border: 'none', 
@@ -704,10 +769,75 @@ const Dashboard = (props: Props) => {
                                                 Edit questions/answers
                                             </Typography>
                                         </Grid>
-
+                                </Grid>
+                            </Paper>
+                        </Link>
+                    {admin && (
+                        <Link href={'/account-requests'} underline='none'>
+                            <Paper variant="outlined" sx={{ border: 'none', borderRadius: 0, maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(40), mt: theme.spacing(5), mb: theme.spacing(5), boxShadow: "3px 3px 3px #c7c7c7" }} >
+                                <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(100), minWidth: theme.spacing(100), minHeight: theme.spacing(10), mt: theme.spacing(1), mb: theme.spacing(1) }} >
+                                    <Grid container>
+                                        <Grid item xs={2}>
+                                            <IconButton
+                                                size="large"
+                                                aria-label="menu"
+                                                sx={{ mr: 2, color: 'black' }}
+                                            >
+                                                <GppMaybeIcon/>
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                Account Requests
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <Typography variant="h5" sx={{ ml: theme.spacing(5), mt: theme.spacing(2) }}>
+                                                {'>'}
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
                                 </Paper>
-                            </Link>
+
+                                <Grid container>
+                                    <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            color="secondary"
+                                            sx={{ mr: 2, ml: theme.spacing(2) }}
+                                        >
+                                            <ManageAccountsIcon />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                        <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                            View all account requests
+                                        </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={2} sx={{ mt: theme.spacing(2) }}>
+                                        <IconButton
+                                            size="large"
+                                            aria-label="menu"
+                                            color="secondary"
+                                            sx={{ mr: 2, ml: theme.spacing(2) }}
+                                        >
+                                            <GroupAddIcon/>
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid item xs={10} sx={{ mt: theme.spacing(2) }}>
+                                        <Typography variant="body1" sx={{ mt: theme.spacing(3) }}>
+                                            Grant/Deny Access
+                                        </Typography>
+                                    </Grid>
+
+
+
+                                </Grid>
+                            </Paper>
+                        </Link>
+                    )} 
 
                             <Link href={'/summary'} underline='none'>
                                 <Paper variant="outlined" sx={{ 
@@ -927,14 +1057,14 @@ const Dashboard = (props: Props) => {
                                 <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
                             </Grid>
 
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
-                                <Typography variant="h5">
-                                    Your email is not associated with any student organization.
-                                    Logout below and try again!
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
-                                <Button onClick={() => logout({ returnTo: logoutRoute })} variant="contained" size="large" color="primary" sx={{
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h5">
+                                Your email is not associated with any student organization.
+                                Click below to try again!
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Button onClick={() => logout({ returnTo: logoutRoute })} variant="contained" size="large" color="primary" sx={{
                                     borderRadius: 0,
                                     pt: theme.spacing(3),
                                     pb: theme.spacing(3),
@@ -942,7 +1072,7 @@ const Dashboard = (props: Props) => {
                                     pr: theme.spacing(8),
                                     ml: theme.spacing(5),
                                 }}>Logout</Button>
-                            </Grid>
+                        </Grid>
                         </Grid>
                     )}
 
@@ -960,10 +1090,33 @@ const Dashboard = (props: Props) => {
 
                         </Grid>
                     )}
-                </Grid>
-            </div>
 
-
+                {!isLoading && !isAuthenticated && (
+                    <Grid container sx={{ backgroundColor:"#fff"}}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                        </Grid>
+                        
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Typography variant="h5">
+                                Login below to access Sponsify
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                            <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    ml: theme.spacing(5),
+                                }}>Login</Button>
+                        </Grid>
+                    </Grid>
+                )}
+            </Grid>
+            
+            </div >
 
         </ThemeProvider>
 

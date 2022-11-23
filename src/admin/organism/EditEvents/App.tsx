@@ -11,9 +11,15 @@ import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import EditEvent from '../../molecule/EditEvent/App';
 import { Paper } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
 import Checkbox from '@mui/material/Checkbox';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { GetAllEvents } from '../../../utils/api-types';
 import MediaQuery from 'react-responsive'
 
@@ -24,9 +30,21 @@ interface Props {
 
 const EditEvents = (props: Props) => {
 
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+
     const [openNewQuestion, setOpenNewQuestion] = React.useState(false);
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
-    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
+    const handleCloseNewQuestion = () => {
+        setNameError(false)
+        setPriceError(false)
+        setDateError(false)
+        setTotalSpotsError(false)
+        setOpenNewQuestion(false)
+    }
+
+    const [resetEvents, setResetEvents] = React.useState(false);
+    const handleOpenResetEvents = () => setResetEvents(true);
+    const handleCloseResetEvents = () => setResetEvents(false);
 
     const [checked, setChecked] = React.useState(true);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,18 +61,23 @@ const EditEvents = (props: Props) => {
     const [dateInput, setDateInput] = React.useState('');
     const [endDateInput, setEndDateInput] = React.useState('');
 
+    const [nameError, setNameError] = React.useState(false);
+    const [priceError, setPriceError] = React.useState(false);
+    const [dateError, setDateError] = React.useState(false);
+    const [totalSpotsError, setTotalSpotsError] = React.useState(false);
+
     const [events, setEvents] = React.useState<GetAllEvents>([]);
-    const [logo, setLogo] = React.useState("")
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const [logo, setLogo] = React.useState("");
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     React.useEffect(() => {
         const fetchLogo = async() => {
             try{
-            // console.log(student_org_name)
-            await fetch("/get-logo/" + student_org_name)
-                .then((res) => res.json()) 
-                .then((data1) => setLogo(data1.logoImage))
+                // console.log(student_org_name)
+                await fetch("/get-logo/" + student_org_name)
+                    .then((res) => res.json()) 
+                    .then((data1) => setLogo(data1.logoImage))
             }
             catch(e){
                 console.log("Error fetching logo",(e))
@@ -93,7 +116,7 @@ const EditEvents = (props: Props) => {
     }, [student_org_name])
 
     const createEvent = () => {
-        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1) {
+        if (nameInput && dateInput && priceInput > -1 && totalSpotsInput > -1 && spotsTakenInput <= totalSpotsInput) {
             fetch('/create-event', {
                 method: 'POST',
                 headers: {
@@ -104,7 +127,7 @@ const EditEvents = (props: Props) => {
                     name: nameInput,
                     price: priceInput,
                     date: dateInput ? dateInput : undefined,
-                    endDate: endDateInput ? endDateInput : undefined,
+                    endDate: (endDateInput && endDateInput !== dateInput) ? endDateInput : undefined,
                     desc: descInput,
                     briefDesc: briefDescInput,
                     totalSpots: totalSpotsInput,
@@ -121,15 +144,63 @@ const EditEvents = (props: Props) => {
         }
         else {
             handleOpenNewQuestion()  // keep modal open
-            // TODO: error handling
+
+            setTotalSpotsError(totalSpotsInput === -1 || spotsTakenInput > totalSpotsInput)
+            setNameError(!nameInput)
+            setPriceError(priceInput === -1)
+            setDateError(!dateInput)
         }
     };
+
+    const handleReset = async() => {
+        await fetch('/reset-events', {
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                org: student_org_name
+            })
+        })
+            .then(() => {
+                handleCloseResetEvents()
+                window.location.reload()
+            })
+    };
+    const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setPriceInput(Number(event.target.value))
+        }
+    };
+    const handleTotalSpotsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setTotalSpotsInput(Number(event.target.value))
+        }
+    };
+    const handleAvgAttendanceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setAvgAttendanceInput(Number(event.target.value))
+        }
+    };
+    const handleSpotsTakenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const re = /^[0-9\b]+$/;
+        if (event.target.value === '' || re.test(event.target.value)) {
+           setSpotsTakenInput(Number(event.target.value))
+        }
+    };
+
+    console.log(isAuthenticated)
 
     return (
 
         <ThemeProvider theme={theme}>
 
-
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
             <div style={{
@@ -234,9 +305,54 @@ const EditEvents = (props: Props) => {
                         pr: theme.spacing(8),
                         ml: theme.spacing(5),
                     }}>Create Event</Button>
+                <Grid container xs={12} sx={{ display: 'flex', m: theme.spacing(6) }}>
 
+                    <Grid item>
+                        <Button onClick={handleOpenResetEvents} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(22),
+                        }}>Reset</Button>
+                    </Grid>
+
+                    <Dialog
+                        open={resetEvents}
+                        keepMounted
+                        onClose={handleCloseResetEvents}
+                        aria-describedby="alert-dialog-slide-description"
+                    >
+                        <DialogTitle>{"Reset all events?"}</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-slide-description">
+                                This will set the number of spots that are sponsored to 0 for <b>all events</b>.
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleCloseResetEvents}>Cancel</Button> 
+                            <Button onClick={handleReset}>Continue</Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <Grid item xs>
+                        <Grid container direction="row-reverse">
+                            <Grid item>
+                                <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
+                                    borderRadius: 0,
+                                    pt: theme.spacing(3),
+                                    pb: theme.spacing(3),
+                                    pl: theme.spacing(8),
+                                    pr: theme.spacing(8),
+                                    mr: theme.spacing(24),
+                                }}>Add Event</Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    
                 </Grid>
-
 
 
                 <Grid item xs={12} sx={{ 
@@ -256,6 +372,7 @@ const EditEvents = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
                     <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
+
                             <Grid item xs={1}>
                                 <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5) }}>
                                     DELETE
@@ -341,32 +458,30 @@ const EditEvents = (props: Props) => {
                     </MediaQuery>
 
                 <>
-                    {
-                    events.map((event: any) =>
-                    <>
-                        <Grid key={event._id} xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    {events.map((event: any) =>
+                        (<React.Fragment key={event._id}>
+                            <Grid item /* key={event._id} */ xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
-                            <EditEvent 
-                                name={event.name}
-                                id={event._id}
-                                short_description={event.briefDesc}
-                                long_description={event.desc}
-                                avg_attendance={event.avgAttendance}
-                                num_sponsored={event.spotsTaken}
-                                occurances={event.totalSpots > -1 ? event.totalSpots : undefined}
-                                price={event.price}
-                                date_start={new Date(event.date)}
-                                date_end={event.endDate ? new Date(event.endDate) : undefined}
-                                visible={event.visible}
-                            />
+                                <EditEvent
+                                    name={event.name}
+                                    id={event._id}
+                                    short_description={event.briefDesc}
+                                    long_description={event.desc}
+                                    avg_attendance={event.avgAttendance}
+                                    num_sponsored={event.spotsTaken}
+                                    occurances={event.totalSpots}
+                                    price={event.price}
+                                    date_start={new Date(event.date)}
+                                    date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                    visible={event.visible}
+                                />
 
-                        </Grid>
-                    </>
+                            </Grid>
+                        </React.Fragment>)
                     )}
                 </>
 
             </Grid>
-
 
             <Modal
                 open={openNewQuestion}
@@ -445,6 +560,8 @@ const EditEvents = (props: Props) => {
                        
                             <Grid item sm={6} xs={12}>
                                 <TextField
+                                    required
+                                    error={dateError}
                                     id="date"
                                     label="Date Start"
                                     type="date"
@@ -487,7 +604,9 @@ const EditEvents = (props: Props) => {
 
                             
                             <Grid item xs={12}>
-                                <TextField 
+                                <TextField
+                                    required
+                                    error={nameError}
                                     sx={{ 
                                         minWidth: theme.spacing(80), 
                                         mb:theme.spacing(4), 
@@ -533,6 +652,8 @@ const EditEvents = (props: Props) => {
                                 <Grid item md={2} sm={6} xs={12} sx={{
                                   }}>
                                     <TextField
+                                        required
+                                        error={priceError}
                                         sx={{ 
                                             maxWidth: theme.spacing(40), 
                                             mb: theme.spacing(2), 
@@ -549,13 +670,16 @@ const EditEvents = (props: Props) => {
                                         variant="outlined"
                                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                         value={priceInput > -1 ? priceInput : ''}
-                                        onChange={ev => setPriceInput(+ev.target.value)} />
+                                        onChange={handlePriceChange} />
 
                                 </Grid>
 
                                 <Grid item md={2} sm={6} xs={12} sx={{
                                 }}>
                                     <TextField
+                                        required
+                                        error={totalSpotsError}
+                                        helperText={totalSpotsError && spotsTakenInput > totalSpotsInput ? "Cannot be less than " + spotsTakenInput : ""}
                                         sx={{ 
                                             maxWidth: theme.spacing(40), 
                                             mb: theme.spacing(2), 
@@ -568,7 +692,7 @@ const EditEvents = (props: Props) => {
                                         variant="outlined"
                                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                         value={totalSpotsInput > -1 ? totalSpotsInput : ''}
-                                        onChange={ev => setTotalSpotsInput(+ev.target.value)} />
+                                        onChange={handleTotalSpotsChange} />
                                 </Grid>
                                 
                                 <Grid item md={2} sm={6} xs={12} sx={{
@@ -587,7 +711,7 @@ const EditEvents = (props: Props) => {
                                         variant="outlined"
                                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                         value={spotsTakenInput > -1 ? spotsTakenInput : ''}
-                                        onChange={ev => setSpotsTakenInput(+ev.target.value)} />
+                                        onChange={handleSpotsTakenChange} />
                                 </Grid>
 
                                 
@@ -605,7 +729,7 @@ const EditEvents = (props: Props) => {
                                         variant="outlined"
                                         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                         value={avgAttendanceInput > -1 ? avgAttendanceInput : ''}
-                                        onChange={ev => setAvgAttendanceInput(+ev.target.value)} />
+                                        onChange={handleAvgAttendanceChange} />
                                 </Grid>
 
 
@@ -667,11 +791,37 @@ const EditEvents = (props: Props) => {
                 </Box>
             </Modal>
 
+            {(!isLoading && !isAuthenticated) && (
+            <Grid container sx={{ backgroundColor:"#fff"}}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                </Grid>
+                
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Typography variant="h5">
+                        Login below to access Sponsify
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                    <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                            borderRadius: 0,
+                            pt: theme.spacing(3),
+                            pb: theme.spacing(3),
+                            pl: theme.spacing(8),
+                            pr: theme.spacing(8),
+                            ml: theme.spacing(5),
+                        }}>Login</Button>
+                </Grid>
+            </Grid> 
+            )}
+            
+            </Grid>
             </div>
 
+            </>
+            )}
+
         </ThemeProvider>
-
-
     )
 }
 

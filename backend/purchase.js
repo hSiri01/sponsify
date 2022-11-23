@@ -10,7 +10,7 @@ const purchaseSchema = new mongoose.Schema({
     events: {
         type: [{
             type: mongoose.SchemaTypes.ObjectId,
-            ref: 'event'
+            ref: 'event',
         }],
         required: true,
         validate: {
@@ -21,6 +21,10 @@ const purchaseSchema = new mongoose.Schema({
     totalAmount: {
         type: Number,
         required: true
+    },
+    donationAmount: {
+        type: Number,
+        required: false
     },
     dateSponsored: {
         type: Date,

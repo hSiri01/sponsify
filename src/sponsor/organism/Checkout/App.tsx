@@ -18,6 +18,7 @@ import {useNavigate} from "react-router-dom"
 import { GetLevelByAmount } from '../../../utils/api-types';
 import { Organization } from '../../../utils/mongodb-types';
 import MediaQuery from 'react-responsive'
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
@@ -27,12 +28,14 @@ interface Props {
 const Checkout = (props: Props) => {
 
     const navigate = useNavigate();
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
     const handleCloseInfo = () => setOpenInfo(false);
+
+    const { clearCart, cart } = useCart()
 
     const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
@@ -64,12 +67,23 @@ const Checkout = (props: Props) => {
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
 
-    const { cart } = useCart();
+    
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     var cartMessage : string = ""
     const [orgAddress1, setOrgAddress1] = React.useState('');
     const [orgAddress2, setOrgAddress2] = React.useState('');
     const [subject,setSubject] = React.useState('')
+
+    const [eventId, setEventId] = React.useState('')
+    const [eventName, setEventName] = React.useState('')
+    const { removeFromCart } = useCart()
+
+    const [openEventError, setOpenEventError] = React.useState(false);
+    const handleOpenEventError = () => setOpenEventError(true);
+    const handleCloseEventError = () => {
+        removeFromCart(eventId)
+        setOpenEventError(false)
+    }
     
     React.useEffect(() => {
         fetch('/get-level-by-amount/' + student_org_name + '/' + total)
@@ -94,8 +108,44 @@ const Checkout = (props: Props) => {
             })
     }, [orgAddress1, student_org_name, orgFundName])
 
-    const submitCheckout = () => {
-        if (cart.at(0) && checkoutReady ) {
+    const checkEventSpots = async () => {
+        let ids = cart.map(item => item.id)
+
+        let c;
+        
+        for (let i = 0; i < cart.length; i++) {
+            c = await fetch('/check-event-availability/' + cart[i].id)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.cleared === false) {
+                    setEventId(cart[i].id)
+                    setEventName(cart[i].name)
+                    handleOpenEventError()
+                    return false
+
+                }
+            })
+
+            if (!c) {
+                break
+            }
+        } 
+
+        return c
+    }
+
+    const submitCheckout = async () => {
+        const cleared = await checkEventSpots()
+        console.log(cleared)
+        if (cart.at(0) && checkoutReady && cleared == undefined) {
+
+            let donation = 0
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].name === 'General Donation') {
+                    donation = cart[i].price
+                }
+            }
+
             fetch('/checkout-events', {
                 method: 'POST',
                 headers: {
@@ -110,16 +160,17 @@ const Checkout = (props: Props) => {
                     sponsorLevel: levelName,
                     events: cart.map(item => item.id),
                     totalAmount: total,
+                    donationAmount: donation ? donation : undefined,
                     org: student_org_name
                 })
             })
+            clearCart()
+            sendEmail()
             navigate("/inbox")
         }
     };
-    const sendEmail = ()=>{
-        
-       
-        
+
+    const sendEmail = () => {
         setSubject( student_org_name + ' Sponsorship Information')
         fetch("/send-checkout-email",{
             method:'POST',
@@ -143,6 +194,8 @@ const Checkout = (props: Props) => {
             console.log("Error found",err)
         })
     }
+
+
     return (
         <ThemeProvider theme={theme}>
 
@@ -336,6 +389,13 @@ const Checkout = (props: Props) => {
 
                 {cart.map(item => {
                     cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quanitity:   </b>" +  item.quantity + "<br>"
+                    if( typeof item.date_start === "string"){
+                        //change the string to a date format
+                        item.date_start = new Date(item.date_start)
+                        if( item.date_end && typeof item.date_end === "string"){
+                            item.date_end = new Date(item.date_end)
+                        }
+                    }
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
@@ -382,7 +442,7 @@ const Checkout = (props: Props) => {
                 <Grid item xs sx={{  margin: theme.spacing(6) }}>
                     <Grid container direction="row-reverse">
                         <Grid>
-                        <Button onClick={(event) => { submitCheckout(); sendEmail();}} variant="contained" size="large" color="primary" sx={{
+                        <Button onClick={(event) => { submitCheckout(); }} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
@@ -397,6 +457,57 @@ const Checkout = (props: Props) => {
                 </Grid>
                 
             </Grid>
+
+            <Modal
+                open={openEventError}
+                onClose={handleCloseEventError}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                disableScrollLock
+            >
+                <Box sx={{
+                    position: 'absolute' as 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    maxWidth: theme.spacing(200),
+                    minWidth: theme.spacing(150),
+                    maxHeight: theme.spacing(200),
+                    minHeight: theme.spacing(50),
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                }}>
+
+                <Grid container direction = "column">
+                    <Grid item xs={1} >
+                            <IconButton color="secondary" aria-label="Edit" onClick={handleCloseEventError}>
+                                <CloseIcon />
+                            </IconButton>
+                    </Grid>
+
+                    <Grid>
+                        <Typography variant="h5" sx={{
+                            display: 'flex', justifyContent: 'center', m: theme.spacing(0), fontFamily: "Oxygen"
+                        }} > 
+                        There has been a problem with<b style={{ color: "#4baa89"}}>{eventName}</b>
+                        </Typography>
+                        
+                    </Grid>
+
+                    <Grid>
+                        <Typography  sx={{
+                            fontSize: 18, display: 'flex', justifyContent: 'center', m: theme.spacing(7), fontFamily: "Oxygen"
+                        }} > 
+                        The event will be removed from your cart. Please review list of events to check availability.
+                        </Typography>
+                        
+                    </Grid>
+
+                    
+                </Grid>
+                </Box>
+            </Modal>
 
         </ThemeProvider>
     )

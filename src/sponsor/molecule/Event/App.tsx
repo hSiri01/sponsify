@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField';
 import { useCart } from '../../../contexts/Cart';
 import MediaQuery from 'react-responsive'
 
-
+import {useLayoutEffect, useRef, useState} from 'react';
 
 
 export type OrgEvent = {
@@ -24,21 +24,24 @@ export type OrgEvent = {
     avg_attendance?: number,
     occurances: number,
     date_start: Date,
-    date_end?: Date
+    date_end?: Date,
+    total_spots: number,
+    spots_taken: number
 }
 
 const Event = (props: OrgEvent) => {
 
-    const {name, short_description, long_description, price, avg_attendance, occurances, date_start, date_end} = props
+    const {name, short_description, long_description, price, avg_attendance, occurances, date_start, date_end, total_spots, spots_taken} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
     const handleCloseEvent = () => setOpenEvent(false);
-
-    const [checked, setChecked] = React.useState(false);
-
     const { addToCart, removeFromCart, cart } = useCart();
+    const [checked, setChecked] = React.useState(cart.find(e => e.id == props.id)? true : false);
     
+    
+   
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
         if (event.target.checked)
@@ -84,10 +87,80 @@ const Event = (props: OrgEvent) => {
         setChecked(false);
         removeFromCart(props.id)
     };
-
-
+    
+    const ref = React.useRef<HTMLDivElement>(null)
+    const [height, setHeight] = React.useState(0);
+    useLayoutEffect(() => {
+        if (ref.current && ref.current.clientHeight) {
+            const height = ref.current.clientHeight;
+            setHeight(height);
+        }
+        
+    }, []);
+        
+     
+       
+    
     return (
         <ThemeProvider theme={theme}>
+            
+            {(total_spots <= spots_taken) ? (
+              <Grid container >
+                <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Paper ref={ref} variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4)}} >
+                        <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                            <Grid item xs={1} sx={{margin:"auto"}}>
+                                <Checkbox disabled />
+                            </Grid>
+
+                            <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
+                                <Date date_1={date_start} date_2={date_end}/>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
+                                <Typography sx={{ fontWeight: "600" }} variant="h6">{avg_attendance}</Typography>
+                            </Grid>
+
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                <Typography sx={{ fontWeight: "600" }} variant="h6">{occurances}</Typography>
+                            </Grid>
+
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                <Typography sx={{ color:"#367c63", fontWeight: "600" }} variant="h6">${price}</Typography>
+                            </Grid>
+
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
+                                <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
+                                    {'>'}
+                                </Typography>
+                            </Grid>
+
+                        </Grid>
+                       
+                    </Paper>
+                    
+                    <Paper variant="outlined" sx={{ mt: theme.spacing(4),alignItems: "center",height: height,display: 'flex', position: "absolute",borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:'rgba(52, 52, 52, 0.8)', maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), backgroundColor: 'rgba(52, 52, 52, 0.8)',}} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
+                                    <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
+                                </Grid>
+                            </Grid>
+                    
+                    </Paper>
+
+                </Grid>
+ 
+              </Grid>
+                          
+                           
+                           ) : (
+                                
+                           
             <Grid container>
                 <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -505,6 +578,7 @@ const Event = (props: OrgEvent) => {
            
            
             </Grid> 
+                           )}
         </ThemeProvider>
 
 
