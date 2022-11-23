@@ -5,8 +5,17 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    date: Date,
-    endDate: Date,
+    date: {
+        type: Date,
+        required: true
+    },
+    endDate: {
+        type: Date,
+        validate: {
+            validator: checkEndDate,
+            message: props => `${props.value} must be later than the field startDate\n`
+        }
+    },
     price: {
         type: Number,
         required: true
@@ -31,8 +40,8 @@ const eventSchema = new mongoose.Schema({
         type: Number,
         required: true,
         validate: {
-            validator: v => v >= 0,
-            message: props => `${props.value} is a negative number\n`
+            validator: checkSpotsTaken,
+            message: props => `${props.value} is a not valid value. either negative or exceeds total spots!\n`
         }
     },
     visible: {
@@ -53,12 +62,12 @@ const eventSchema = new mongoose.Schema({
     }
 })
 
-eventSchema.pre('validate', (next) => {
-    if (this.spotsTaken > this.totalSpots) {
-        next(new Error('spots taken must be less than or equal to total spots'));
-    } else {
-        next();
-    }
-});
+function checkSpotsTaken(value) {
+    return (value >= 0 && value <= this.totalSpots);
+}
+
+function checkEndDate(value) {
+    return (this.endDate > this.startDate);
+}
 
 module.exports = mongoose.model('event', eventSchema);
