@@ -13,6 +13,7 @@ import MenuBar from '../../molecule/MenuBar/App'
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import { GetAllFaq } from '../../../utils/api-types';
+import MediaQuery from 'react-responsive'
 import { useAuth0 } from "@auth0/auth0-react";
 
 
@@ -107,26 +108,89 @@ const EditFAQ = (props: Props) => {
             <>
             <MenuBar />
 
-            <Grid container sx={{ backgroundColor:"#f3f3f3"}}>
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+            <div style={{
+                backgroundColor: "#f3f3f3",
+                minWidth: "100vw",
+                minHeight: "100vh",
+            }}>
+                <Grid container >
+                    <MediaQuery minWidth={1200}>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(30),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery minWidth={500} maxWidth={1199}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(20),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery maxWidth={499}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(15),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(6),}}>
                     <Button onClick={handleOpenNewQuestion} variant="contained" size="large" color="primary" sx={{
@@ -143,7 +207,7 @@ const EditFAQ = (props: Props) => {
 
 
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10), mb: theme.spacing(5)  }}>
                     <Typography variant="h4">
                         {student_org_short_name} FAQ
                     </Typography>
@@ -166,15 +230,6 @@ const EditFAQ = (props: Props) => {
                 </>
                 
                 
-                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
-                    <EditQuestion ques="I want to send company swag to distribute at the event I'm sponsoring. Where do I sent it?"
-                    ans="This address you can send you package at is: <br> Society of Women Engineers <br> TAMU <br> 3127 TAMU <br> College Station, TX 77843-3127" student_org_name={''}/>
-                    
-                </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(8) }}>
-                    <EditQuestion ques="How many people can I expect at the event I’m sponsoring?"
-                    ans="Our General Meetings generally have higher attendance than most other events. Our Lunch & Learns and Dinner & Develops are smaller and more personable events. Additionally, this is because our members are busy with other events on campus, exams, homework and classes and so conflicts with our events are sometimes inevitable. For more information on current registration for your sponsored event, contact <b>CorporateVP@swetamu.org</b>. Please note, SWE-TAMU does not guarantee attendance for any event." student_org_name={''} />
-                </Grid> */}
 
             </Grid>
 
@@ -198,6 +253,14 @@ const EditFAQ = (props: Props) => {
                     boxShadow: 24,
                     p: 4,
                     overflow: 'scroll',
+                    [theme.breakpoints.down('md')]: {
+                        maxWidth: theme.spacing(170),
+                        minWidth: theme.spacing(170),
+                    },
+                    [theme.breakpoints.down('sm')]: {
+                    maxWidth: theme.spacing(80),
+                    minWidth: theme.spacing(80),
+                    },
                 }}>
                     <Grid container>
                         <Grid item xs={1} sx={{ mt: theme.spacing(2) }}>
@@ -216,7 +279,14 @@ const EditFAQ = (props: Props) => {
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
-                            <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" 
+                            <TextField sx={{ 
+                                minWidth: theme.spacing(150), 
+                                mt: theme.spacing(5),
+                                [theme.breakpoints.down('sm')]: {
+                                    maxWidth: theme.spacing(70),
+                                    minWidth: theme.spacing(70),
+                                },
+                            }} id="outlined-basic" label="Question" variant="outlined" 
                             defaultValue={''} onChange={handleQuestionChange()} />
                         </Grid>
 
@@ -227,7 +297,16 @@ const EditFAQ = (props: Props) => {
                                 aria-label="empty textarea"
                                 placeholder="Answer"
                                 minRows={8}
-                                style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                multiline
+                                sx={{ 
+                                    minWidth: theme.spacing(150), 
+                                    fontFamily: "Poppins", 
+                                    fontSize: theme.spacing(4),
+                                    [theme.breakpoints.down('sm')]: {
+                                        maxWidth: theme.spacing(70),
+                                        minWidth: theme.spacing(70),
+                                    },
+                                 }}
                                 defaultValue={''} 
                                 onChange={handleAnswerChange()} 
                             />
@@ -254,9 +333,7 @@ const EditFAQ = (props: Props) => {
 
                 </Box>
             </Modal>
-            </>
-            )}
-
+            
             {(!isLoading && !isAuthenticated) && (
             <Grid container sx={{ backgroundColor:"#fff"}}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -279,6 +356,10 @@ const EditFAQ = (props: Props) => {
                         }}>Login</Button>
                 </Grid>
             </Grid> 
+            )}
+
+            </div>
+            </>
             )}
 
         </ThemeProvider>

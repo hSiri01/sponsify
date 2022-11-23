@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
 import Date from '../../../sponsor/atom/Date/App'
+import MediaQuery from 'react-responsive'
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -65,7 +66,20 @@ const Transaction = (props: Props) => {
         <ThemeProvider theme={theme}>
             <Grid container>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(420), minWidth: theme.spacing(350), minHeight: theme.spacing(20), mt:theme.spacing(2), mb: theme.spacing(2) }} >
+
+
+                    <MediaQuery minWidth={1350}>
+                    <Paper variant="outlined" 
+                    sx={{ 
+                        borderWidth: theme.spacing(.5), 
+                        borderRadius: 0, 
+                        borderColor:"#c2c2c2", 
+                        maxWidth: theme.spacing(320),
+                        minWidth: theme.spacing(320), 
+                        minHeight: theme.spacing(20), 
+                        mt:theme.spacing(2), 
+                        mb: theme.spacing(2),
+                          }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
                                 <IconButton color="secondary" aria-label="Edit" onClick={handleOpenConfirmation} sx={{ ml: theme.spacing(5), mb: theme.spacing(2), pt: theme.spacing(0) }}>
@@ -169,6 +183,86 @@ const Transaction = (props: Props) => {
                         </Modal>
                         
                    </Paper>
+                </MediaQuery>
+
+                <MediaQuery minWidth={750} maxWidth={1349}>
+                    <Paper variant="outlined"
+                        sx={{
+                            borderWidth: theme.spacing(.5),
+                            borderRadius: 0,
+                            borderColor: "#c2c2c2",
+                            maxWidth: theme.spacing(170),
+                            minWidth: theme.spacing(170),
+                            minHeight: theme.spacing(20),
+                            mt: theme.spacing(2),
+                            mb: theme.spacing(2),
+                            ml: "8%"
+                        }} >
+                        <Grid container sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2)}}>
+
+                            <Grid item xs={2} >
+                                <Typography sx={{ fontWeight: "600", mt: theme.spacing(3) }} variant="body1">{company_name}</Typography>
+                            </Grid>
+
+                            <Grid item xs={4} sx={{ marginTop: theme.spacing(3),  }}>
+                                <Typography sx={{ fontWeight: "600" }} variant="body1">{rep_name}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{rep_email}</Typography>
+                            </Grid>
+
+                            <Grid item xs={3} sx={{ marginTop: theme.spacing(2), pr: theme.spacing(3) }}>
+                                <Typography sx={{ fontWeight: "600" }} variant="body1">{event_name}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{short_description}</Typography>
+                            </Grid>
+
+                            <Grid item xs={2} sx={{ marginTop: theme.spacing(5), }}>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
+                            </Grid>
+
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
+                                <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body2">${price}</Typography>
+                            </Grid>
+
+                        </Grid>
+
+                    </Paper>
+                </MediaQuery>
+
+                <MediaQuery maxWidth={749}>
+                    <Paper variant="outlined"
+                        sx={{
+                            borderWidth: theme.spacing(.5),
+                            borderRadius: 0,
+                            borderColor: "#c2c2c2",
+                            maxWidth: theme.spacing(80),
+                            minWidth: theme.spacing(80),
+                            minHeight: theme.spacing(20),
+                            mt: theme.spacing(2),
+                            mb: theme.spacing(2),
+                            ml: "15%"
+                        }} >
+                        <Grid container sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+
+                            
+
+                            <Grid item xs={8} sx={{ marginTop: theme.spacing(3), pl: theme.spacing(1) }}>
+                                <Typography sx={{ fontWeight: "600" }} variant="body2">{rep_name}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{rep_email}</Typography>
+                            </Grid>
+
+                            <Grid item xs={4} sx={{ marginTop: theme.spacing(3), pl: theme.spacing(5) }}>
+                                <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body2">${price}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
+                            </Grid>
+
+                            <Grid item xs={12} sx={{ marginTop: theme.spacing(5), pr: theme.spacing(3), textAlign:'center' }}>
+                                <Typography sx={{ fontWeight: "600" }} variant="body1">{event_name}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{short_description}</Typography>
+                            </Grid>
+
+                        </Grid>
+
+                    </Paper>
+                </MediaQuery>
 
                 </Grid>
             </Grid>    

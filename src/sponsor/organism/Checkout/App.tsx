@@ -17,6 +17,7 @@ import { useCart } from '../../../contexts/Cart';
 import {useNavigate} from "react-router-dom"
 import { GetLevelByAmount } from '../../../utils/api-types';
 import { Organization } from '../../../utils/mongodb-types';
+import MediaQuery from 'react-responsive'
 import CloseIcon from '@mui/icons-material/Close';
 
 
@@ -230,25 +231,83 @@ const Checkout = (props: Props) => {
                     </IconButton>
                 </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                <MediaQuery minWidth={1200}>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(30),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={500} maxWidth={1199}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(20),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery maxWidth={499}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(15),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
@@ -258,14 +317,27 @@ const Checkout = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
+                        sx={{ 
+                            minWidth: theme.spacing(80), 
+                            mr: theme.spacing(10),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }} 
                         id="first-name" 
                         label="First Name" 
                         variant="outlined"
                         value={firstNameInput} 
                         onChange={ev => setFirstNameInput(ev.target.value)} />
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80) }}
+                        sx={{ 
+                            minWidth: theme.spacing(80),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }}
                         id="last-name"
                         label="Last Name"
                         variant="outlined"
@@ -275,14 +347,27 @@ const Checkout = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10), mb: theme.spacing(5) }}>
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
+                        sx={{ 
+                            minWidth: theme.spacing(80), 
+                            mr: theme.spacing(10),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }} 
                         id="email" 
                         label="Email" 
                         variant="outlined"
                         value={emailInput} 
                         onChange={ev => setEmailInput(ev.target.value)} />
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80) }}
+                        sx={{ 
+                            minWidth: theme.spacing(80),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }}
                         id="company"
                         label="Company"
                         variant="outlined"
@@ -291,7 +376,11 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                    <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10), mt: theme.spacing(4) }} >
+                    <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10), mt: theme.spacing(4),
+                    [theme.breakpoints.down('sm')]: {
+                        minWidth: theme.spacing(80),
+                    },
+                 }} >
                         <Typography variant="body1" sx={{ pl: theme.spacing(5) }}>
                             SPONSORED ITEMS
                         </Typography>
