@@ -13,7 +13,7 @@ const eventSchema = new mongoose.Schema({
         type: Date,
         validate: {
             validator: checkEndDate,
-            message: props => `${props.value} must be later than the field startDate\n`
+            message: props => `${props.value} must be later than the field date\n`
         }
     },
     price: {
@@ -67,7 +67,7 @@ function checkSpotsTaken(value) {
 }
 
 function checkEndDate(value) {
-    return (this.endDate > this.startDate);
+    return (value > this.date);
 }
 
 module.exports = mongoose.model('event', eventSchema);

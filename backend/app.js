@@ -337,17 +337,21 @@ app.post('/create-event', async (req, res) => {
     })
 })
 
-function updateEvent(id, eventOptions) {
+async function updateEvent(id, eventOptions) {
     let queryStatus = '200'
 
     if (mongoose.Types.ObjectId.isValid(id)) {
-        events.findByIdAndUpdate(id, eventOptions, (err, event) => {
+        const event = await events.findOne({ _id: id });
+        event.set(eventOptions)
+        // console.log(event)
+
+        event.save((err) => {
             if (err) {
                 console.log('Error on update-event: ' + err)
                 queryStatus = '500'
             }
             else {
-                console.log('Successfully updated event: \n' + event)
+                console.log('Successfully updated event\n')
                 queryStatus = '200'
             }
         })
@@ -372,7 +376,7 @@ app.put('/update-event', (req, res) => {
             name: req.body.name,
             briefDesc: req.body.briefDesc,
             date: req.body.date + 'T06:00:00.000+00:00',
-            endDate: req.body.endDate + 'T06:00:00.000+00:00',
+            endDate: (req.body.endDate && req.body.endDate != req.body.date) ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
