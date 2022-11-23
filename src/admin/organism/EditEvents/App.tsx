@@ -451,7 +451,7 @@ const EditEvents = (props: Props) => {
                                         occurrences={event.totalSpots}
                                         price={event.price}
                                         date_start={new Date(event.date)}
-                                        date_end={event.endDate ? new Date(event.endDate) : undefined}
+                                        date_end={event.endDate && event.endDate !== event.date ? new Date(event.endDate) : undefined}
                                         visible={event.visible}
                                     />
 

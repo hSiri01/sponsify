@@ -376,7 +376,7 @@ app.put('/update-event', (req, res) => {
             name: req.body.name,
             briefDesc: req.body.briefDesc,
             date: req.body.date + 'T06:00:00.000+00:00',
-            endDate: (req.body.endDate && req.body.endDate != req.body.date) ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
+            endDate: (req.body.endDate && req.body.endDate !== req.body.date) ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
@@ -414,13 +414,15 @@ app.delete('/delete-event', (req, res) => {
     }
     else {
         if (mongoose.Types.ObjectId.isValid(id)) {
+            // const event = events.findById(id)
+            
             events.findByIdAndRemove(id, (err, event) => {
                 if (err) {
                     console.log('Error on delete-event: ' + err)
                     res.json({ status: '500' })
                 }
                 else {
-                    console.log('Successfully deleted event: \n' + event)
+                    console.log('Successfully deleted event\n')
                     res.json({ status: '200' })
                 }
             })

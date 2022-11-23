@@ -75,10 +75,11 @@ const EditEvent = (props: Props) => {
                     id: id,
                     price: priceInput,
                     date: dateInput,
-                    endDate: endDateInput,
+                    endDate: endDateInput > dateInput ? endDateInput: undefined,
                     desc: descInput,
                     briefDesc: briefDescInput,
                     totalSpots: generalDonation ? -1 : totalSpotsInput,
+                    spotsTaken: props.num_sponsored,
                     avgAttendance: avgAttendanceInput,
                     visible: checked
                 })
@@ -131,7 +132,7 @@ const EditEvent = (props: Props) => {
 
     let date_end_format = date_start_format
 
-    if(date_end)
+    if(date_end && date_end !== date_start)
     {
         const endmonth = (date_end.getMonth()+1 < 10) ? ("0" + (date_end.getMonth()+1).toString()) : date_end.getMonth()+1
         const enddate = (date_end.getDate() < 10) ? ("0" + date_end.getDate().toString()) : date_end.getDate() 
@@ -259,8 +260,8 @@ const EditEvent = (props: Props) => {
                                             id="date"
                                             label="Date End"
                                             type="date"
-                                            value={endDateInput !== dateInput ? endDateInput : ''} 
-                                            onChange={ev => setEndDateInput(ev.target.value)}
+                                            value={endDateInput > dateInput ? endDateInput : ''} 
+                                            onChange={ev => {(ev.target.value > dateInput) ? setEndDateInput(ev.target.value) : setEndDateInput(dateInput)}}
                                             InputLabelProps={{
                                                 shrink: true,
                                             }}
@@ -544,7 +545,7 @@ const EditEvent = (props: Props) => {
                                                 }}
                                                 sx={{ maxWidth: theme.spacing(40) }} />
 
-                                            {(date_end) ?
+                                            {(date_end && date_end_format !== date_start_format) ?
                                                 (
 
                                                     <TextField
@@ -552,8 +553,8 @@ const EditEvent = (props: Props) => {
                                                         label="Date End"
                                                         type="date"
                                                         defaultValue={date_end_format}
-                                                        value={endDateInput}
-                                                        onChange={ev => setEndDateInput(ev.target.value)}
+                                                        value={endDateInput > dateInput ? endDateInput : ''} 
+                                                        onChange={ev => {(ev.target.value > dateInput) ? setEndDateInput(ev.target.value) : setEndDateInput(dateInput)}}
                                                         InputLabelProps={{
                                                             shrink: true,
                                                         }}
@@ -876,7 +877,7 @@ const EditEvent = (props: Props) => {
                                                         mt: theme.spacing(5),
                                                     },
                                             }}>
-                                            {(date_end) ?
+                                            {(date_end && date_end_format !== date_start_format) ?
                                                 (
                                                     
                                                     <TextField
@@ -884,8 +885,8 @@ const EditEvent = (props: Props) => {
                                                         label="Date End"
                                                         type="date"
                                                         defaultValue={date_end_format}
-                                                        value={endDateInput}
-                                                        onChange={ev => setEndDateInput(ev.target.value)}
+                                                        value={endDateInput > dateInput ? endDateInput : ''} 
+                                                        onChange={ev => {(ev.target.value > dateInput) ? setEndDateInput(ev.target.value) : setEndDateInput(dateInput)}}
                                                         InputLabelProps={{
                                                             shrink: true,
                                                         }}
