@@ -30,7 +30,7 @@ interface Props {
     price:number, 
     avg_attendance?: number,
     num_sponsored: number,
-    occurances: number,
+    occurrences: number,
     date_start: Date,
     date_end?: Date, 
     visible: boolean,
@@ -38,7 +38,7 @@ interface Props {
 
 const EditEvent = (props: Props) => {
 
-    const {name, id, short_description, long_description, price, avg_attendance, num_sponsored, occurances, date_start, date_end, visible} = props
+    const {name, id, short_description, long_description, price, avg_attendance, num_sponsored, occurrences, date_start, date_end, visible} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
@@ -57,7 +57,7 @@ const EditEvent = (props: Props) => {
     const [descInput, setDescInput] = React.useState(props.long_description);
     const [briefDescInput, setBriefDescInput] = React.useState(props.short_description);
     const [priceInput, setPriceInput] = React.useState(props.price);
-    const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurances);
+    const [totalSpotsInput, setTotalSpotsInput] = React.useState(props.occurrences);
     const [totalSpotsError, setTotalSpotsError] = React.useState(false);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
     const [generalDonation, setGeneralDonation] = React.useState(props.name === 'General Donation');
@@ -174,12 +174,12 @@ const EditEvent = (props: Props) => {
                             </Grid>
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
                             {
-                                occurances > -1 ? (
-                                    occurances === num_sponsored ? (
-                                        <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}/{occurances}</Typography>
+                                occurrences > -1 ? (
+                                    occurrences === num_sponsored ? (
+                                        <Typography sx={{ fontWeight: "600", color:"#4baa89" }} variant="h6">{num_sponsored}/{occurrences}</Typography>
 
                                     ):(
-                                        <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}/{occurances}</Typography>
+                                        <Typography sx={{ fontWeight: "600", color:"#ef5350" }} variant="h6">{num_sponsored}/{occurrences}</Typography>
                                     )
                                 ) : (
                                     num_sponsored > 0 ? (
@@ -306,7 +306,7 @@ const EditEvent = (props: Props) => {
                                             helperText={totalSpotsError ? "Cannot be less than " + num_sponsored : ""}
                                             sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                             id={totalSpotsError ? "outlined-error-helper-text" : "outlined-basic"}
-                                            label="Occurances"
+                                            label="Occurrences"
                                             variant="outlined"
                                             inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                             value={generalDonation ? '-' : totalSpotsInput  }
@@ -590,34 +590,35 @@ const EditEvent = (props: Props) => {
 
                                         <Grid item xs={4} sx={{ textAlign: "right" }}>
                                             <TextField
+                                                disabled={generalDonation}
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                                 id="outlined-basic"
                                                 label="Price"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                                defaultValue={price}
-                                                value={priceInput}
-                                                onChange={ev => setPriceInput(+ev.target.value)}
+                                                defaultValue={generalDonation ? '-' : priceInput}
+                                                onChange={handlePriceChange /*ev => setPriceInput(+ev.target.value)*/}
                                             />
                                             <TextField
+                                                disabled={generalDonation}
+                                                error={totalSpotsError}
+                                                helperText={totalSpotsError ? "Cannot be less than " + num_sponsored : ""}
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                                id="outlined-basic"
-                                                label="Occurances"
+                                                id={totalSpotsError ? "outlined-error-helper-text" : "outlined-basic"}
+                                                label="Occurrences"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                                defaultValue={occurances}
-                                                value={totalSpotsInput}
-                                                onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) } }}
+                                                defaultValue={generalDonation ? '-' : totalSpotsInput}
+                                                onChange={handleTotalSpotsChange}
                                             />
                                             <TextField
+                                                disabled
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                                 id="outlined-basic"
                                                 label="Sponsored"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                                 defaultValue={num_sponsored}
-                                                value={spotsTakenInput}
-                                                onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) } }}
                                             />
                                             <TextField
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
@@ -625,9 +626,8 @@ const EditEvent = (props: Props) => {
                                                 label="Avg Attendance"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                                defaultValue={avg_attendance}
-                                                value={avgAttendanceInput}
-                                                onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                                defaultValue={generalDonation ? '-' : avgAttendanceInput}
+                                                onChange={handleAvgAttendanceChange}
                                             />
                                         </Grid>
 
@@ -947,50 +947,51 @@ const EditEvent = (props: Props) => {
                                             <Grid container>
                                             <Grid item xs={12}>
                                             <TextField
+                                                disabled={generalDonation}
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                                 id="outlined-basic"
                                                 label="Price"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                                defaultValue={price}
-                                                value={priceInput}
-                                                onChange={ev => setPriceInput(+ev.target.value)}
+                                                defaultValue={generalDonation ? '-' : priceInput}
+                                                onChange={handlePriceChange}
                                             />
                                             </Grid>
                                             <Grid item xs={12}>
                                             <TextField
+                                                disabled={generalDonation}
+                                                error={totalSpotsError}
+                                                helperText={totalSpotsError ? "Cannot be less than " + num_sponsored : ""}
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
-                                                id="outlined-basic"
-                                                label="Occurances"
+                                                id={totalSpotsError ? "outlined-error-helper-text" : "outlined-basic"}
+                                                label="Occurrences"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                                defaultValue={occurances}
-                                                value={totalSpotsInput}
-                                                onChange={ev => { if (spotsTakenInput <= +ev.target.value) { setTotalSpotsInput(+ev.target.value) } }}
+                                                        defaultValue={generalDonation ? '-' : totalSpotsInput}
+                                                        onChange={handleTotalSpotsChange}
                                             />
                                             </Grid>
                                             <Grid item xs={12}>
                                             <TextField
+                                                        disabled
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                                 id="outlined-basic"
                                                 label="Sponsored"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                                                 defaultValue={num_sponsored}
-                                                value={spotsTakenInput}
-                                                onChange={ev => { if (+ev.target.value <= totalSpotsInput) { setSpotsTakenInput(+ev.target.value) } }}
                                             />
                                             </Grid>
                                             <Grid item xs={12}>
                                             <TextField
+                                                        disabled={generalDonation}
                                                 sx={{ maxWidth: theme.spacing(40), mb: theme.spacing(2) }}
                                                 id="outlined-basic"
                                                 label="Avg Attendance"
                                                 variant="outlined"
                                                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                                                defaultValue={avg_attendance}
-                                                value={avgAttendanceInput}
-                                                onChange={ev => setAvgAttendanceInput(+ev.target.value)}
+                                                        defaultValue={generalDonation ? '-' : avgAttendanceInput}
+                                                        onChange={handleAvgAttendanceChange}
                                             />
                                             </Grid>
                                             </Grid>

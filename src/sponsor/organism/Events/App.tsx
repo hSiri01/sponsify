@@ -386,7 +386,7 @@ const Events = (props: Props) => {
 
                             <Grid item xs={1}>
                                 <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(16) }}>
-                                    OCCURANCES
+                                    OCCURRENCES
                                 </Typography>
                             </Grid>
 
@@ -430,7 +430,7 @@ const Events = (props: Props) => {
 
                             <Grid item xs={1}>
                                     <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(10), fontSize: theme.spacing(3) }}>
-                                    OCCURANCES
+                                    OCCURRENCES
                                 </Typography>
                             </Grid>
 
@@ -461,7 +461,7 @@ const Events = (props: Props) => {
                                     short_description={event.briefDesc}
                                     long_description={event.desc}
                                     avg_attendance={event.avgAttendance ? event.avgAttendance : '-'}
-                                    occurances={event.totalSpots - event.spotsTaken}
+                                    occurrences={event.totalSpots - event.spotsTaken}
                                     price={event.price}
                                     date_start={new Date(event.date)}
                                     date_end={event.endDate ? new Date(event.endDate) : undefined}

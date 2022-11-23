@@ -64,11 +64,11 @@ const CartItem = (props: CartItemType) => {
                             <Grid container sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(3) }}>
 
 
-                                <Grid item xs={3} sx={{ pr: theme.spacing(15) }}>
+                                <Grid item xs={4} sx={{ pr: theme.spacing(15) }}>
                                     <Date date_1={date_start} date_2={date_end} />
                                 </Grid>
 
-                                <Grid item xs={5}>
+                                <Grid item xs={4}>
                                     <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body1">{short_description}</Typography>
                                 </Grid>

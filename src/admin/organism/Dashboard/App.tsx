@@ -537,14 +537,6 @@ const Dashboard = (props: Props) => {
 
                                     </Grid>
 
-                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
-
-                                        <Typography variant="body2" sx={{ mt: theme.spacing(5) }}>
-                                            Valid Until <b>{valid_until_date.getMonth()}/{valid_until_date.getDate()}/{valid_until_date.getFullYear()}</b>
-                                        </Typography>
-
-                                    </Grid>
-
                                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
 
                                         <Typography variant="body1" sx={{ fontWeight: 700, mt: theme.spacing(2), mb: theme.spacing(3) }}>

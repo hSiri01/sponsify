@@ -22,7 +22,7 @@ export type OrgEvent = {
     long_description: string, 
     price: number, 
     avg_attendance?: number,
-    occurances: number,
+    occurrences: number,
     date_start: Date,
     date_end?: Date,
     total_spots: number,
@@ -31,7 +31,7 @@ export type OrgEvent = {
 
 const Event = (props: OrgEvent) => {
 
-    const {name, short_description, long_description, price, avg_attendance, occurances, date_start, date_end, total_spots, spots_taken} = props
+    const {name, short_description, long_description, price, avg_attendance, occurrences, date_start, date_end, total_spots, spots_taken} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
     const handleOpenEvent = () => setOpenEvent(true);
@@ -68,8 +68,8 @@ const Event = (props: OrgEvent) => {
             let parsedValue = +event.target.value
             if (parsedValue > 0)
             {
-                if (parsedValue > occurances){
-                    parsedValue = occurances
+                if (parsedValue > occurrences){
+                    parsedValue = occurrences
                 }
                 setChecked(true);
                 addToCart({
@@ -127,7 +127,7 @@ const Event = (props: OrgEvent) => {
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ fontWeight: "600" }} variant="h6">{occurances}</Typography>
+                                <Typography sx={{ fontWeight: "600" }} variant="h6">{occurrences}</Typography>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
@@ -143,6 +143,7 @@ const Event = (props: OrgEvent) => {
                         </Grid>
                        
                     </Paper>
+                    
                     
                     <Paper variant="outlined" sx={{ mt: theme.spacing(4),alignItems: "center",height: height,display: 'flex', position: "absolute",borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:'rgba(52, 52, 52, 0.8)', maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), backgroundColor: 'rgba(52, 52, 52, 0.8)',}} >
                             <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
@@ -185,7 +186,7 @@ const Event = (props: OrgEvent) => {
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ fontWeight: "600" }} variant="h6">{occurances}</Typography>
+                                <Typography sx={{ fontWeight: "600" }} variant="h6">{occurrences}</Typography>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
@@ -239,7 +240,7 @@ const Event = (props: OrgEvent) => {
 
                                     <Grid item xs={4} sx={{ textAlign: "right" }}>
                                         <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
-                                        <Typography sx={{}} variant="body1">Occurances: {occurances}</Typography>
+                                        <Typography sx={{}} variant="body1">Occurrences: {occurrences}</Typography>
                                     </Grid>
 
 
@@ -253,7 +254,7 @@ const Event = (props: OrgEvent) => {
                                     </Grid>
                                 </Grid>
 
-                                { occurances > 1 ?
+                                { occurrences > 1 ?
                                 (
                                     <Grid container sx = {{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
                                         <Grid item xs={3}>
@@ -320,7 +321,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{occurances}</Typography>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{occurrences}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
@@ -374,7 +375,7 @@ const Event = (props: OrgEvent) => {
 
                                         <Grid item xs={4} sx={{ textAlign: "right" }}>
                                             <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
-                                            <Typography sx={{}} variant="body1">Occurances: {occurances}</Typography>
+                                            <Typography sx={{}} variant="body1">Occurrences: {occurrences}</Typography>
                                         </Grid>
 
 
@@ -388,7 +389,7 @@ const Event = (props: OrgEvent) => {
                                     </Grid>
                                 </Grid>
 
-                                {occurances > 1 ?
+                                {occurrences > 1 ?
                                     (
                                         <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
                                             <Grid item xs={3}>
@@ -469,7 +470,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={12} sx={{ }}>
-                                    <Typography sx={{ fontWeight: "600", textAlign: 'center' }} variant="body1">Occurances: {occurances}</Typography>
+                                    <Typography sx={{ fontWeight: "600", textAlign: 'center' }} variant="body1">Occurrences: {occurrences}</Typography>
                                 </Grid>
 
                                 <Grid item xs={12} sx={{ }}>
@@ -526,7 +527,7 @@ const Event = (props: OrgEvent) => {
 
                                         <Grid item xs={12} sx={{ textAlign: "center" }}>
                                             <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
-                                            <Typography sx={{}} variant="body1">Occurances: {occurances}</Typography>
+                                            <Typography sx={{}} variant="body1">Occurrences: {occurrences}</Typography>
                                         </Grid>
 
 
@@ -540,7 +541,7 @@ const Event = (props: OrgEvent) => {
                                     </Grid>
                                 </Grid>
 
-                                {occurances > 1 ?
+                                {occurrences > 1 ?
                                     (
                                         <Grid container sx={{ display: 'flex', justifyContent: 'right', mt: theme.spacing(8) }}>
                                             <Grid item xs={4}>
