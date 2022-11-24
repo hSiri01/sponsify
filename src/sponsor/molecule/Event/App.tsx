@@ -38,7 +38,7 @@ const Event = (props: OrgEvent) => {
     const handleCloseEvent = () => setOpenEvent(false);
     const { addToCart, removeFromCart, cart } = useCart();
     const [checked, setChecked] = React.useState(cart.find(e => e.id == props.id)? true : false);
-    
+    const [medQuery, setmedQuery] = React.useState(0)
     
    
 
@@ -88,15 +88,32 @@ const Event = (props: OrgEvent) => {
         removeFromCart(props.id)
     };
     
-    const ref = React.useRef<HTMLDivElement>(null)
+    const ref = React.useRef<HTMLInputElement>(null)
     const [height, setHeight] = React.useState(0);
+    const [width,setWidth] = React.useState(0)
     useLayoutEffect(() => {
-        if (ref.current && ref.current.clientHeight) {
+        
+        if (ref.current) {
             const height = ref.current.clientHeight;
+            const width = ref.current.clientWidth;
             setHeight(height);
+            setWidth(width);
+        }
+        window.addEventListener('resize', updateSize);
+        function updateSize () {
+            console.log("update size")
+            if (ref.current) {
+                const changeHeight = ref.current.clientHeight;
+                console.log("height: ", height)
+                
+                const changeWidth = ref.current.clientWidth;console.log("width: ", width)
+                setHeight(changeHeight);
+                setWidth(changeWidth);
+            }
         }
         
-    }, []);
+        
+    }, [ref]);
         
      
        
@@ -105,58 +122,255 @@ const Event = (props: OrgEvent) => {
         <ThemeProvider theme={theme}>
             
             {(total_spots <= spots_taken) ? (
+              
               <Grid container >
-                <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper ref={ref} variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4)}} >
-                        <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
-                            <Grid item xs={1} sx={{margin:"auto"}}>
-                                <Checkbox disabled />
-                            </Grid>
-
-                            <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                <Date date_1={date_start} date_2={date_end}/>
-                            </Grid>
-
-                            <Grid item xs={4}>
-                                <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
-                                <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
-                            </Grid>
-
-                            <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ fontWeight: "600" }} variant="h6">{avg_attendance}</Typography>
-                            </Grid>
-
-                            <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ fontWeight: "600" }} variant="h6">{occurrences}</Typography>
-                            </Grid>
-
-                            <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                <Typography sx={{ color:"#367c63", fontWeight: "600" }} variant="h6">${price}</Typography>
-                            </Grid>
-
-                            <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
-                                <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
-                                    {'>'}
-                                </Typography>
-                            </Grid>
-
-                        </Grid>
-                       
-                    </Paper>
-                    
-                    
-                    <Paper variant="outlined" sx={{ mt: theme.spacing(4),alignItems: "center",height: height,display: 'flex', position: "absolute",borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:'rgba(52, 52, 52, 0.8)', maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), backgroundColor: 'rgba(52, 52, 52, 0.8)',}} >
-                            <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
-                                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
-                                    <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
+               <MediaQuery minWidth={1350}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Paper ref = {ref} variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
+     
+                            <Grid  container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                                <Grid item xs={1} sx={{margin:"auto"}}>
+                                    <Checkbox disabled />
                                 </Grid>
-                            </Grid>
-                    
-                    </Paper>
 
-                </Grid>
- 
+                                <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
+                                    <Date date_1={date_start} date_2={date_end}/>
+                                </Grid>
+
+                                <Grid item xs={4}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
+                                </Grid>
+
+                                <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{avg_attendance}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{occurrences}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ color:"#367c63", fontWeight: "600" }} variant="h6">${price}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
+                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
+                                        {'>'}
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+                        
+                        </Paper>
+                        
+                        
+                        <Paper variant="outlined"  sx={{ 
+                         mt: theme.spacing(4),
+                         alignItems: "center",
+                         display: 'flex',
+                         position: "absolute",
+                         borderWidth: theme.spacing(.5), 
+                         borderRadius: 0, 
+                         borderColor:'rgba(52, 52, 52, 0.8)', 
+                         maxWidth: theme.spacing(300), 
+                         minWidth: theme.spacing(300), 
+                         minHeight: theme.spacing(20), 
+                         height: height,
+                         width: width,
+                         backgroundColor: 'rgba(52, 52, 52, 0.8)',}} >
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
+                                        <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
+                                    </Grid>
+                                </Grid>
+                        
+                        </Paper>
+
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={750} maxWidth={1349}>
+                    <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Paper ref={ref} variant="outlined" sx={{ 
+                            borderWidth: theme.spacing(.5), 
+                            borderRadius: 0, 
+                            borderColor: "#c2c2c2", 
+                            maxWidth: theme.spacing(180), 
+                            minWidth: theme.spacing(180), 
+                            minHeight: theme.spacing(20), 
+                            mt: theme.spacing(4) 
+                            }} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(3) }}>
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(2) }}>
+                                    <Checkbox disabled />
+                                </Grid>
+
+                                <Grid item xs={2} sx={{  }}>
+                                    <Date date_1={date_start} date_2={date_end} />
+                                </Grid>
+
+                                <Grid item xs={4} sx={{pl: theme.spacing(8), pr: theme.spacing(8)}}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{avg_attendance}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{occurrences}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
+                                    <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
+                                </Grid>
+
+                                <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9) }}>
+                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
+                                        {'>'}
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+                        
+                        </Paper>
+                        
+                        <Paper variant="outlined" sx={{ 
+                            position: "absolute",
+                            borderWidth: theme.spacing(.5), 
+                            borderRadius: 0, 
+                            backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                            borderColor:'rgba(52, 52, 52, 0.8)',
+                            alignItems:"center",
+                            maxWidth: theme.spacing(180), 
+                            minWidth: theme.spacing(180), 
+                            minHeight: theme.spacing(20), 
+                            mt: theme.spacing(4) ,
+                            height: height,
+                            width: width,
+                            ml: "auto",
+                            mr: "auto",
+                            left: 0,
+                            right: 0,
+                            textAlign: "center",
+                            display:"flex"
+                        
+                            }} >
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',   }}>
+                                        <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
+                                    </Grid>
+                                </Grid>
+                        
+                        </Paper>
+                        
+
+                    </Grid>
+                    
+                </MediaQuery>
+
+                <MediaQuery maxWidth={749} >
+                    <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Paper ref={ref} variant="outlined" sx={{ 
+                            borderWidth: theme.spacing(.5), 
+                            borderRadius: 0, 
+                            borderColor: "#c2c2c2", 
+                            maxWidth: theme.spacing(80), 
+                            minWidth: theme.spacing(80), 
+                            minHeight: theme.spacing(20), 
+                            mt: theme.spacing(4) 
+                            }} >
+                            <Grid container sx={{ display: 'flex', justifyContent: 'center', }}>
+                                <Grid item xs={1} sx={{ pr: theme.spacing(5) }}>
+                                    <Checkbox disabled />
+                                </Grid>
+                                <Grid item xs={12} sx={{}}>
+                                </Grid>
+
+                                <Grid item xs={3} sx={{}}>
+                                </Grid>
+
+                                <Grid item xs={5} sx={{ }}>
+                                    <Date date_1={date_start} date_2={date_end} />
+                                </Grid>
+
+                                <Grid item xs={3} sx={{}}>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{pl: theme.spacing(8), pr: theme.spacing(8), mt: theme.spacing(5)}}>
+                                    <Typography sx={{ 
+                                        fontWeight: "600",
+                                        textAlign: 'center'
+                                        }} variant="body1">{name}</Typography>
+                                    <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ marginTop: theme.spacing(5) }}>
+                                    <Typography sx={{ 
+                                        fontWeight: "600",
+                                        textAlign: 'center'
+                                         }} variant="body1">Attendance: {avg_attendance}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ }}>
+                                    <Typography sx={{ fontWeight: "600", textAlign: 'center' }} variant="body1">Occurrences: {occurrences}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ }}>
+                                    <Typography sx={{ color: "#367c63", fontWeight: "600", textAlign: 'center' }} variant="body1">${price}</Typography>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ marginTop: theme.spacing(1.5), display:'flex', justifyContent:'center'}}>
+                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
+                                        {'>'}
+                                    </Typography>
+                                </Grid>
+
+                            </Grid>
+                        
+                        </Paper>
+                        
+                        <Paper variant="outlined" sx={{ 
+                            position: "absolute",
+                            borderWidth: theme.spacing(.5), 
+                            borderRadius: 0, 
+                            maxWidth: theme.spacing(80), 
+                            minWidth: theme.spacing(80), 
+                            minHeight: theme.spacing(20), 
+                            backgroundColor: 'rgba(52, 52, 52, 0.8)',
+                            borderColor:'rgba(52, 52, 52, 0.8)', 
+                            mt: theme.spacing(4) ,
+                            height: height,
+                            width: width,
+                            ml: "auto",
+                            mr: "auto",
+                            left: 0,
+                            right: 0,
+                            textAlign: "center",
+                           
+                        
+                            }} >
+                                <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
+                                        <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
+                                    </Grid>
+                                </Grid>
+                        
+                        </Paper>
+                        
+
+                    </Grid>
+                  
+                    
+                </MediaQuery>
+
+               
+                
+                
               </Grid>
+             
                           
                            
                            ) : (
