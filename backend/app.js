@@ -845,7 +845,7 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
 app.post("/send-checkout-email", (req, res) => {
     const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+    sendGridEmail(emailInput,sponsifyEmail,subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
 })
 
 app.post("/send-request-created-email", (req, res) => {
