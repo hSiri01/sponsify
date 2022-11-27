@@ -87,10 +87,30 @@ const Event = (props: OrgEvent) => {
         setChecked(false);
         removeFromCart(props.id)
     };
-    
-    const ref = React.useRef<HTMLInputElement>(null)
+    const ref = React.useRef<HTMLDivElement>(null)
+    // const useResize = (ref : HTMLDivElement) => {
+    //     const [width, setWidth] = useState(0)
+    //     const [height, setHeight] = useState(0)
+      
+    //     const handleResize = () => {
+    //       setWidth(ref.current.offsetWidth)
+    //       setHeight(ref.current.offsetHeight)
+    //     }
+      
+    //     useEffect(() => {
+    //       ref.current && ref.current.addEventListener('resize', handleResize)
+      
+    //       return () => {
+    //         ref.current.removeEventListener('resize', handleResize)
+    //       }
+    //     }, [ref])
+      
+    //     return { width, height }
+    //   }
+   
     const [height, setHeight] = React.useState(0);
     const [width,setWidth] = React.useState(0)
+   
     useLayoutEffect(() => {
         
         if (ref.current) {
