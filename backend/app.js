@@ -844,14 +844,14 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
 app.post("/send-checkout-email", (req, res) => {
     const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+    sendGridEmail(emailInput,"sponsifynoreply@gmail.com",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
 })
 
 app.post("/send-request-created-email", (req, res) => {
     console.log(req.body)
     const { email, name } = req.body
     let subject = "Sponsify New User Request - " + name
-    sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
+    sendRequestCreatedEmail(email, "sponsifynoreply@gmail.com", subject, name);
 })
 
 app.get('/get-requests', (req, res) => {
@@ -929,7 +929,7 @@ app.delete('/delete-request', (req, res) => {
                 }
             })
 
-            sendAccessDeniedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Denied")
+            sendAccessDeniedEmail(req.body.email, "sponsifynoreply@gmail.com", "Sponsify Access Denied")
 
         }
         else {
@@ -978,7 +978,7 @@ app.post("/request-to-org", async (req, res) => {
         }
     })
 
-    sendAccessGrantedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Granted!", req.body.name)
+    sendAccessGrantedEmail(req.body.email, "sponsifynoreply@gmail.com", "Sponsify Access Granted!", req.body.name)
     requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
 
 
