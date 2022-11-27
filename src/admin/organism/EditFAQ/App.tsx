@@ -31,8 +31,18 @@ const EditFAQ = (props: Props) => {
     const [FAQ, setFAQ] = React.useState<GetAllFaq>([])
     const [question, setQuestion] = React.useState('')
     const [answer, setAnswer] = React.useState('')
+    
+    const [questionError, setQuestionError] = React.useState(false)
+    const [answerError, setAnswerError] = React.useState(false)
+    
     const handleOpenNewQuestion = () => setOpenNewQuestion(true);
-    const handleCloseNewQuestion = () => setOpenNewQuestion(false);
+    const handleCloseNewQuestion = () => {
+        setOpenNewQuestion(false);
+        setQuestionError(false)
+        setAnswerError(false)
+    }
+
+    
 
     const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
@@ -80,20 +90,25 @@ const EditFAQ = (props: Props) => {
 
     const handleCreateQuestion = async () => {
 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                organization: org, 
-                question: question,
-                answer: answer
-            })
-        }
+        if(question.length > 0 && answer.length > 0){
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    organization: org, 
+                    question: question,
+                    answer: answer
+                })
+            }
 
         await fetch("/create-FAQ", requestOptions)
             .then((res) => console.log(res)) 
 
         handleCloseNewQuestion()
+        } else {
+            setQuestionError(!question)
+            setAnswerError(!answer)
+        }
      
         console.log(FAQ)
     }
@@ -216,7 +231,7 @@ const EditFAQ = (props: Props) => {
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
-                            <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" 
+                            <TextField error={questionError} sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" 
                             defaultValue={''} onChange={handleQuestionChange()} />
                         </Grid>
 
@@ -224,6 +239,7 @@ const EditFAQ = (props: Props) => {
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
                             <TextField
+                                error = {answerError}
                                 aria-label="empty textarea"
                                 placeholder="Answer"
                                 minRows={8}
