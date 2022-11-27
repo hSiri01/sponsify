@@ -11,6 +11,8 @@ import Button from '@mui/material/Button';
 import LevelSponsors from '../../molecule/LevelSponsors/App';
 import { Event, Sponsor } from '../../../utils/mongodb-types';
 import { GetAllLevels, GetAllPurchasedEvents, GetAllSponsors } from '../../../utils/api-types';
+import MediaQuery from 'react-responsive'
+
 import { useAuth0 } from "@auth0/auth0-react";
 
 
@@ -99,41 +101,126 @@ const PurchaseHistory = (props: Props) => {
             <>
             <MenuBar />
 
-            <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+            <div style={{
+                backgroundColor: "#f3f3f3",
+                minWidth: "100vw",
+                minHeight: "100vh",
+            }}>
+                <Grid container >
+                    <MediaQuery minWidth={1200}>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(30),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery minWidth={500} maxWidth={1199}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(20),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery maxWidth={499}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(15),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
 
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+
+                <Grid item xs={12} sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    marginTop: theme.spacing(10),
+                    [theme.breakpoints.down('sm')]: {
+                        ml: '15%',
+                    }, 
+                    }}>
                     <Typography variant="h4">
                         Purchase History
                     </Typography>
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                <Grid item xs={12} sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    marginTop: theme.spacing(10),
+                    [theme.breakpoints.down('sm')]: {
+                        ml: '15%',
+                    },
+                     }}>
                     <Typography variant="body1">
                         TOTAL SPONSORED
                     </Typography>
+                    
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2), }}>
+                <Grid item xs={12} sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    mt: theme.spacing(2),
+                    [theme.breakpoints.down('sm')]: {
+                        ml: '15%',
+                    }, }}>
                     <Typography variant="h5" sx={{ color: '#4baa89', fontWeight: 600, }}>
                         ${total}
                     </Typography>
@@ -141,25 +228,31 @@ const PurchaseHistory = (props: Props) => {
 
                 <Grid item xs={12} sx={{ textAlign: 'center', justifyContent: 'center', ml: theme.spacing(15) }}>
 
-                    <Grid container sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(5) }}>
+                        <Grid container sx={{ display: 'flex', justifyContent: 'center', }}>
 
                         {levels.map((level: any) => (
-                            (<Grid item xs={2}>
-                                <LevelSponsors sponsors={sponsors.filter((sponsor:any) => sponsor.sponsorLevel === level.name)} name={level.name} color_level={level.color} />
-                            </Grid>)
+                            (
 
+                                <Grid item lg={3} md={6} sm={12} xs={12} sx={{ mt: theme.spacing(5)}}>
+                                    <LevelSponsors 
+                                    sponsors={sponsors.filter((sponsor:any) => sponsor.sponsorLevel === level.name)} 
+                                    name={level.name} 
+                                    color_level={level.color} />
+                                </Grid>
 
+                            )
                         )
                         )
 
                         }
                         
                       
-
                     </Grid>
 
                 </Grid>
 
+
+                <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
                     <Paper variant="outlined" sx={{ backgroundColor: 'transparent', borderWidth: theme.spacing(0), maxWidth: theme.spacing(350), minWidth: theme.spacing(340), minHeight: theme.spacing(10) }} >
                         <Grid container>
@@ -207,40 +300,96 @@ const PurchaseHistory = (props: Props) => {
                         </Grid>
                     </Paper>
                 </Grid>
+                </MediaQuery>
 
+                <MediaQuery minWidth={750} maxWidth={1349}>
+                <Grid item xs={12} 
+                sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    mt: theme.spacing(10),
+                    ml: theme.spacing(8)
+                 }}>
+                    <Paper variant="outlined" 
+                    sx={{ 
+                        backgroundColor: 'transparent', 
+                        borderWidth: theme.spacing(0), 
+                        maxWidth: theme.spacing(150), 
+                        minWidth: theme.spacing(150), 
+                        minHeight: theme.spacing(10), 
+                        }} >
+                        <Grid container>
+                            <Grid item xs={2}>
+                                <Typography variant="body2" sx={{ color: "#979797", textAlign: 'left', mt: theme.spacing(5) }}>
+                                    COMPANY
+                                </Typography>
+                            </Grid>
 
+                            <Grid item xs={4}>
+                                <Typography variant="body2" sx={{ color: "#979797",mt: theme.spacing(5), ml:theme.spacing(5) }}>
+                                    COMPANY REP
+                                </Typography>
+                            </Grid>
 
+                            <Grid item xs={3}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(14) }}>
+                                    EVENT
+                                </Typography>
+                            </Grid>
 
-                {/* <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+                            <Grid item xs={2}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(20)}}>
+                                    DATE
+                                </Typography>
+                            </Grid>
 
-                    <Transaction company_name="Capital One"
-                        rep_name="Lauren Kotke"
-                        rep_email='lauren.raleigh@capitalone.com'
-                        event_name='General Donation'
-                        short_description='Provide a General Donation'
-                        purchase_date={new Date(2022,9,10)}
-                        price={750}
-                        date_start={new Date(2022, 10, 14)}
-                        />
-                    
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(18)}}>
+                                    PRICE
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Paper>
                 </Grid>
+                </MediaQuery>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center'}}>
+                <MediaQuery maxWidth={749}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
+                    <Paper variant="outlined" sx={{ 
+                        backgroundColor: 'transparent', 
+                        borderWidth: theme.spacing(0), 
+                        maxWidth: theme.spacing(80), 
+                        minWidth: theme.spacing(80), 
+                        minHeight: theme.spacing(10),
+                        ml: "20%"
+                         }} >
+                        <Grid container>
+                           
 
-                    <Transaction company_name="Capital One"
-                        rep_name="Lauren Kotke"
-                        rep_email='lauren.raleigh@capitalone.com'
-                        event_name='Leadership Conference'
-                        short_description='Present at Conference'
-                        purchase_date={new Date(2022,9,11)}
-                        price={2500}
-                        date_start={new Date(2022, 10, 14)}
-                        date_end={new Date(2022, 10, 16)}
-                        />
-                    
-                </Grid> */}
+                            <Grid item xs={4}>
+                                <Typography variant="body2" sx={{ color: "#979797",  mt: theme.spacing(5) }}>
+                                    COMPANY REP
+                                </Typography>
+                            </Grid>
 
-               
+                            <Grid item xs={4}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(6) }}>
+                                    EVENT
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                                <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5) }}>
+                                    DATE/PRICE
+                                </Typography>
+                            </Grid>
+
+                        </Grid>
+                    </Paper>
+                </Grid>
+                </MediaQuery>
+
+
                 <>
                     {purchases.map((purchase) => {
                         // FIXME: Change keying for outer purchase fragment
@@ -287,9 +436,6 @@ const PurchaseHistory = (props: Props) => {
 
             </Grid>
 
-            </>
-            )}
-
             {(!isLoading && !isAuthenticated) && (
                 <Grid container sx={{ backgroundColor:"#fff"}}>
                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -312,6 +458,11 @@ const PurchaseHistory = (props: Props) => {
                             }}>Login</Button>
                     </Grid>
                 </Grid> 
+            )}
+
+                    </div>
+
+                </>
             )}
 
         </ThemeProvider>

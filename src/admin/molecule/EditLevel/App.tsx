@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import CloseIcon from '@mui/icons-material/Close';
+import MediaQuery from 'react-responsive'
 
 
 interface Props {
@@ -140,7 +141,22 @@ const EditLevel = (props: Props) => {
     
     return (
         <ThemeProvider theme={theme}>
-            <Grid container  spacing = {1} padding={5} wrap="nowrap"  sx={{maxWidth:theme.spacing(275), backgroundColor: props.hexcode,  margin: "auto", m: theme.spacing(2) }}>
+            <MediaQuery minWidth={690}>
+            <Grid container  spacing = {1} padding={5} wrap="nowrap"  
+            sx={{
+            maxWidth:theme.spacing(275), 
+            backgroundColor: props.hexcode, 
+            margin: "auto", 
+            m: theme.spacing(2), 
+            [theme.breakpoints.down('md')]: {
+             maxWidth: theme.spacing(150),
+             ml: "8%",
+            },
+            [theme.breakpoints.down('sm')]: {
+                maxWidth: theme.spacing(70),
+                ml: "15%",
+            },
+            }}>
             
                     <Grid item  xs = {1} sx={{ display: 'flex', justifyContent: 'left', margin: "auto" }}>
                        
@@ -198,6 +214,83 @@ const EditLevel = (props: Props) => {
             
 
             </Grid>
+            </MediaQuery>
+
+            <MediaQuery maxWidth={689}>
+                <Grid container
+                    sx={{
+                        maxWidth: theme.spacing(275),
+                        backgroundColor: props.hexcode,
+                        margin: "auto",
+                        m: theme.spacing(2),
+                        [theme.breakpoints.down('md')]: {
+                            maxWidth: theme.spacing(150),
+                            ml: "8%",
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            maxWidth: theme.spacing(70),
+                            ml: "15%",
+                        },
+                    }}>
+
+                    
+
+
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(3) }}>
+                            <Typography variant="h5" sx={{fontWeight:500}}>
+                                {level}
+                            </Typography>
+
+                        </Grid>
+
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(3), mb: theme.spacing(3) }}>
+
+                            <Typography >
+                                ${lowerbound}
+                            </Typography>
+                            {props.upperbound &&
+                                <Typography>
+                                    -
+                                </Typography>
+                            }
+                            {!props.upperbound &&
+                                <Typography>
+                                    +
+                                </Typography>
+                            }
+                            {props.upperbound &&
+                                <Typography >
+                                    ${upperbound}
+                                </Typography>
+                            }
+                        </Grid>
+
+                   
+
+                    <Grid item xs={12} sx={{ }}>
+                        <Typography variant="body1" sx={{ textAlign: "center", ml: theme.spacing(5), mr: theme.spacing(5) }} dangerouslySetInnerHTML={{ __html: description }} />
+                    </Grid>
+
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'left', margin: "auto" }}>
+
+                        <IconButton onClick={handleOpenConfirmation} color="secondary" aria-label="Edit" >
+                            <DeleteIcon />
+                        </IconButton>
+
+                    </Grid>
+
+
+
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', margin: "auto" }}>
+                        <IconButton onClick={handleOpenLevel} color="secondary" aria-label="Edit">
+                            <EditIcon />
+                        </IconButton>
+                    </Grid>
+
+
+
+                </Grid>
+            </MediaQuery>
             
 
             <Modal
@@ -220,6 +313,18 @@ const EditLevel = (props: Props) => {
                     boxShadow: 24,
                     p: 4,
                     overflow: 'scroll',
+                    [theme.breakpoints.down('md')]: {
+                        maxWidth: theme.spacing(120),
+                        minWidth: theme.spacing(120),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
+                    },
+                    [theme.breakpoints.down('sm')]: {
+                        maxWidth: theme.spacing(80),
+                        minWidth: theme.spacing(80),
+                        maxHeight: theme.spacing(100),
+                        minHeight: theme.spacing(100),
+                    },
                 }}>
                     
                     <Grid container direction = "column" sx={{ml: theme.spacing(2)}}>
@@ -237,13 +342,36 @@ const EditLevel = (props: Props) => {
                         </Grid>
 
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField required error={levelNameError}  sx={{ minWidth: theme.spacing(15), mt: theme.spacing(5) }} id="outlined-basic" label="Level Name" 
+                            <TextField required error={levelNameError} sx={{ 
+                                minWidth: theme.spacing(15), 
+                                mt: theme.spacing(5),
+                                }} 
+                                id="outlined-basic" label="Level Name" 
                             value={levelName} onChange={handleNameChange()}  variant="outlined" />
                         </Grid>
                         <Grid item xs={3} sx={{display: 'flex', justifyContent: 'left', mt: theme.spacing(5)}}>
-                            <TextField required  error={minAmountError} sx={{ minWidth: theme.spacing(15), mr: theme.spacing(5) }} id="outlined-basic" label="Lower bound cost of level" 
+                            <TextField
+                            required  
+                            error={minAmountError} 
+                            sx={{ 
+                                minWidth: theme.spacing(15), 
+                                mr: theme.spacing(5),
+                                [theme.breakpoints.down('sm')]: {
+                                    maxWidth: theme.spacing(30),
+                                    minWidth: theme.spacing(30),
+                                },
+                                }} 
+                                id="outlined-basic" label="Lower bound cost of level" 
                             value={minAmount} onChange={handleMinAmountChange()} variant="outlined" />
-                            <TextField error={maxAmountError} sx={{ minWidth: theme.spacing(15), }} id="outlined-basic" label="Upper bound cost of level" variant="outlined" 
+                            <TextField 
+                            error={maxAmountError}
+                            sx={{ 
+                                minWidth: theme.spacing(15),
+                                [theme.breakpoints.down('sm')]: {
+                                    maxWidth: theme.spacing(30),
+                                    minWidth: theme.spacing(30),
+                                },
+                             }} id="outlined-basic" label="Upper bound cost of level" variant="outlined" 
                             value={maxAmount} onChange={handleMaxAmountChange()} />
                         </Grid>
 
@@ -260,7 +388,17 @@ const EditLevel = (props: Props) => {
                                 multiline={true}
                                 value={des}
                                 onChange={handleDescriptionChange()}
-                                style={{ minWidth: theme.spacing(150), fontFamily: "Poppins", fontSize: theme.spacing(4) }}
+                                sx={{ 
+                                    minWidth: theme.spacing(150), 
+                                    fontFamily: "Poppins", 
+                                    fontSize: theme.spacing(4),
+                                    [theme.breakpoints.down('md')]: {
+                                        minWidth: theme.spacing(100), 
+                                    },
+                                    [theme.breakpoints.down('sm')]: {
+                                        minWidth: theme.spacing(70),
+                                    },
+                                }}
                             />
                         </Grid>
 
@@ -320,7 +458,10 @@ const EditLevel = (props: Props) => {
                         minHeight: theme.spacing(55),
                         bgcolor: 'background.paper',
                         boxShadow: 24,
-                        p: 4
+                        p: 4,
+                        [theme.breakpoints.down('sm')]: {
+                            minWidth: theme.spacing(80),
+                        },
                     }}>
                     
                         <Grid container direction = "column">
