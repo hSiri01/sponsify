@@ -626,7 +626,7 @@ app.get('/get-all-sponsors/:org', (req, res) => {
 
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1})
+        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1, validAdmins : 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
@@ -787,13 +787,13 @@ app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
 
-function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2){
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2, orgEmailAddress){
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
-        cc: sponsifyEmail,
+        cc: [sponsifyEmail, orgEmailAddress],
         
         templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
         dynamicTemplateData: {
@@ -803,7 +803,8 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             items : messageInput, 
             totalCost : "$" + total,
             orgFundName : orgFundName,
-            orgAddress2 : orgAddress2
+            orgAddress2 : orgAddress2, 
+            orgEmailAddress : orgEmailAddress,
             },
         }
         sgMail
@@ -847,9 +848,9 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
 }
 
 app.post("/send-checkout-email", (req, res) => {
-    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2, orgEmailAddress } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,sponsifyEmail,subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+    sendGridEmail(emailInput,sponsifyEmail,subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2, orgEmailAddress);
 })
 
 app.post("/send-request-created-email", (req, res) => {
