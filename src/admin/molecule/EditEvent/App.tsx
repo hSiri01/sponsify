@@ -93,8 +93,8 @@ const EditEvent = (props: Props) => {
         }
     };
 
-    const deleteEvent = () => {
-        fetch('/delete-event', {
+    const deleteEvent = async() => {
+        await fetch('/delete-event', {
             method: 'DELETE',
             headers: {
                 Accept: 'application/json',

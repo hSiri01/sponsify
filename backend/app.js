@@ -1,15 +1,16 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const requests = require('./request')
-const events = require('./event')
-const orgs = require('./org')
-const sponsors = require('./sponsor')
-const purchases = require('./purchase')
+const requests = require('./models/request')
+const events = require('./models/event')
+const orgs = require('./models/org')
+const sponsors = require('./models/sponsor')
+const purchases = require('./models/purchase')
+const zombieEvents = require('./models/zombie')
 const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
-const sponsor = require('./sponsor');
+const sponsor = require('./models/sponsor');
 var cors = require('cors');
 var async = require('async');
 app.use(cors())
@@ -405,7 +406,7 @@ app.put('/reset-events', async(req, res) => {
     res.json({ status: returnStatus })
 })
 
-app.delete('/delete-event', (req, res) => {
+app.delete('/delete-event', async(req, res) => {
     const id = req.body.id
 
     if (!id) {
@@ -414,9 +415,40 @@ app.delete('/delete-event', (req, res) => {
     }
     else {
         if (mongoose.Types.ObjectId.isValid(id)) {
-            // const event = events.findById(id)
+            const event = await events.findById(id)
+            console.log(event)
+
+            if (event.spotsTaken > 0) {
+                console.log('creating zombie event before deleting...')
+
+                const newZombie = new zombieEvents({
+                    _id: event._id,
+                    name: event.name,
+                    date: event.date,
+                    endDate: (event.endDate && event.endDate != event.date) ? event.endDate : undefined,
+                    price: event.price,
+                    briefDesc: event.briefDesc,
+                    totalSpots: event.totalSpots,
+                    spotsTaken: event.spotsTaken,
+                    org: event.org,
+                    sponsors: event.sponsors
+                })
+
+                console.log(newZombie)
             
-            events.findByIdAndRemove(id, (err, event) => {
+                newZombie.save((err) => {
+                    if (err) {
+                        console.log('Error on delete-event while creating zombie: ' + err)
+                        res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Added event to zombie collection')
+                        res.json({ status: '200' })
+                    }
+                })
+            }
+            
+            /*events.findByIdAndRemove(id, (err, event) => {
                 if (err) {
                     console.log('Error on delete-event: ' + err)
                     res.json({ status: '500' })
@@ -425,7 +457,7 @@ app.delete('/delete-event', (req, res) => {
                     console.log('Successfully deleted event\n')
                     res.json({ status: '200' })
                 }
-            })
+            })*/
         }
         else {
             console.log('Cannot delete event, invalid id in request body')
@@ -511,16 +543,36 @@ app.post('/checkout-events', (req, res) => {
 })
 
 app.get('/get-all-purchased-events/:org', (req, res) => {
-    purchases.find({org: req.params.org })
+    let purchasedEvents = []
+
+    purchases.find({ org: req.params.org })
         .populate("events")
         .populate("sponsorID")
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-all-purchased-events, " + err)
+                console.log("Error on querying events collection in get-all-purchased-events, " + err)
             }
 
-            res.send(result)
-            console.log(result)
+            purchasedEvents = result
+            console.log(purchasedEvents)
+
+            purchases.find({ org: req.params.org })
+                .populate("zombies")
+                .populate("sponsorID")
+                .exec((err, result) => {
+                    if (err) {
+                        console.log("Error on querying zombie collection in get-all-purchased-events, " + err)
+                    }
+
+                    console.log("result of zombie query:\n")
+                    console.log(result)
+
+                    for (let i = 0; i < result.length; i++) {
+                        purchasedEvents.push(result[i])
+                    }
+                    
+                    res.send(purchasedEvents)
+                })
         })
 })
 
