@@ -825,8 +825,12 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
         cc: sponsifyEmail,
+        templateId: 'd-f148bb16c70548e09ab271ed526e04d9',
+        dynamicTemplateData: {
+            orgName : orgName
+        },
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        //html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
         
         }
         console.log(msg)
@@ -894,8 +898,9 @@ function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
         cc: sponsifyEmail,
+        templateId: 'd-7436b466a7f8469fa5b396429b70d1c2',
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
+       // html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
         
         }
         console.log(msg)
@@ -946,9 +951,14 @@ function sendAccessGrantedEmail(toInput, fromInput, subjectInput, orgName) {
     const msg = {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
+        cc: sponsifyEmail,
         subject: subjectInput,
-        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
+        templateId:"d-1a4ab0ad027545d0b201dbaa2cf9010c",
+        dynamicTemplateData: {
+            orgName : orgName
+        } ,
+        // // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        // html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
         
         }
         console.log(msg)
