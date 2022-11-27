@@ -28,6 +28,9 @@ const EditQuestion = (props: Props) => {
     const [question, setQuestion] = React.useState(props.ques)
     const [answer, setAnswer] = React.useState(props.ans)
 
+    const [questionError, setQuestionError] = React.useState(false)
+    const [answerError, setAnswerError] = React.useState(false)
+
 
     const handleQuestionChange = () => (event: React.ChangeEvent<HTMLInputElement>) => {
         setQuestion(event.target.value )
@@ -42,27 +45,47 @@ const EditQuestion = (props: Props) => {
         setAnswer(ans)
         setOpenQuestion(true)
     };
-    const handleCloseQuestion = () => setOpenQuestion(false);
+    const handleCloseQuestion = () => {
+        setOpenQuestion(false);
+        setQuestionError(false)
+        setAnswerError(false)
+    }
     
     const [openConfirmation, setOpenConfirmation] = React.useState(false)
     const handleOpenConfirmation = () => setOpenConfirmation(true)
     const handleCloseConfirmation = () => setOpenConfirmation(false)
 
     const handleUpdateQuestion = async () => {
-        const requestOptions = {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                FAQId: id,
-                question: question,
-                answer: answer
-            })
+        // const requestOptions = {
+        //     method: 'PUT',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ 
+        //         FAQId: id,
+        //         question: question,
+        //         answer: answer
+        //     })
+        // }
+        if(question.length > 0 && answer.length > 0){
+            const requestOptions = {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    FAQId: id,
+                    question: question,
+                    answer: answer
+                })
+            }
+            await fetch("/update-FAQ", requestOptions)
+                .then((res) => console.log(res)) 
+    
+                handleCloseQuestion()
+        } 
+        else {
+                handleCloseQuestion()
+                setQuestionError(!question)
+                setAnswerError(!answer)
         }
 
-        await fetch("/update-FAQ", requestOptions)
-            .then((res) => console.log(res)) 
-
-            handleCloseQuestion()
     }
     const handleDeleteQuestion = async () => {
         const requestOptions = {
@@ -172,13 +195,14 @@ const EditQuestion = (props: Props) => {
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
-                            <TextField sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" value={question} onChange={handleQuestionChange()}/>
+                            <TextField error={questionError} sx={{ minWidth: theme.spacing(150), mt: theme.spacing(5) }} id="outlined-basic" label="Question" variant="outlined" value={question} onChange={handleQuestionChange()}/>
                         </Grid>
                         
                         <Grid item xs={12} sx={{
                             display: 'flex', justifyContent: 'center', mt: theme.spacing(5)
                         }}>
                             <TextField
+                                error={answerError}
                                 aria-label="empty textarea"
                                 placeholder="Empty"
                                 minRows={8}
