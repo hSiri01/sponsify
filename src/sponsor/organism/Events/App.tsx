@@ -18,6 +18,8 @@ import CartItem from '../../molecule/CartItem/App'
 import { useNavigate } from "react-router-dom"
 import { useCart } from '../../../contexts/Cart';
 import { GetEnabledEvents, GetLevelByAmount } from '../../../utils/api-types';
+import MediaQuery from 'react-responsive'
+
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -169,6 +171,14 @@ const Events = (props: Props) => {
                         boxShadow: 24,
                         p: 4,
                         overflow: 'scroll',
+                        [theme.breakpoints.down('md')]: {
+                            maxWidth: theme.spacing(150),
+                            minWidth: theme.spacing(150),
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            maxWidth: theme.spacing(80),
+                            minWidth: theme.spacing(80),
+                        },
                     }}>
                         <HowItWorksContents />
                     </Box>
@@ -194,18 +204,35 @@ const Events = (props: Props) => {
                         boxShadow: 24,
                         p: 4,
                         overflow: 'scroll',
+                        [theme.breakpoints.down('md')]: {
+                            maxWidth: theme.spacing(150),
+                            minWidth: theme.spacing(150),
+                        },
+                        [theme.breakpoints.down('sm')]: {
+                            maxWidth: theme.spacing(80),
+                            minWidth: theme.spacing(80),
+                        },
                     }}>
                         <Typography variant="h6" sx={{ fontWeight: 500, }}>
                             Sponsored Items
                         </Typography>
 
                         <Grid container>
-                            {cart.map(item => (
-                                <Grid item key={item.id} xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                                    <CartItem name={item.name} date_start={item.date_start} short_description={item.short_description} price={item.price} quantity={item.quantity} id={item.id} />
-                                </Grid>
-                            ))}
-
+                            {cart.map(item => {
+                                if( typeof item.date_start === "string"){
+                                    //change the string to a date format
+                                    console.log("Changing string to date")
+                                    item.date_start = new Date(item.date_start)
+                                    if( item.date_end && typeof item.date_end === "string"){
+                                        item.date_end = new Date(item.date_end)
+                                    }
+                                }
+                                return (
+                                    <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
+                                        <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
+                                    </Grid>
+                                )
+                            })}
                             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', m: theme.spacing(5) }}>
                                 <Typography variant="body1" sx={{ fontWeight: 600, pt: theme.spacing(2), textAlign: 'center', color: "#367c63" }}>Total:     ${total}</Typography>
                             </Grid>
@@ -245,25 +272,83 @@ const Events = (props: Props) => {
                     
                 </Modal>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                <MediaQuery minWidth={1200}>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(30),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={500} maxWidth={1199}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(20),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery maxWidth={499}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(15),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
@@ -271,6 +356,7 @@ const Events = (props: Props) => {
                     </Typography>
                 </Grid>
 
+                <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
                     <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0), maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(10) }} >
                         <Grid container>
@@ -300,7 +386,7 @@ const Events = (props: Props) => {
 
                             <Grid item xs={1}>
                                 <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(16) }}>
-                                    OCCURANCES
+                                    OCCURRENCES
                                 </Typography>
                             </Grid>
 
@@ -312,6 +398,51 @@ const Events = (props: Props) => {
                         </Grid>
                     </Paper>
                 </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={750} maxWidth={1349}>
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(10) }}>
+                    <Paper variant="outlined" sx={{ borderWidth: theme.spacing(0), maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10) }} >
+                        <Grid container>
+                            <Grid item xs={1}>
+                                <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(3), mt: theme.spacing(5), fontSize:theme.spacing(3) }}>
+                                    SELECT
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                                    <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(20), mt: theme.spacing(5), fontSize: theme.spacing(3) }}>
+                                    DATE
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={3}>
+                                    <Typography variant="body2" sx={{ color: "#979797", ml: theme.spacing(20), mt: theme.spacing(5), fontSize: theme.spacing(3) }}>
+                                    EVENT NAME
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={2}>
+                                    <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(20), fontSize: theme.spacing(3), textAlign: 'center' }}>
+                                    AVG ATTENDANCE
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={1}>
+                                    <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(10), fontSize: theme.spacing(3) }}>
+                                    OCCURRENCES
+                                </Typography>
+                            </Grid>
+
+                            <Grid item xs={1}>
+                                    <Typography variant="body2" sx={{ color: "#979797", mt: theme.spacing(5), ml: theme.spacing(18), fontSize: theme.spacing(3) }}>
+                                    PRICE
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
+                </MediaQuery>
 
                 <>
                     {events.map((event: any) =>   
@@ -330,7 +461,7 @@ const Events = (props: Props) => {
                                     short_description={event.briefDesc}
                                     long_description={event.desc}
                                     avg_attendance={event.avgAttendance ? event.avgAttendance : '-'}
-                                    occurances={event.totalSpots - event.spotsTaken}
+                                    occurrences={event.totalSpots - event.spotsTaken}
                                     price={event.price}
                                     date_start={new Date(event.date)}
                                     date_end={event.endDate ? new Date(event.endDate) : undefined}

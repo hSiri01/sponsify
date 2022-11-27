@@ -13,12 +13,14 @@ import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from "react-router-dom"
 import { VerifySponsorCode } from '../../../utils/api-types';
+import { useCart } from '../../../contexts/Cart';
 
 
 interface Props {
 }
 
 const SponsorHome = (props: Props) => {
+    const { clearCart, cart } = useCart()
     const [input, setInput] = React.useState('');
     const [openAlert, setOpenAlert] = React.useState(false);
     const navigate = useNavigate();
@@ -29,6 +31,7 @@ const SponsorHome = (props: Props) => {
     }
 
     const handleVerifyCode = async () => {
+        clearCart() //Need to reset cart for each individual user
         if (input === '') {
 
             setOpenAlert(true)
