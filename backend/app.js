@@ -14,7 +14,7 @@ var cors = require('cors');
 var async = require('async');
 app.use(cors())
 
-
+const sponsifyEmail = "sponsifynoreply@gmail.com"
 const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
 var cors = require('cors');
@@ -793,7 +793,7 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
-        
+        cc: sponsifyEmail,
         
         templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
         dynamicTemplateData: {
@@ -824,6 +824,7 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
+        cc: sponsifyEmail,
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
         html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
         
@@ -851,7 +852,7 @@ app.post("/send-request-created-email", (req, res) => {
     console.log(req.body)
     const { email, name } = req.body
     let subject = "Sponsify New User Request - " + name
-    sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
+    sendRequestCreatedEmail(email, sponsifyEmail, subject, name);
 })
 
 app.get('/get-requests', (req, res) => {
@@ -892,6 +893,7 @@ function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
+        cc: sponsifyEmail,
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
         html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
         
@@ -929,7 +931,7 @@ app.delete('/delete-request', (req, res) => {
                 }
             })
 
-            sendAccessDeniedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Denied")
+            sendAccessDeniedEmail(req.body.email, sponsifyEmail, "Sponsify Access Denied")
 
         }
         else {
@@ -978,7 +980,7 @@ app.post("/request-to-org", async (req, res) => {
         }
     })
 
-    sendAccessGrantedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Granted!", req.body.name)
+    sendAccessGrantedEmail(req.body.email, sponsifyEmail, "Sponsify Access Granted!", req.body.name)
     requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
 
 
