@@ -69,3 +69,11 @@ export type Sponsor = {
     email: string
     sponsorLevel: string
 }
+
+export type Request = { 
+    _id: string
+    name: string
+    email: string
+    description: string
+    date: Date
+}

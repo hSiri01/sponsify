@@ -17,6 +17,9 @@ import { useCart } from '../../../contexts/Cart';
 import {useNavigate} from "react-router-dom"
 import { GetLevelByAmount } from '../../../utils/api-types';
 import { Organization } from '../../../utils/mongodb-types';
+import MediaQuery from 'react-responsive'
+import CloseIcon from '@mui/icons-material/Close';
+
 
 
 interface Props {
@@ -25,12 +28,14 @@ interface Props {
 const Checkout = (props: Props) => {
 
     const navigate = useNavigate();
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     const [openInfo, setOpenInfo] = React.useState(false);
     const handleOpenInfo = () => setOpenInfo(true);
     const handleCloseInfo = () => setOpenInfo(false);
+
+    const { clearCart, cart } = useCart()
 
     const [logo, setLogo] = React.useState("")
     React.useEffect(() => {
@@ -62,12 +67,23 @@ const Checkout = (props: Props) => {
     const [levelName, setLevelName] = React.useState('');
     const [levelColor, setLevelColor] = React.useState('');
 
-    const { cart } = useCart();
+    
     const total = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     var cartMessage : string = ""
     const [orgAddress1, setOrgAddress1] = React.useState('');
     const [orgAddress2, setOrgAddress2] = React.useState('');
     const [subject,setSubject] = React.useState('')
+    const [orgEmailAddress, setOrgEmailAddress] = React.useState('')
+    const [eventId, setEventId] = React.useState('')
+    const [eventName, setEventName] = React.useState('')
+    const { removeFromCart } = useCart()
+
+    const [openEventError, setOpenEventError] = React.useState(false);
+    const handleOpenEventError = () => setOpenEventError(true);
+    const handleCloseEventError = () => {
+        removeFromCart(eventId)
+        setOpenEventError(false)
+    }
     
     React.useEffect(() => {
         fetch('/get-level-by-amount/' + student_org_name + '/' + total)
@@ -88,12 +104,41 @@ const Checkout = (props: Props) => {
                setOrgAddress2(`${data.address.city}, ${data.address.state} ${data.address.zip}`)
                setOrgFundName(data.fundName)
                setOrgShortName(data.shortName)
+               setOrgEmailAddress(data.validAdmins[0])
               // console.log(orgFundName) // FIXME: State changes are not immediate
             })
     }, [orgAddress1, student_org_name, orgFundName])
 
-    const submitCheckout = () => {
-        if (cart.at(0) && checkoutReady ) {
+    const checkEventSpots = async () => {
+        let ids = cart.map(item => item.id)
+
+        let c;
+        
+        for (let i = 0; i < cart.length; i++) {
+            c = await fetch('/check-event-availability/' + cart[i].id)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.cleared === false) {
+                    setEventId(cart[i].id)
+                    setEventName(cart[i].name)
+                    handleOpenEventError()
+                    return false
+
+                }
+            })
+
+            if (!c) {
+                break
+            }
+        } 
+
+        return c
+    }
+
+    const submitCheckout = async () => {
+        const cleared = await checkEventSpots()
+        console.log(cleared)
+        if (cart.at(0) && checkoutReady && cleared == undefined) {
 
             let donation = 0
             for (let i = 0; i < cart.length; i++) {
@@ -120,6 +165,8 @@ const Checkout = (props: Props) => {
                     org: student_org_name
                 })
             })
+            clearCart()
+            sendEmail()
             navigate("/inbox")
         }
     };
@@ -142,7 +189,8 @@ const Checkout = (props: Props) => {
             orgAddress1,
             orgAddress2,
             total,
-            orgFundName
+            orgFundName, 
+            orgEmailAddress
         })
         }).catch(err=>{
             console.log("Error found",err)
@@ -185,25 +233,83 @@ const Checkout = (props: Props) => {
                     </IconButton>
                 </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                <MediaQuery minWidth={1200}>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(30),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        x
-                    </Typography>
-                </Grid>
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
-                </Grid>
+                    <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                    <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery minWidth={500} maxWidth={1199}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(20),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
+
+                <MediaQuery maxWidth={499}>
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{
+                            maxHeight: theme.spacing(15),
+                            marginTop: theme.spacing(10),
+                        }}
+                            src={Logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                        <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                            x
+                        </Typography>
+                    </Grid>
+
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                    </Grid>
+
+                    <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                    </Grid>
+                </MediaQuery>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <Typography variant="h4">
@@ -213,14 +319,27 @@ const Checkout = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
+                        sx={{ 
+                            minWidth: theme.spacing(80), 
+                            mr: theme.spacing(10),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }} 
                         id="first-name" 
                         label="First Name" 
                         variant="outlined"
                         value={firstNameInput} 
                         onChange={ev => setFirstNameInput(ev.target.value)} />
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80) }}
+                        sx={{ 
+                            minWidth: theme.spacing(80),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }}
                         id="last-name"
                         label="Last Name"
                         variant="outlined"
@@ -230,14 +349,27 @@ const Checkout = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10), mb: theme.spacing(5) }}>
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80), mr: theme.spacing(10) }} 
+                        sx={{ 
+                            minWidth: theme.spacing(80), 
+                            mr: theme.spacing(10),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }} 
                         id="email" 
                         label="Email" 
                         variant="outlined"
                         value={emailInput} 
                         onChange={ev => setEmailInput(ev.target.value)} />
                     <TextField 
-                        sx={{ minWidth: theme.spacing(80) }}
+                        sx={{ 
+                            minWidth: theme.spacing(80),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(40),
+                                maxWidth: theme.spacing(40)
+                            },
+                         }}
                         id="company"
                         label="Company"
                         variant="outlined"
@@ -246,7 +378,11 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
-                    <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10), mt: theme.spacing(4) }} >
+                    <Paper variant="outlined" sx={{ borderStyle: "none none solid none", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor: "#c2c2c2", maxWidth: theme.spacing(180), minWidth: theme.spacing(180), minHeight: theme.spacing(10), mt: theme.spacing(4),
+                    [theme.breakpoints.down('sm')]: {
+                        minWidth: theme.spacing(80),
+                    },
+                 }} >
                         <Typography variant="body1" sx={{ pl: theme.spacing(5) }}>
                             SPONSORED ITEMS
                         </Typography>
@@ -255,6 +391,13 @@ const Checkout = (props: Props) => {
 
                 {cart.map(item => {
                     cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quanitity:   </b>" +  item.quantity + "<br>"
+                    if( typeof item.date_start === "string"){
+                        //change the string to a date format
+                        item.date_start = new Date(item.date_start)
+                        if( item.date_end && typeof item.date_end === "string"){
+                            item.date_end = new Date(item.date_end)
+                        }
+                    }
                     return (
                         <Grid key={item.id} item xs={12} sx={{ display: 'flex', justifyContent: 'center', m: theme.spacing(2) }}>
                             <CartItem name={item.name} short_description={item.short_description} price={item.price} quantity={item.quantity} date_start={item.date_start} date_end={item.date_end} id={item.id} />
@@ -301,7 +444,7 @@ const Checkout = (props: Props) => {
                 <Grid item xs sx={{  margin: theme.spacing(6) }}>
                     <Grid container direction="row-reverse">
                         <Grid>
-                        <Button onClick={(event) => { submitCheckout(); sendEmail();}} variant="contained" size="large" color="primary" sx={{
+                        <Button onClick={(event) => { submitCheckout(); }} variant="contained" size="large" color="primary" sx={{
                         borderRadius: 0,
                         pt: theme.spacing(3),
                         pb: theme.spacing(3),
@@ -316,6 +459,57 @@ const Checkout = (props: Props) => {
                 </Grid>
                 
             </Grid>
+
+            <Modal
+                open={openEventError}
+                onClose={handleCloseEventError}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                disableScrollLock
+            >
+                <Box sx={{
+                    position: 'absolute' as 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    maxWidth: theme.spacing(200),
+                    minWidth: theme.spacing(150),
+                    maxHeight: theme.spacing(200),
+                    minHeight: theme.spacing(50),
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                }}>
+
+                <Grid container direction = "column">
+                    <Grid item xs={1} >
+                            <IconButton color="secondary" aria-label="Edit" onClick={handleCloseEventError}>
+                                <CloseIcon />
+                            </IconButton>
+                    </Grid>
+
+                    <Grid>
+                        <Typography variant="h5" sx={{
+                            display: 'flex', justifyContent: 'center', m: theme.spacing(0), fontFamily: "Oxygen"
+                        }} > 
+                        There has been a problem with<b style={{ color: "#4baa89"}}>{eventName}</b>
+                        </Typography>
+                        
+                    </Grid>
+
+                    <Grid>
+                        <Typography  sx={{
+                            fontSize: 18, display: 'flex', justifyContent: 'center', m: theme.spacing(7), fontFamily: "Oxygen"
+                        }} > 
+                        The event will be removed from your cart. Please review list of events to check availability.
+                        </Typography>
+                        
+                    </Grid>
+
+                    
+                </Grid>
+                </Box>
+            </Modal>
 
         </ThemeProvider>
     )

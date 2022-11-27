@@ -15,9 +15,10 @@ type CartContextType = {
 const CartContext = React.createContext({} as CartContextType)
 
 export const useCart = () => React.useContext(CartContext)
+const localStorageCart = JSON.parse(localStorage.getItem('cart') || "[]")
 
 const CartProvider = ({ children }: Props) => {
-    const [cart, setCart] = React.useState<CartItemType[]>([])
+    const [cart, setCart] = React.useState<CartItemType[]>(localStorageCart)
 
     const addToCart = (item: CartItemType) => {
         console.log(cart.filter(e => e.id !== item.id).concat([item]))
@@ -29,6 +30,7 @@ const CartProvider = ({ children }: Props) => {
     const clearCart = () => setCart([])
 
     React.useEffect(() => {
+        localStorage.setItem('cart', JSON.stringify(cart))
         console.log("CartContext", cart)
     }, [cart, setCart])
 
