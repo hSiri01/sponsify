@@ -41,12 +41,21 @@ const EditEvent = (props: Props) => {
     const {name, id, short_description, long_description, price, avg_attendance, num_sponsored, occurrences, date_start, date_end, visible} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
-    const handleOpenEvent = () => setOpenEvent(true);
+    const handleOpenEvent = () => {
+        setmodalVisibilityChecked(checked)
+        setOpenEvent(true);
+    }
     const handleCloseEvent = () => setOpenEvent(false);
-
+    const [updateEventFunc, setUpdateEventFunc] = React.useState(false);
     const [checked, setChecked] = React.useState(visible);
+    const [modalVisibilityChecked, setmodalVisibilityChecked] = React.useState(checked);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
+        setmodalVisibilityChecked(event.target.checked)
+        setUpdateEventFunc(true)
+    };
+    const handleModalVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setmodalVisibilityChecked(event.target.checked);
     };
 
     const [openConfirmation, setOpenConfirmation] = React.useState(false)
@@ -61,10 +70,11 @@ const EditEvent = (props: Props) => {
     const [totalSpotsError, setTotalSpotsError] = React.useState(false);
     const [avgAttendanceInput, setAvgAttendanceInput] = React.useState(props.avg_attendance);
     const [generalDonation, setGeneralDonation] = React.useState(props.name === 'General Donation');
-
+    const isMounted = React.useRef(false);
     const updateEvent = () => {
         if (totalSpotsInput >= num_sponsored) {
-            fetch('/update-event', {
+            
+        fetch('/update-event', {
                 method: 'PUT',
                 headers: {
                     Accept: 'application/json',
@@ -81,17 +91,32 @@ const EditEvent = (props: Props) => {
                     totalSpots: generalDonation ? -1 : totalSpotsInput,
                     spotsTaken: props.num_sponsored,
                     avgAttendance: avgAttendanceInput,
-                    visible: checked
+                    visible: openEvent ? modalVisibilityChecked : checked
                 })
             })
                 .then(() => {
+                    if( openEvent){
                     handleCloseEvent()
-                    window.location.reload()})
+                    }
+                setUpdateEventFunc(false)
+                window.location.reload()
+                })
         }
         else {
             setTotalSpotsError(true)
         }
+
+                
     };
+    //do not want to run this on initial render, only if the checked state changes
+    React.useEffect(() => {
+        if( updateEventFunc == true){
+            console.log(updateEventFunc)
+            updateEvent();
+        }
+        
+
+      }, [updateEventFunc]); 
 
     const deleteEvent = () => {
         fetch('/delete-event', {
@@ -362,8 +387,8 @@ const EditEvent = (props: Props) => {
                                     <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                                 </Grid>
                                 <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                    <Checkbox checked={checked}
-                                        onChange={handleChange} />
+                                    <Checkbox checked={modalVisibilityChecked}
+                                        onChange={handleModalVisibilityChange} />
                                 </Grid>
 
                                 <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
@@ -660,8 +685,8 @@ const EditEvent = (props: Props) => {
                                         <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                                     </Grid>
                                     <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                        <Checkbox checked={checked}
-                                            onChange={handleChange} />
+                                        <Checkbox checked={modalVisibilityChecked}
+                                            onChange={handleModalVisibilityChange} />
                                     </Grid>
 
                                     <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
@@ -1035,8 +1060,8 @@ const EditEvent = (props: Props) => {
                                         <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                                     </Grid>
                                     <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                        <Checkbox checked={checked}
-                                            onChange={handleChange} />
+                                        <Checkbox checked={modalVisibilityChecked}
+                                            onChange={handleModalVisibilityChange} />
                                     </Grid>
 
                                     <Grid item sx={{ pt: theme.spacing(3) }} sm={4} xs={6}>
