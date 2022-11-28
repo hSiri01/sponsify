@@ -88,25 +88,9 @@ const Event = (props: OrgEvent) => {
         removeFromCart(props.id)
     };
     const ref = React.useRef<HTMLDivElement>(null)
-    // const useResize = (ref : HTMLDivElement) => {
-    //     const [width, setWidth] = useState(0)
-    //     const [height, setHeight] = useState(0)
-      
-    //     const handleResize = () => {
-    //       setWidth(ref.current.offsetWidth)
-    //       setHeight(ref.current.offsetHeight)
-    //     }
-      
-    //     useEffect(() => {
-    //       ref.current && ref.current.addEventListener('resize', handleResize)
-      
-    //       return () => {
-    //         ref.current.removeEventListener('resize', handleResize)
-    //       }
-    //     }, [ref])
-      
-    //     return { width, height }
-    //   }
+    const refMid = React.useRef<HTMLDivElement>(null)
+    const refSmall = React.useRef<HTMLDivElement>(null)
+
    
     const [height, setHeight] = React.useState(0);
     const [width,setWidth] = React.useState(0)
@@ -126,7 +110,8 @@ const Event = (props: OrgEvent) => {
                 const changeHeight = ref.current.clientHeight;
                 console.log("height: ", height)
                 
-                const changeWidth = ref.current.clientWidth;console.log("width: ", width)
+                const changeWidth = ref.current.clientWidth;
+                console.log("width: ", width)
                 setHeight(changeHeight);
                 setWidth(changeWidth);
             }
@@ -134,6 +119,52 @@ const Event = (props: OrgEvent) => {
         
         
     }, [ref]);
+    useLayoutEffect(() => {
+        
+        if (refMid.current) {
+            const height = refMid.current.clientHeight;
+            const width = refMid.current.clientWidth;
+            setHeight(height);
+            setWidth(width);
+        }
+        window.addEventListener('resize', updateSizeMid);
+        function updateSizeMid () {
+            console.log("update Mid Ref size")
+            if (refMid.current) {
+                const changeHeight = refMid.current.clientHeight;
+                const changeWidth = refMid.current.clientWidth;
+                console.log("Mid height: ", height)
+                console.log("Mid width: ", width)
+                setHeight(changeHeight);
+                setWidth(changeWidth);
+            }
+        }
+        
+        
+    }, [refMid]);
+    useLayoutEffect(() => {
+        
+        if (refSmall.current) {
+            const height = refSmall.current.clientHeight;
+            const width = refSmall.current.clientWidth;
+            setHeight(height);
+            setWidth(width);
+        }
+        window.addEventListener('resize', updateSizeMid);
+        function updateSizeMid () {
+            console.log("update Small Ref size")
+            if (refSmall.current) {
+                const changeHeight = refSmall.current.clientHeight;
+                const changeWidth = refSmall.current.clientWidth;
+                console.log("Small height: ", height)
+                console.log("Small width: ", width)
+                setHeight(changeHeight);
+                setWidth(changeWidth);
+            }
+        }
+        
+        
+    }, [refSmall]);
         
      
        
@@ -212,7 +243,7 @@ const Event = (props: OrgEvent) => {
 
                 <MediaQuery minWidth={750} maxWidth={1349}>
                     <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Paper ref={ref} variant="outlined" sx={{ 
+                        <Paper ref={refMid} variant="outlined" sx={{ 
                             borderWidth: theme.spacing(.5), 
                             borderRadius: 0, 
                             borderColor: "#c2c2c2", 
@@ -293,7 +324,7 @@ const Event = (props: OrgEvent) => {
 
                 <MediaQuery maxWidth={749} >
                     <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper ref={ref} variant="outlined" sx={{ 
+                    <Paper ref={refSmall} variant="outlined" sx={{ 
                             borderWidth: theme.spacing(.5), 
                             borderRadius: 0, 
                             borderColor: "#c2c2c2", 
