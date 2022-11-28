@@ -41,15 +41,21 @@ const EditEvent = (props: Props) => {
     const {name, id, short_description, long_description, price, avg_attendance, num_sponsored, occurrences, date_start, date_end, visible} = props
 
     const [openEvent, setOpenEvent] = React.useState(false);
-    const handleOpenEvent = () => setOpenEvent(true);
+    const handleOpenEvent = () => {
+        setmodalVisibilityChecked(checked)
+        setOpenEvent(true);
+    }
     const handleCloseEvent = () => setOpenEvent(false);
     const [updateEventFunc, setUpdateEventFunc] = React.useState(false);
     const [checked, setChecked] = React.useState(visible);
+    const [modalVisibilityChecked, setmodalVisibilityChecked] = React.useState(checked);
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
-        
+        setmodalVisibilityChecked(event.target.checked)
         setUpdateEventFunc(true)
-        
+    };
+    const handleModalVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setmodalVisibilityChecked(event.target.checked);
     };
 
     const [openConfirmation, setOpenConfirmation] = React.useState(false)
@@ -85,7 +91,7 @@ const EditEvent = (props: Props) => {
                     totalSpots: generalDonation ? -1 : totalSpotsInput,
                     spotsTaken: props.num_sponsored,
                     avgAttendance: avgAttendanceInput,
-                    visible: checked
+                    visible: openEvent ? modalVisibilityChecked : checked
                 })
             })
                 .then(() => {
@@ -381,8 +387,8 @@ const EditEvent = (props: Props) => {
                                     <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                                 </Grid>
                                 <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                    <Checkbox checked={checked}
-                                        onChange={handleChange} />
+                                    <Checkbox checked={modalVisibilityChecked}
+                                        onChange={handleModalVisibilityChange} />
                                 </Grid>
 
                                 <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
@@ -679,8 +685,8 @@ const EditEvent = (props: Props) => {
                                         <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                                     </Grid>
                                     <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                        <Checkbox checked={checked}
-                                            onChange={handleChange} />
+                                        <Checkbox checked={modalVisibilityChecked}
+                                            onChange={handleModalVisibilityChange} />
                                     </Grid>
 
                                     <Grid item sx={{ pt: theme.spacing(3) }} xs={2}>
@@ -1054,8 +1060,8 @@ const EditEvent = (props: Props) => {
                                         <Typography sx={{ pt: theme.spacing(5) }} variant="body1">VISIBLE</Typography>
                                     </Grid>
                                     <Grid item sx={{ pt: theme.spacing(3) }} xs={1}>
-                                        <Checkbox checked={checked}
-                                            onChange={handleChange} />
+                                        <Checkbox checked={modalVisibilityChecked}
+                                            onChange={handleModalVisibilityChange} />
                                     </Grid>
 
                                     <Grid item sx={{ pt: theme.spacing(3) }} sm={4} xs={6}>
