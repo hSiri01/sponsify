@@ -12,11 +12,11 @@ const purchaseSchema = new mongoose.Schema({
             type: mongoose.SchemaTypes.ObjectId,
             ref: 'event',
         }],
-        required: true,
-        validate: {
-            validator: v => v.length > 0,
-            message: props => `Events array is empty: ${props.value}`
-        }
+        required: true
+        // validate: {
+        //     validator: v => v.length > 0,
+        //     message: props => `Events array is empty: ${props.value}`
+        // }
     },
     totalAmount: {
         type: Number,
