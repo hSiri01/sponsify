@@ -472,10 +472,20 @@ app.post('/checkout-events', async(req, res) => {
         }
     })
 
+    // console.log("got events from request: ")
+    // console.log(req.body.events)
+    let eventIDs = []
+    for (let i = 0; i < req.body.events.length; i++) {
+        for (let j = 0; j < req.body.events[i].quantity; j++) {
+            eventIDs.push(req.body.events[i].id)
+        }
+    }
+    // console.log("event IDs: ", eventIDs)
+
     // create a purchase
     const purchase = new purchases({
         sponsorID: newSponsor._id,
-        events: req.body.events,
+        events: eventIDs,
         totalAmount: req.body.totalAmount,
         donationAmount: req.body.donationAmount ? req.body.donationAmount : undefined,
         dateSponsored: Date.now(),
@@ -509,7 +519,6 @@ app.post('/checkout-events', async(req, res) => {
         }
 
         // console.log("eventOptions: " + eventOptions)
-
         const result = updateEvent(eventID, eventOptions)
         if (result.status != '200') {
             resStatus = result
