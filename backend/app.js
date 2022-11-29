@@ -452,7 +452,7 @@ app.get('/verify-sponsor-code/:code', (req, res) => {
         })
 })
 
-app.post('/checkout-events', (req, res) => {
+app.post('/checkout-events', async(req, res) => {
     // create new sponsor
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
@@ -496,10 +496,19 @@ app.post('/checkout-events', (req, res) => {
 
     for (let i = 0; i < purchase.events.length; i++) {
         const eventID = purchase.events[i]
-        const eventOptions = {
-            $inc: { spotsTaken: 1 },
-            $push: { sponsors: newSponsor._id }
+
+        const event = await events.findById(eventID)
+        // console.log("found event to update: " + event)
+
+        let newSponsors = event.sponsors
+        newSponsors.push(newSponsor._id)
+
+        eventOptions = {
+            spotsTaken: event.spotsTaken + 1,
+            sponsors: newSponsors
         }
+
+        // console.log("eventOptions: " + eventOptions)
 
         const result = updateEvent(eventID, eventOptions)
         if (result.status != '200') {
