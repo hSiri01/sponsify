@@ -14,7 +14,7 @@ var cors = require('cors');
 var async = require('async');
 app.use(cors())
 
-
+const sponsifyEmail = "sponsifynoreply@gmail.com"
 const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
 var cors = require('cors');
@@ -666,7 +666,7 @@ app.get('/get-all-sponsors/:org', (req, res) => {
 
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1})
+        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1, validAdmins : 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
@@ -827,13 +827,13 @@ app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
 
-function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2){
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2, orgEmailAddress){
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
-        
+        cc: [sponsifyEmail, orgEmailAddress],
         
         templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
         dynamicTemplateData: {
@@ -843,7 +843,8 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             items : messageInput, 
             totalCost : "$" + total,
             orgFundName : orgFundName,
-            orgAddress2 : orgAddress2
+            orgAddress2 : orgAddress2, 
+            orgEmailAddress : orgEmailAddress,
             },
         }
         sgMail
@@ -864,8 +865,13 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
+        cc: sponsifyEmail,
+        templateId: 'd-f148bb16c70548e09ab271ed526e04d9',
+        dynamicTemplateData: {
+            orgName : orgName
+        },
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        //html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
         
         }
         console.log(msg)
@@ -882,16 +888,16 @@ function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
 }
 
 app.post("/send-checkout-email", (req, res) => {
-    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2, orgEmailAddress } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+    sendGridEmail(emailInput,sponsifyEmail,subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2, orgEmailAddress);
 })
 
 app.post("/send-request-created-email", (req, res) => {
     console.log(req.body)
     const { email, name } = req.body
     let subject = "Sponsify New User Request - " + name
-    sendRequestCreatedEmail(email, "sabrinapena@tamu.edu", subject, name);
+    sendRequestCreatedEmail(email, sponsifyEmail, subject, name);
 })
 
 app.get('/get-requests', (req, res) => {
@@ -932,8 +938,10 @@ function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
+        cc: sponsifyEmail,
+        templateId: 'd-7436b466a7f8469fa5b396429b70d1c2',
         // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
+       // html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
         
         }
         console.log(msg)
@@ -969,7 +977,7 @@ app.delete('/delete-request', (req, res) => {
                 }
             })
 
-            sendAccessDeniedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Denied")
+            sendAccessDeniedEmail(req.body.email, sponsifyEmail, "Sponsify Access Denied")
 
         }
         else {
@@ -984,9 +992,14 @@ function sendAccessGrantedEmail(toInput, fromInput, subjectInput, orgName) {
     const msg = {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
+        cc: sponsifyEmail,
         subject: subjectInput,
-        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
-        html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
+        templateId:"d-1a4ab0ad027545d0b201dbaa2cf9010c",
+        dynamicTemplateData: {
+            orgName : orgName
+        } ,
+        // // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        // html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
         
         }
         console.log(msg)
@@ -1018,7 +1031,7 @@ app.post("/request-to-org", async (req, res) => {
         }
     })
 
-    sendAccessGrantedEmail(req.body.email, "sabrinapena@tamu.edu", "Sponsify Access Granted!", req.body.name)
+    sendAccessGrantedEmail(req.body.email, sponsifyEmail, "Sponsify Access Granted!", req.body.name)
     requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
 
 

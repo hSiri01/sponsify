@@ -73,7 +73,7 @@ const Checkout = (props: Props) => {
     const [orgAddress1, setOrgAddress1] = React.useState('');
     const [orgAddress2, setOrgAddress2] = React.useState('');
     const [subject,setSubject] = React.useState('')
-
+    const [orgEmailAddress, setOrgEmailAddress] = React.useState('')
     const [eventId, setEventId] = React.useState('')
     const [eventName, setEventName] = React.useState('')
     const { removeFromCart } = useCart()
@@ -104,6 +104,7 @@ const Checkout = (props: Props) => {
                setOrgAddress2(`${data.address.city}, ${data.address.state} ${data.address.zip}`)
                setOrgFundName(data.fundName)
                setOrgShortName(data.shortName)
+               setOrgEmailAddress(data.validAdmins[0])
               // console.log(orgFundName) // FIXME: State changes are not immediate
             })
     }, [orgAddress1, student_org_name, orgFundName])
@@ -188,7 +189,8 @@ const Checkout = (props: Props) => {
             orgAddress1,
             orgAddress2,
             total,
-            orgFundName
+            orgFundName, 
+            orgEmailAddress
         })
         }).catch(err=>{
             console.log("Error found",err)

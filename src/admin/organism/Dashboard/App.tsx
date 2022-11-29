@@ -33,6 +33,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Tooltip from '@mui/material/Tooltip';
 
 interface Props {
 }
@@ -520,11 +521,13 @@ const Dashboard = (props: Props) => {
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={8}>
-                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                                Sponsor Code
-                                            </Typography>
+                                            <Tooltip placement="top" title="Sponsor codes allow you to protect who can sponsor events. Share this with companies who you trust. Generate a new code anytime you remove a corporate contact. ">
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Sponsor Code
+                                                </Typography>
+                                            </Tooltip>
+                                            
                                         </Grid>
-
                                     </Grid>
                                 </Paper>
 
@@ -544,7 +547,46 @@ const Dashboard = (props: Props) => {
                                         </Typography>
 
                                     </Grid>
-
+                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: "auto" }}>
+                                        <Button 
+                                        onClick={handlePopupOpen}
+                                        variant="contained" 
+                                        size="large" 
+                                        color="secondary" 
+                                    sx={{
+                                        
+                                        color: 'white',
+                                        mb: theme.spacing(2),
+                                        backgroundColor: '#434343',
+                                        borderRadius: 0,
+                                        fontFamily: 'Oxygen',
+                                        pt: theme.spacing(3),
+                                        pb: theme.spacing(3),
+                                        pl: theme.spacing(8),
+                                        pr: theme.spacing(8),
+                                        "&:hover": {
+                                            color: 'white',
+                                            backgroundColor: '#367c63',
+                                        }
+                                        }}>Generate New Code</Button>
+                                    </Grid>
+                                    <Dialog
+                                        open={generateGenerateCodePopup}
+                                        keepMounted
+                                        onClose={handlePopupClose}
+                                        aria-describedby="alert-dialog-slide-description"
+                                    >
+                                        <DialogTitle>{"Are you sure you want to generate a new code?"}</DialogTitle>
+                                        <DialogContent>
+                                        <DialogContentText id="alert-dialog-slide-description">
+                                            Generating a new code will delete the current code. Click yes below if you wish to do this, and make sure to send the new code to your sponsors! If not, click no. 
+                                        </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={updateSponsorCode}>Yes</Button> 
+                                            <Button onClick={handlePopupClose}>No</Button>
+                                        </DialogActions>
+                                 </Dialog>
                                 </Grid>
                             </Paper>
 
