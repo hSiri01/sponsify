@@ -28,6 +28,17 @@ const SponsorHome = (props: Props) => {
         setOpenAlert(false)
     }
 
+    const handleEnterKey = () => (event: any) => {
+        //console.log("ENTER IS PRESSED");
+        const { key, keyCode } = event;
+
+        // get started button triggered by pressing the enter key
+        if (keyCode === 'Enter' || keyCode === 13) {
+            //console.log("verifying code")
+            handleVerifyCode();
+        }
+    }
+
     const handleVerifyCode = async () => {
         if (input === '') {
 
@@ -98,12 +109,11 @@ const SponsorHome = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
-                    <TextField id="outlined-basic" label="Sponsor Code" variant="filled" sx={{width:theme.spacing(70)}} value={input} onChange={handleChange()}/>
+                    <TextField id="outlined-basic" label="Sponsor Code" variant="filled" sx={{width:theme.spacing(70)}} value={input} onChange={handleChange()} onKeyDown={handleEnterKey()}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
-                    <Button 
-                    variant="contained" size="large" color="secondary" onClick={handleVerifyCode}>Get Started</Button>
+                    <Button variant="contained" size="large" color="secondary" type="submit" onClick={handleVerifyCode}>Get Started</Button>
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
