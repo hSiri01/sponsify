@@ -82,13 +82,13 @@ const Transaction = (props: Props) => {
                           }} >
                         <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
-                                <IconButton color="secondary" aria-label="Edit" onClick={handleOpenConfirmation} sx={{ ml: theme.spacing(5), mb: theme.spacing(2), pt: theme.spacing(0) }}>
+                                <IconButton color="secondary" aria-label="Edit" onClick={handleOpenConfirmation} sx={{mb: theme.spacing(2), pt: theme.spacing(0) }}>
                                     <DeleteIcon />
                                 </IconButton>
                             </Grid>
 
                             <Grid item xs={2}>
-                                <Typography sx={{ fontWeight: "600", mt: theme.spacing(3), ml: theme.spacing(8)}} variant="h6">{company_name}</Typography>    
+                                <Typography sx={{ fontWeight: "600", mt: theme.spacing(3)}} variant="h6">{company_name}</Typography>    
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(3)}}>
@@ -96,7 +96,7 @@ const Transaction = (props: Props) => {
                                 <Typography sx={{ color: "#979797" }} variant="body2">{rep_email}</Typography>
                             </Grid>
 
-                            <Grid item xs={2} sx={{ marginTop: theme.spacing(2), ml:theme.spacing(10), pr: theme.spacing(23) }}>
+                            <Grid item xs={2} sx={{ marginTop: theme.spacing(2), ml:theme.spacing(5), pr: theme.spacing(23) }}>
                                 <Date date_1={date_start} date_2={date_end} />
                             </Grid>
 
@@ -109,8 +109,8 @@ const Transaction = (props: Props) => {
                                 <Typography sx={{ color: "#979797" }} variant="h6">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
                             </Grid>
 
-                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5), ml: theme.spacing(10) }}>
-                                <Typography sx={{ color:"#367c63", fontWeight: "600" }} variant="h6">${price}</Typography>
+                            <Grid item xs={1} sx={{ marginTop: theme.spacing(5), pr: theme.spacing(5) }}>
+                                <Typography sx={{ color:"#367c63", fontWeight: "600", textAlign:"right"}} variant="h6">${price}</Typography>
                             </Grid>
 
                         </Grid>
