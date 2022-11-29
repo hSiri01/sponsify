@@ -33,6 +33,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import GppMaybeIcon from '@mui/icons-material/GppMaybe';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Tooltip from '@mui/material/Tooltip';
 
 interface Props {
 }
@@ -520,9 +521,12 @@ const Dashboard = (props: Props) => {
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs={8}>
-                                            <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
-                                                Sponsor Code
-                                            </Typography>
+                                            <Tooltip placement="top" title="Sponsor codes allow you to protect who can sponsor events. Share this with companies who you trust. Generate a new code anytime you remove a corporate contact. ">
+                                                <Typography variant="h6" sx={{ mt: theme.spacing(2) }}>
+                                                    Sponsor Code
+                                                </Typography>
+                                            </Tooltip>
+                                            
                                         </Grid>
                                     </Grid>
                                 </Paper>
