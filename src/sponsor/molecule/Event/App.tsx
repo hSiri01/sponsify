@@ -253,8 +253,8 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={4} sx={{pl: theme.spacing(8), pr: theme.spacing(8)}}>
-                                    <Typography sx={{ fontWeight: "1000"  }} variant="body1">
-                                        ALREADY SPONSORED
+                                    <Typography sx={{ fontWeight: "1000" , }} variant="body1">
+                                        FULLY SPONSORED
                                     </Typography>
                                     <Typography sx={{ fontWeight: "600", color: "#434343" }} variant="body1">{name} </Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
@@ -314,7 +314,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={12} sx={{pl: theme.spacing(8), pr: theme.spacing(8), mt: theme.spacing(5)}}>
-                                    <Typography color="#434343" sx={{ fontWeight: "1000", textAlign: 'center',  }} variant="body1">
+                                    <Typography sx={{ fontWeight: "1000", textAlign: 'center',  }} variant="body1">
                                         ALREADY SPONSORED
                                     </Typography>
                                     <Typography sx={{ 
