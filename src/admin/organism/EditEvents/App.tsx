@@ -130,7 +130,7 @@ const EditEvents = (props: Props) => {
                     briefDesc: briefDescInput,
                     totalSpots: totalSpotsInput,
                     spotsTaken: spotsTakenInput > -1 ? spotsTakenInput : 0,
-                    avgAttendance: avgAttendanceInput,
+                    avgAttendance: avgAttendanceInput > -1 ? avgAttendanceInput : undefined,
                     visible: checked,
                     org: student_org_name
                 })
