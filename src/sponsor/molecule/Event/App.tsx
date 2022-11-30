@@ -94,7 +94,18 @@ const Event = (props: OrgEvent) => {
    
     const [height, setHeight] = React.useState(0);
     const [width,setWidth] = React.useState(0)
-   
+    // function updateSize () {
+    //     console.log("update size")
+    //     if (ref.current) {
+    //         const changeHeight = ref.current.clientHeight;
+    //         console.log("height: ", height)
+            
+    //         const changeWidth = ref.current.clientWidth;
+    //         console.log("width: ", width)
+    //         setHeight(changeHeight);
+    //         setWidth(changeWidth);
+    //     }
+    // }
     useLayoutEffect(() => {
         
         if (ref.current) {
@@ -105,7 +116,7 @@ const Event = (props: OrgEvent) => {
         }
         window.addEventListener('resize', updateSize);
         function updateSize () {
-            console.log("update size")
+            console.log("update regular size")
             if (ref.current) {
                 const changeHeight = ref.current.clientHeight;
                 console.log("height: ", height)
@@ -118,7 +129,7 @@ const Event = (props: OrgEvent) => {
         }
         
         
-    }, [ref]);
+    }, []);
     useLayoutEffect(() => {
         
         if (refMid.current) {
@@ -141,7 +152,7 @@ const Event = (props: OrgEvent) => {
         }
         
         
-    }, [refMid]);
+    }, []);
     useLayoutEffect(() => {
         
         if (refSmall.current) {
@@ -150,8 +161,8 @@ const Event = (props: OrgEvent) => {
             setHeight(height);
             setWidth(width);
         }
-        window.addEventListener('resize', updateSizeMid);
-        function updateSizeMid () {
+        window.addEventListener('resize', updateSizeSmall);
+        function updateSizeSmall () {
             console.log("update Small Ref size")
             if (refSmall.current) {
                 const changeHeight = refSmall.current.clientHeight;
@@ -164,7 +175,7 @@ const Event = (props: OrgEvent) => {
         }
         
         
-    }, [refSmall]);
+    }, []);
         
      
        
@@ -189,7 +200,10 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={4}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{name}</Typography>
+                                    <Typography color="darkGrey" sx={{ fontWeight: "600"  }} variant="body1">
+                                        ALREADY SPONSORED
+                                    </Typography>
+                                    <Typography color="darkGrey" sx={{ fontWeight: "600",  }} variant="h6">{name}</Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
                                 </Grid>
 
@@ -206,7 +220,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
-                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize:theme.spacing(8)}} variant="body1">
+                                    <Typography color="darkGrey" onClick={handleOpenEvent} sx={{ cursor: "pointer", fontSize:theme.spacing(8)}} variant="body1">
                                         {'>'}
                                     </Typography>
                                 </Grid>
@@ -214,30 +228,6 @@ const Event = (props: OrgEvent) => {
                             </Grid>
                         
                         </Paper>
-                        
-                        
-                        <Paper variant="outlined"  sx={{ 
-                         mt: theme.spacing(4),
-                         alignItems: "center",
-                         display: 'flex',
-                         position: "absolute",
-                         borderWidth: theme.spacing(.5), 
-                         borderRadius: 0, 
-                         borderColor:'rgba(52, 52, 52, 0.8)', 
-                         maxWidth: theme.spacing(300), 
-                         minWidth: theme.spacing(300), 
-                         minHeight: theme.spacing(20), 
-                         height: height,
-                         width: width,
-                         backgroundColor: 'rgba(52, 52, 52, 0.8)',}} >
-                                <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
-                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
-                                        <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
-                                    </Grid>
-                                </Grid>
-                        
-                        </Paper>
-
                     </Grid>
                 </MediaQuery>
 
@@ -262,7 +252,10 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={4} sx={{pl: theme.spacing(8), pr: theme.spacing(8)}}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{name}</Typography>
+                                    <Typography color="darkGrey" sx={{ fontWeight: "600"  }} variant="body1">
+                                        ALREADY SPONSORED
+                                    </Typography>
+                                    <Typography color="darkGrey" sx={{ fontWeight: "600" }} variant="body1">{name} </Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
                                 </Grid>
 
@@ -271,7 +264,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{occurrences}</Typography>
+                                    <Typography  sx={{ fontWeight: "600" }} variant="body1">{occurrences}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
@@ -279,7 +272,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9) }}>
-                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
+                                    <Typography color="darkGrey" onClick={handleOpenEvent} sx={{ cursor: "pointer", fontSize: theme.spacing(8) }} variant="body1">
                                         {'>'}
                                     </Typography>
                                 </Grid>
@@ -287,37 +280,6 @@ const Event = (props: OrgEvent) => {
                             </Grid>
                         
                         </Paper>
-                        
-                        <Paper variant="outlined" sx={{ 
-                            position: "absolute",
-                            borderWidth: theme.spacing(.5), 
-                            borderRadius: 0, 
-                            backgroundColor: 'rgba(52, 52, 52, 0.8)',
-                            borderColor:'rgba(52, 52, 52, 0.8)',
-                            alignItems:"center",
-                            maxWidth: theme.spacing(180), 
-                            minWidth: theme.spacing(180), 
-                            minHeight: theme.spacing(20), 
-                            mt: theme.spacing(4) ,
-                            height: height,
-                            width: width,
-                            ml: "auto",
-                            mr: "auto",
-                            left: 0,
-                            right: 0,
-                            textAlign: "center",
-                            display:"flex"
-                        
-                            }} >
-                                <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
-                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',   }}>
-                                        <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
-                                    </Grid>
-                                </Grid>
-                        
-                        </Paper>
-                        
-
                     </Grid>
                     
                 </MediaQuery>
@@ -351,9 +313,12 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={12} sx={{pl: theme.spacing(8), pr: theme.spacing(8), mt: theme.spacing(5)}}>
-                                    <Typography sx={{ 
+                                    <Typography color="darkGrey" sx={{ fontWeight: "600"  }} variant="body1">
+                                        ALREADY SPONSORED
+                                    </Typography>
+                                    <Typography color="darkGrey" sx={{ 
                                         fontWeight: "600",
-                                        textAlign: 'center'
+                                        textAlign: 'center', 
                                         }} variant="body1">{name}</Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
                                 </Grid>
@@ -374,7 +339,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={12} sx={{ marginTop: theme.spacing(1.5), display:'flex', justifyContent:'center'}}>
-                                    <Typography onClick={handleOpenEvent} sx={{ cursor: "pointer", color: "#666666", fontSize: theme.spacing(8) }} variant="body1">
+                                    <Typography color="darkGrey" onClick={handleOpenEvent} sx={{ cursor: "pointer",fontSize: theme.spacing(8) }} variant="body1">
                                         {'>'}
                                     </Typography>
                                 </Grid>
@@ -382,35 +347,6 @@ const Event = (props: OrgEvent) => {
                             </Grid>
                         
                         </Paper>
-                        
-                        <Paper variant="outlined" sx={{ 
-                            position: "absolute",
-                            borderWidth: theme.spacing(.5), 
-                            borderRadius: 0, 
-                            maxWidth: theme.spacing(80), 
-                            minWidth: theme.spacing(80), 
-                            minHeight: theme.spacing(20), 
-                            backgroundColor: 'rgba(52, 52, 52, 0.8)',
-                            borderColor:'rgba(52, 52, 52, 0.8)', 
-                            mt: theme.spacing(4) ,
-                            height: height,
-                            width: width,
-                            ml: "auto",
-                            mr: "auto",
-                            left: 0,
-                            right: 0,
-                            textAlign: "center",
-                           
-                        
-                            }} >
-                                <Grid container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
-                                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', }}>
-                                        <Typography sx={{ fontWeight: "600", color: "white" }} variant="h6">ALREADY SPONSORED</Typography>
-                                    </Grid>
-                                </Grid>
-                        
-                        </Paper>
-                        
 
                     </Grid>
                   
