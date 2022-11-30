@@ -13,9 +13,6 @@ import TextField from '@mui/material/TextField';
 import { useCart } from '../../../contexts/Cart';
 import MediaQuery from 'react-responsive'
 
-import {useLayoutEffect, useRef, useState} from 'react';
-
-
 export type OrgEvent = {
     name: string,
     id: string,
@@ -38,10 +35,7 @@ const Event = (props: OrgEvent) => {
     const handleOpenEvent = () => setOpenEvent(true);
     const handleCloseEvent = () => setOpenEvent(false);
     const { addToCart, removeFromCart, cart } = useCart();
-    const [checked, setChecked] = React.useState(cart.find(e => e.id == props.id)? true : false);
-    const [medQuery, setmedQuery] = React.useState(0)
-    
-   
+    const [checked, setChecked] = React.useState(cart.find(e => e.id === props.id)? true : false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
@@ -88,99 +82,6 @@ const Event = (props: OrgEvent) => {
         setChecked(false);
         removeFromCart(props.id)
     };
-    const ref = React.useRef<HTMLDivElement>(null)
-    const refMid = React.useRef<HTMLDivElement>(null)
-    const refSmall = React.useRef<HTMLDivElement>(null)
-
-   
-    const [height, setHeight] = React.useState(0);
-    const [width,setWidth] = React.useState(0)
-    // function updateSize () {
-    //     console.log("update size")
-    //     if (ref.current) {
-    //         const changeHeight = ref.current.clientHeight;
-    //         console.log("height: ", height)
-            
-    //         const changeWidth = ref.current.clientWidth;
-    //         console.log("width: ", width)
-    //         setHeight(changeHeight);
-    //         setWidth(changeWidth);
-    //     }
-    // }
-    useLayoutEffect(() => {
-        
-        if (ref.current) {
-            const height = ref.current.clientHeight;
-            const width = ref.current.clientWidth;
-            setHeight(height);
-            setWidth(width);
-        }
-        window.addEventListener('resize', updateSize);
-        function updateSize () {
-            console.log("update regular size")
-            if (ref.current) {
-                const changeHeight = ref.current.clientHeight;
-                console.log("height: ", height)
-                
-                const changeWidth = ref.current.clientWidth;
-                console.log("width: ", width)
-                setHeight(changeHeight);
-                setWidth(changeWidth);
-            }
-        }
-        
-        
-    }, []);
-    useLayoutEffect(() => {
-        
-        if (refMid.current) {
-            const height = refMid.current.clientHeight;
-            const width = refMid.current.clientWidth;
-            setHeight(height);
-            setWidth(width);
-        }
-        window.addEventListener('resize', updateSizeMid);
-        function updateSizeMid () {
-            console.log("update Mid Ref size")
-            if (refMid.current) {
-                const changeHeight = refMid.current.clientHeight;
-                const changeWidth = refMid.current.clientWidth;
-                console.log("Mid height: ", height)
-                console.log("Mid width: ", width)
-                setHeight(changeHeight);
-                setWidth(changeWidth);
-            }
-        }
-        
-        
-    }, []);
-    useLayoutEffect(() => {
-        
-        if (refSmall.current) {
-            const height = refSmall.current.clientHeight;
-            const width = refSmall.current.clientWidth;
-            setHeight(height);
-            setWidth(width);
-        }
-        window.addEventListener('resize', updateSizeSmall);
-        function updateSizeSmall () {
-            console.log("update Small Ref size")
-            if (refSmall.current) {
-                const changeHeight = refSmall.current.clientHeight;
-                const changeWidth = refSmall.current.clientWidth;
-                console.log("Small height: ", height)
-                console.log("Small width: ", width)
-                setHeight(changeHeight);
-                setWidth(changeWidth);
-            }
-        }
-        
-        
-    }, []);
-        
-     
-       
-    
     return (
         <ThemeProvider theme={theme}>
             
