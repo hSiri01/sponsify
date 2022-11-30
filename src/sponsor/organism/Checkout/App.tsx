@@ -138,7 +138,7 @@ const Checkout = (props: Props) => {
     const submitCheckout = async () => {
         const cleared = await checkEventSpots()
         console.log(cleared)
-        if (cart.at(0) && checkoutReady && cleared == undefined) {
+        if (cart.at(0) && checkoutReady && cleared === undefined) {
 
             let donation = 0
             for (let i = 0; i < cart.length; i++) {
