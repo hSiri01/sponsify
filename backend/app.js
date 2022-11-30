@@ -8,7 +8,6 @@ const purchases = require('./purchase')
 const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
-const sponsor = require('./sponsor');
 var cors = require('cors');
 var async = require('async');
 app.use(cors())
@@ -57,7 +56,6 @@ app.get('/get-all-FAQ/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-FAQ, " + err);
-                //res.send("some error");
                 res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
@@ -718,15 +716,22 @@ app.post("/send-checkout-email", (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-    res.redirect('/redirect');
+    res.redirect(404, '../src/sponsor/organism/CheckBackLater');
 });
 
+// app.get('/redirect', (req, res) => {
+//     console.log('redirected')
+//     res.send('Hello, World!')
+//     res.render(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
+// });
+
 // redirect to /check-back-later page on error
-app.use('/redirect', (req, res) => {
-    res.send('Check back later')
-    //let filePath = path.join(__dirname, '../src/sponsor/organism/CheckBackLater');
-    //res.sendFile(filePath);
-})
+// app.use('/redirect', (req, res) => {
+//     console.log('redirected')
+//     res.send('Check back later')
+//     //let filePath = path.join(__dirname, '../src/sponsor/organism/CheckBackLater');
+//     //res.sendFile(filePath);
+// })
 
 app.listen(port, () => {
     console.log(`App listening on port ${port} :)`)
