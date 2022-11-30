@@ -577,16 +577,20 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
         .populate("events")
         .populate("zombieEvents")
         .populate("sponsorID")
-        .exec((err, result) => {
+        .exec((err, purchasedEvents) => {
             if (err) {
                 console.log("Error on querying events collection in get-all-purchased-events, " + err)
             }
 
-            purchasedEvents = result
-            console.log(purchasedEvents)
+            // copy zombieEvents into events for each purchase
+            for (let i = 0; i < purchasedEvents.length; i++) {
+                if (purchasedEvents[i].zombieEvents.length > 0) {
+                    Array.prototype.push.apply(purchasedEvents[i].events, purchasedEvents[i].zombieEvents)
+                    delete purchasedEvents[i].zombieEvents
+                }
+            }
 
-            // TODO: copy zombieEvents into events for each purchase
-            
+            // console.log(purchasedEvents)
             res.json(purchasedEvents)
         })
 })
