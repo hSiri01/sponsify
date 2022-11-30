@@ -30,7 +30,7 @@ const { sub } = require('date-fns');
 var fs = require('fs');
 var multer = require('multer');
 const { BedtimeOffRounded } = require('@mui/icons-material');
-const { findOne } = require('./request')
+const { findOne } = require('./models/request')
 app.use("/images", express.static("./images"));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
