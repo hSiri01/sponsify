@@ -44,8 +44,8 @@ const EditEvents = (props: Props) => {
 
     const [events, setEvents] = React.useState<GetAllEvents>([]);
     const [logo, setLogo] = React.useState("")
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
     React.useEffect(() => {
         const fetchLogo = async() => {
@@ -145,8 +145,9 @@ const EditEvents = (props: Props) => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
+                    src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{student_org_short_name}</Typography>}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>

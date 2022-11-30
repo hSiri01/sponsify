@@ -13,13 +13,12 @@ interface Props {
 
 const Levels = (props: Props) => {
 
-    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '{}');
-    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '{}');
+    const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
+    const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
 
-    const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
     const [logo, setLogo] = React.useState("")
     const [levels, setLevels] = React.useState<GetAllLevels>([])
-
+    
     React.useEffect(() => {
         const fetchData = async() => {
             await fetch("/get-all-levels/" + student_org_name)
@@ -38,12 +37,10 @@ const Levels = (props: Props) => {
         const fetchLogo = async() => {
            try{
              //console.log(student_org_name)
-             //console.log(student_org_short_name)
              await fetch("/get-logo/" + student_org_name)
                 .then((res) => res.json()) 
                 .then((data1) => {
                     setLogo(data1.logoImage)
-                    setOrgShortName(data1.shortName)
                 })
            }
            catch(e){
@@ -74,10 +71,9 @@ const Levels = (props: Props) => {
                     </Typography>
                 </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    wip here <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={logo ? logo : orgShortName} alt="Sponsify logo" />
-                    
-                
+                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
+                    src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{student_org_short_name}</Typography>}
                 </Grid>
 
                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
