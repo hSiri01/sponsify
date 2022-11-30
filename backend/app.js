@@ -343,7 +343,7 @@ async function updateEvent(id, eventOptions) {
     if (mongoose.Types.ObjectId.isValid(id)) {
         const event = await events.findOne({ _id: id });
         event.set(eventOptions)
-         console.log(event)
+        // console.log(event)
 
         event.save((err) => {
             if (err) {
@@ -502,7 +502,7 @@ app.post('/checkout-events', (req, res) => {
         }
 
         const result = updateEvent(eventID, eventOptions)
-        if (result.status !== '200') {
+        if (result.status != '200') {
             resStatus = result
         }
     }
@@ -560,7 +560,7 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
                 console.log("Error on get-all-sponsors, " + err)
             }
             
-            if (result[0].events.length === 0) {
+            if (result[0].events.length == 0) {
 
                 // remove purchase
                 purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
