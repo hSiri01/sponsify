@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const eventSchema = new mongoose.Schema({
+const zombieSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -19,10 +19,6 @@ const eventSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true
-    },
-    desc: {
-        type: String,
-        default: ""
     },
     briefDesc: {
         type: String,
@@ -44,11 +40,6 @@ const eventSchema = new mongoose.Schema({
             message: props => `${props.value} is a not valid value. either negative or exceeds total spots!\n`
         }
     },
-    visible: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
     org: {
         type: String,
         required: true
@@ -63,11 +54,11 @@ const eventSchema = new mongoose.Schema({
 })
 
 function checkSpotsTaken(value) {
-    return (value >= 0 && value <= this.totalSpots);
+    return (value > 0 && value <= this.totalSpots);
 }
 
 function checkEndDate(value) {
     return (value > this.date);
 }
 
-module.exports = mongoose.model('event', eventSchema);
+module.exports = mongoose.model('zombie', zombieSchema);
