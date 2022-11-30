@@ -30,6 +30,7 @@ const { sub } = require('date-fns');
 var fs = require('fs');
 var multer = require('multer');
 const { BedtimeOffRounded } = require('@mui/icons-material');
+const { findOne } = require('./request')
 app.use("/images", express.static("./images"));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
@@ -511,7 +512,7 @@ app.get('/verify-sponsor-code/:code', (req, res) => {
         })
 })
 
-app.post('/checkout-events', (req, res) => {
+app.post('/checkout-events', async(req, res) => {
     // create new sponsor
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
@@ -531,10 +532,20 @@ app.post('/checkout-events', (req, res) => {
         }
     })
 
+    // console.log("got events from request: ")
+    // console.log(req.body.events)
+    let eventIDs = []
+    for (let i = 0; i < req.body.events.length; i++) {
+        for (let j = 0; j < req.body.events[i].quantity; j++) {
+            eventIDs.push(req.body.events[i].id)
+        }
+    }
+    // console.log("event IDs: ", eventIDs)
+
     // create a purchase
     const purchase = new purchases({
         sponsorID: newSponsor._id,
-        events: req.body.events,
+        events: eventIDs,
         zombieEvents: undefined,
         totalAmount: req.body.totalAmount,
         donationAmount: req.body.donationAmount ? req.body.donationAmount : undefined,
@@ -554,14 +565,21 @@ app.post('/checkout-events', (req, res) => {
 
     let resStatus = { status: '200' }
 
-    for (let i = 0; i < purchase.events.length; i++) {
-        const eventID = purchase.events[i]
-        const eventOptions = {
-            $inc: { spotsTaken: 1 },
-            $push: { sponsors: newSponsor._id }
-        }
+    for (let i = 0; i < req.body.events.length; i++) {
+        const eventID = req.body.events[i].id
+        const event = await events.findById(eventID)
+        // console.log("found event to update: " + event)
 
-        const result = updateEvent(eventID, eventOptions)
+        let newSponsors = event.sponsors
+        newSponsors.push(newSponsor._id)
+
+        eventOptions = {
+            spotsTaken: event.spotsTaken + req.body.events[i].quantity,
+            sponsors: newSponsors
+        }
+        // console.log(eventOptions)
+
+        const result = await updateEvent(eventID, eventOptions)
         if (result.status != '200') {
             resStatus = result
         }
@@ -598,30 +616,51 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
 app.delete('/delete-event-from-purchase', async (req, res) => {
 
     // Remove event id, decrease total amount of purchase
-    await purchases.findOneAndUpdate(
-        { _id: req.body.purchaseId },
-        { 
-            $pull: { events: req.body.eventId},
-            $inc: { totalAmount: -1*req.body.eventPrice }
+    const purchase = await purchases.findOne({ _id: req.body.purchaseId })
+    let index = purchase.events.indexOf(mongoose.Types.ObjectId(req.body.eventId))
+    let newEvents = purchase.events
+    newEvents.splice(index, 1);
+
+    purchase.set({
+        events: newEvents,
+        totalAmount: purchase.totalAmount - req.body.eventPrice
+    })
+
+    purchase.save((err) => {
+        if (err) {
+            console.log('Error on update purchase: ' + err)
         }
-    ).then(console.log("Done")) 
+        else {
+            console.log('Successfully update purchase\n')
+        }
+    })
 
     // Decrement number of spots taken from event
     // Remove sponsor
-    await events.findOneAndUpdate(
-        { _id: req.body.eventId },
-        { 
-            $inc: { spotsTaken: -1 },
-            $pull: { sponsors: req.body.sponsorId}
-        }
-    ).then("Dec spots taken & removed sponsor from event")
+    const event = await events.findOne({ _id: req.body.eventId })
+    let newSponsors = event.sponsors
+    index = newSponsors.indexOf(mongoose.Types.ObjectId(req.body.sponsorId))
+    newSponsors.splice(index, 1)
+    
+    event.set({
+        spotsTaken: event.spotsTaken - 1,
+        sponsors: newSponsors
+    })
 
+    event.save((err) => {
+        if (err) {
+            console.log('Error on update event: ' + err)
+        }
+        else {
+            console.log('Successfully update event\n')
+        }
+    })
 
     // change sponsor level
     var newLevel = await getLevelNameByAmount(req.body.name, req.body.totalAmount-req.body.eventPrice)
     await sponsors.findOneAndUpdate(
         { _id: req.body.sponsorId},
-        { sponsorLevel: newLevel }
+        { sponsorLevel: newLevel ? newLevel : 'Not qualified' }
     ).then(console.log("Updated sponsor level"))
     
     // check if events array from purchase is empty

@@ -159,7 +159,7 @@ const Checkout = (props: Props) => {
                     company: companyInput,
                     email: emailInput,
                     sponsorLevel: levelName,
-                    events: cart.map(item => item.id),
+                    events: cart.map(item => ({ "id": item.id, "quantity": item.quantity })),
                     totalAmount: total,
                     donationAmount: donation ? donation : undefined,
                     org: student_org_name
