@@ -416,9 +416,9 @@ app.delete('/delete-event', async(req, res) => {
     else {
         if (mongoose.Types.ObjectId.isValid(id)) {
             const event = await events.findById(id)
-            console.log(event)
+            let status = '200'
 
-            if (event.spotsTaken > 0) {
+            if (event.sponsors.length > 0) {
                 console.log('creating zombie event before deleting...')
 
                 const newZombie = new zombieEvents({
@@ -434,30 +434,57 @@ app.delete('/delete-event', async(req, res) => {
                     sponsors: event.sponsors
                 })
 
-                console.log(newZombie)
+                // console.log(newZombie)
             
                 newZombie.save((err) => {
                     if (err) {
                         console.log('Error on delete-event while creating zombie: ' + err)
-                        res.json({ status: '500' })
+                        status = '500'
                     }
                     else {
                         console.log('Added event to zombie collection')
-                        res.json({ status: '200' })
                     }
                 })
+
+                for (let i = 0; i < event.sponsors.length; i++) {
+                    const sponsorID = event.sponsors[i]
+                    const sponsorPurchase = await purchases.findOne({ sponsorID: sponsorID })
+                    // console.log("found purchase: ", sponsorPurchase, " for ID " + sponsorID)
+                    
+                    let newZombieEvents = []
+                    
+                    // move event from events array to zombieEvents array
+                    let idx = sponsorPurchase.events.indexOf(event._id)
+                    while (idx > -1) {
+                        sponsorPurchase.events.splice(idx, 1)
+                        newZombieEvents.push(event._id)
+
+                        idx = sponsorPurchase.events.indexOf(event._id)  // event might have quantity > 1
+                    }
+                    console.log(newZombieEvents)
+
+                    if (newZombieEvents.length > 0) {
+                        await purchases.findOneAndUpdate(
+                            { sponsorID: sponsorID },
+                            { zombieEvents: newZombieEvents, events: sponsorPurchase.events })
+                            .catch((err) => {
+                                console.log('Error on delete-event while adding zombie events to purchase: ' + err)
+                                status = '500'
+                            })
+                    }
+                }
             }
             
-            /*events.findByIdAndRemove(id, (err, event) => {
+            events.findByIdAndRemove(id, (err) => {
                 if (err) {
                     console.log('Error on delete-event: ' + err)
-                    res.json({ status: '500' })
+                    res.json({ status: status })
                 }
                 else {
                     console.log('Successfully deleted event\n')
-                    res.json({ status: '200' })
+                    res.json({ status: status })
                 }
-            })*/
+            })
         }
         else {
             console.log('Cannot delete event, invalid id in request body')
@@ -508,6 +535,7 @@ app.post('/checkout-events', (req, res) => {
     const purchase = new purchases({
         sponsorID: newSponsor._id,
         events: req.body.events,
+        zombieEvents: undefined,
         totalAmount: req.body.totalAmount,
         donationAmount: req.body.donationAmount ? req.body.donationAmount : undefined,
         dateSponsored: Date.now(),
@@ -547,6 +575,7 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
 
     purchases.find({ org: req.params.org })
         .populate("events")
+        .populate("zombieEvents")
         .populate("sponsorID")
         .exec((err, result) => {
             if (err) {
@@ -556,23 +585,9 @@ app.get('/get-all-purchased-events/:org', (req, res) => {
             purchasedEvents = result
             console.log(purchasedEvents)
 
-            purchases.find({ org: req.params.org })
-                .populate("zombies")
-                .populate("sponsorID")
-                .exec((err, result) => {
-                    if (err) {
-                        console.log("Error on querying zombie collection in get-all-purchased-events, " + err)
-                    }
-
-                    console.log("result of zombie query:\n")
-                    console.log(result)
-
-                    for (let i = 0; i < result.length; i++) {
-                        purchasedEvents.push(result[i])
-                    }
-                    
-                    res.send(purchasedEvents)
-                })
+            // TODO: copy zombieEvents into events for each purchase
+            
+            res.json(purchasedEvents)
         })
 })
 
