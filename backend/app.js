@@ -505,25 +505,21 @@ app.post('/checkout-events', async(req, res) => {
 
     let resStatus = { status: '200' }
 
-    for (let i = 0; i < purchase.events.length; i++) {
-        const eventID = purchase.events[i]
-
+    for (let i = 0; i < req.body.events.length; i++) {
+        const eventID = req.body.events[i].id
         const event = await events.findById(eventID)
         // console.log("found event to update: " + event)
-        
+
         let newSponsors = event.sponsors
         newSponsors.push(newSponsor._id)
 
         eventOptions = {
-            spotsTaken: event.spotsTaken + 1,
-            // sponsors: newSponsors
+            spotsTaken: event.spotsTaken + req.body.events[i].quantity,
+            sponsors: newSponsors
         }
-
         // console.log(eventOptions)
 
-        const result = updateEvent(eventID, eventOptions)
-        // TODO: Figure out if we can keep this
-        await new Promise(resolve => setTimeout(resolve, 500));
+        const result = await updateEvent(eventID, eventOptions)
         if (result.status != '200') {
             resStatus = result
         }
