@@ -138,7 +138,7 @@ const Checkout = (props: Props) => {
     const submitCheckout = async () => {
         const cleared = await checkEventSpots()
         console.log(cleared)
-        if (cart.at(0) && checkoutReady && cleared == undefined) {
+        if (cart.at(0) && checkoutReady && cleared === undefined) {
 
             let donation = 0
             for (let i = 0; i < cart.length; i++) {
@@ -390,7 +390,7 @@ const Checkout = (props: Props) => {
                 </Grid>
 
                 {cart.map(item => {
-                    cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quanitity:   </b>" +  item.quantity + "<br>"
+                    cartMessage += "<b>Item:</b>   " + item.name +  "<b>    Price:   </b>$" + item.price +   "    <b>Quantity:   </b>" +  item.quantity + "<br>"
                     if( typeof item.date_start === "string"){
                         //change the string to a date format
                         item.date_start = new Date(item.date_start)
