@@ -6,6 +6,7 @@ import { ThemeProvider } from '@mui/system';
 import { Paper } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Date from '../../atom/Date/App'
+import FullySponsoredDate from '../../atom/FullySponsoredDate/App'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -188,7 +189,7 @@ const Event = (props: OrgEvent) => {
               <Grid container >
                <MediaQuery minWidth={1350}>
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper ref = {ref} variant="outlined" sx={{ borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
+                    <Paper variant="outlined" sx={{ backgroundColor: "#c3c3c3", borderWidth: theme.spacing(.5), borderRadius: 0, borderColor:"#c2c2c2", maxWidth: theme.spacing(300), minWidth: theme.spacing(300), minHeight: theme.spacing(20), mt:theme.spacing(4) }} >
      
                             <Grid  container sx={{ display: 'flex', justifyContent: 'center', margin:theme.spacing(3)}}>
                                 <Grid item xs={1} sx={{margin:"auto"}}>
@@ -196,27 +197,27 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={2} sx={{pr:theme.spacing(15)}}>
-                                    <Date date_1={date_start} date_2={date_end}/>
+                                    <FullySponsoredDate date_1={date_start} date_2={date_end}/>
                                 </Grid>
 
                                 <Grid item xs={4}>
-                                    <Typography color="darkGrey" sx={{ fontWeight: "600"  }} variant="body1">
+                                    <Typography color="#434343" sx={{ fontWeight: "600"  }} variant="body1">
                                         ALREADY SPONSORED
                                     </Typography>
-                                    <Typography color="darkGrey" sx={{ fontWeight: "600",  }} variant="h6">{name}</Typography>
+                                    <Typography sx={{ color:"#434343", fontWeight: "600",  }} variant="h6">{name}</Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body1" dangerouslySetInnerHTML={{ __html: short_description }}/>
                                 </Grid>
 
                                 <Grid item xs={2} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{avg_attendance}</Typography>
+                                    <Typography color="#434343"sx={{ fontWeight: "600" }} variant="h6">{avg_attendance}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="h6">{occurrences}</Typography>
+                                    <Typography color="#434343"sx={{ fontWeight: "600" }} variant="h6">{occurrences}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ color:"#367c63", fontWeight: "600" }} variant="h6">${price}</Typography>
+                                    <Typography color="#434343"sx={{ fontWeight: "600" }} variant="h6">${price}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9)}}>
@@ -233,7 +234,8 @@ const Event = (props: OrgEvent) => {
 
                 <MediaQuery minWidth={750} maxWidth={1349}>
                     <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Paper ref={refMid} variant="outlined" sx={{ 
+                        <Paper variant="outlined" sx={{ 
+                            backgroundColor: "#c2c2c2", 
                             borderWidth: theme.spacing(.5), 
                             borderRadius: 0, 
                             borderColor: "#c2c2c2", 
@@ -248,27 +250,27 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={2} sx={{  }}>
-                                    <Date date_1={date_start} date_2={date_end} />
+                                    <FullySponsoredDate date_1={date_start} date_2={date_end} />
                                 </Grid>
 
                                 <Grid item xs={4} sx={{pl: theme.spacing(8), pr: theme.spacing(8)}}>
-                                    <Typography color="darkGrey" sx={{ fontWeight: "600"  }} variant="body1">
+                                    <Typography color="#434343" sx={{ fontWeight: "600"  }} variant="body1">
                                         ALREADY SPONSORED
                                     </Typography>
-                                    <Typography color="darkGrey" sx={{ fontWeight: "600" }} variant="body1">{name} </Typography>
+                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{name} </Typography>
                                     <Typography sx={{ color: "#979797" }} variant="body2" dangerouslySetInnerHTML={{ __html: short_description }} />
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ fontWeight: "600" }} variant="body1">{avg_attendance}</Typography>
+                                    <Typography sx={{ color:"#434343", fontWeight: "600" }} variant="body1">{avg_attendance}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography  sx={{ fontWeight: "600" }} variant="body1">{occurrences}</Typography>
+                                    <Typography sx={{ color:"#434343", fontWeight: "600" }} variant="body1">{occurrences}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(3) }}>
-                                    <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body1">${price}</Typography>
+                                    <Typography sx={{ color:"#434343", fontWeight: "600" }} variant="body1">${price}</Typography>
                                 </Grid>
 
                                 <Grid item xs={1} sx={{ marginTop: theme.spacing(1.5), pl: theme.spacing(9) }}>
@@ -286,7 +288,8 @@ const Event = (props: OrgEvent) => {
 
                 <MediaQuery maxWidth={749} >
                     <Grid item xs  ={12} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Paper ref={refSmall} variant="outlined" sx={{ 
+                    <Paper variant="outlined" sx={{ 
+                            backgroundColor: "#c2c2c2",
                             borderWidth: theme.spacing(.5), 
                             borderRadius: 0, 
                             borderColor: "#c2c2c2", 
@@ -306,14 +309,14 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={5} sx={{ }}>
-                                    <Date date_1={date_start} date_2={date_end} />
+                                    <FullySponsoredDate date_1={date_start} date_2={date_end} />
                                 </Grid>
 
                                 <Grid item xs={3} sx={{}}>
                                 </Grid>
 
                                 <Grid item xs={12} sx={{pl: theme.spacing(8), pr: theme.spacing(8), mt: theme.spacing(5)}}>
-                                    <Typography color="darkGrey" sx={{ fontWeight: "600"  }} variant="body1">
+                                    <Typography color="#434343" sx={{ fontWeight: "600"  }} variant="body1">
                                         ALREADY SPONSORED
                                     </Typography>
                                     <Typography color="darkGrey" sx={{ 
@@ -335,7 +338,7 @@ const Event = (props: OrgEvent) => {
                                 </Grid>
 
                                 <Grid item xs={12} sx={{ }}>
-                                    <Typography sx={{ color: "#367c63", fontWeight: "600", textAlign: 'center' }} variant="body1">${price}</Typography>
+                                    <Typography color="#434343" sx={{fontWeight: "600", textAlign: 'center' }} variant="body1">${price}</Typography>
                                 </Grid>
 
                                 <Grid item xs={12} sx={{ marginTop: theme.spacing(1.5), display:'flex', justifyContent:'center'}}>
