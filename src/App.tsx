@@ -19,6 +19,9 @@ import EditLevels from './admin/organism/EditLevels/App';
 import EditEvents from './admin/organism/EditEvents/App'
 import PurchaseHistory from './admin/organism/PurchaseHistory/App';
 
+import NewUser from './admin/organism/NewUser/App'
+import AccountRequests from './admin/organism/AccountRequests/App';
+import RequestInbox from './admin/organism/Inbox/App'
 import CheckBackLater from './sponsor/organism/CheckBackLater/App'
 
 import {
@@ -27,6 +30,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+
 
 const App: React.FC = () => {
   return (
@@ -52,6 +56,10 @@ const App: React.FC = () => {
             <Route path="/levels-edit" element={<EditLevels />} />
             <Route path="/events-edit" element={<EditEvents />} />
             <Route path="/summary" element={<PurchaseHistory />} />
+
+            <Route path="/new-user" element={<NewUser />} />
+            <Route path="/account-requests" element={<AccountRequests />} />
+            <Route path="/request-inbox" element={<RequestInbox />} />
           </Routes>
 
         </BrowserRouter>

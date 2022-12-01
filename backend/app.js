@@ -1,10 +1,12 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const events = require('./event')
-const orgs = require('./org')
-const sponsors = require('./sponsor')
-const purchases = require('./purchase')
+const requests = require('./models/request')
+const events = require('./models/event')
+const orgs = require('./models/org')
+const sponsors = require('./models/sponsor')
+const purchases = require('./models/purchase')
+const zombieEvents = require('./models/zombie')
 const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -12,7 +14,7 @@ var cors = require('cors');
 var async = require('async');
 app.use(cors())
 
-
+const sponsifyEmail = "sponsifynoreply@gmail.com"
 const port = process.env.PORT || 5000;
 const sgMail = require('@sendgrid/mail')
 var cors = require('cors');
@@ -27,6 +29,7 @@ const { sub } = require('date-fns');
 var fs = require('fs');
 var multer = require('multer');
 const { BedtimeOffRounded } = require('@mui/icons-material');
+const { findOne } = require('./models/request')
 app.use("/images", express.static("./images"));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended: true}))
@@ -143,6 +146,31 @@ app.get('/get-all-levels/:org', (req, res) => {
         })
 })
 
+async function getLevelNameByAmount(org, amount) {
+    let level = []
+    await orgs.find({ name: org })
+    .select({ levels: 1 })
+    .exec().then((result) => {
+            const levels = result[0].levels
+            let currLevel = {}
+
+            for (let i = 0; i < levels.length; i++) {
+                if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
+                    currLevel = levels[i]
+                }
+                else if (amount >= levels[i].minAmount && !levels[i].maxAmount) {
+                    currLevel = levels[i]
+                }
+            }
+
+            level = currLevel
+            
+    })
+
+    return level.name
+
+}
+
 app.get('/get-level-by-amount/:org/:amount', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ levels: 1 })
@@ -154,7 +182,9 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
             else {
                 const amount = req.params.amount
                 const levels = result[0].levels
-                let currLevel = {}
+                let currLevel = {
+                    name: "",
+                }
 
                 for (let i = 0; i < levels.length; i++) {
                     if (amount <= levels[i].maxAmount && amount >= levels[i].minAmount) {
@@ -265,11 +295,31 @@ app.get('/get-all-events/:org', (req, res) => {
         )
 })
 
+app.get('/check-event-availability/:id', (req, res) => {
+        events.find({_id: req.params.id})
+            .exec((err, result) => {
+            if (err) {
+                console.log("Error on check-event-availability, " + err)
+            }
+            else {
+                if (result[0].spotsTaken >= result[0].totalSpots) {
+                    response = false
+                    res.send({ cleared: false})
+                } else {
+                    res.send({ cleared: true})
+                }
+                // res.send(result)
+            }
+        }
+        )
+    
+})
+
 app.post('/create-event', async (req, res) => {
     const newEvent = new events({
         name: req.body.name,
         date: req.body.date + 'T06:00:00.000+00:00',
-        endDate: req.body.endDate + 'T06:00:00.000+00:00',
+        endDate: (req.body.endDate && req.body.endDate != req.body.date) ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
         price: req.body.price,
         desc: req.body.desc,
         briefDesc: req.body.briefDesc,
@@ -293,17 +343,21 @@ app.post('/create-event', async (req, res) => {
     })
 })
 
-function updateEvent(id, eventOptions) {
+async function updateEvent(id, eventOptions) {
     let queryStatus = '200'
 
     if (mongoose.Types.ObjectId.isValid(id)) {
-        events.findByIdAndUpdate(id, eventOptions, (err, event) => {
+        const event = await events.findOne({ _id: id });
+        event.set(eventOptions)
+        // console.log(event)
+
+        event.save((err) => {
             if (err) {
                 console.log('Error on update-event: ' + err)
                 queryStatus = '500'
             }
             else {
-                console.log('Successfully updated event: \n' + event)
+                console.log('Successfully updated event\n')
                 queryStatus = '200'
             }
         })
@@ -328,7 +382,7 @@ app.put('/update-event', (req, res) => {
             name: req.body.name,
             briefDesc: req.body.briefDesc,
             date: req.body.date + 'T06:00:00.000+00:00',
-            endDate: req.body.endDate + 'T06:00:00.000+00:00',
+            endDate: (req.body.endDate && req.body.endDate !== req.body.date) ? req.body.endDate + 'T06:00:00.000+00:00' : undefined,
             price: req.body.price,
             totalSpots: req.body.totalSpots,
             spotsTaken: req.body.spotsTaken,
@@ -341,7 +395,23 @@ app.put('/update-event', (req, res) => {
     }
 })
 
-app.delete('/delete-event', (req, res) => {
+app.put('/reset-events', async(req, res) => {
+    let returnStatus = '200'
+
+    const update = await events.updateMany(
+        { org: req.body.org, spotsTaken: { $gt : 0 } },
+        { $set: { spotsTaken: 0 } }
+    )
+
+    // console.log(update.modifiedCount)
+
+    if (!update.acknowledged || update.modifiedCount < 1)
+        returnStatus = '400'
+    
+    res.json({ status: returnStatus })
+})
+
+app.delete('/delete-event', async(req, res) => {
     const id = req.body.id
 
     if (!id) {
@@ -350,14 +420,74 @@ app.delete('/delete-event', (req, res) => {
     }
     else {
         if (mongoose.Types.ObjectId.isValid(id)) {
-            events.findByIdAndRemove(id, (err, event) => {
+            const event = await events.findById(id)
+            let status = '200'
+
+            if (event.sponsors.length > 0) {
+                console.log('creating zombie event before deleting...')
+
+                const newZombie = new zombieEvents({
+                    _id: event._id,
+                    name: event.name,
+                    date: event.date,
+                    endDate: (event.endDate && event.endDate != event.date) ? event.endDate : undefined,
+                    price: event.price,
+                    briefDesc: event.briefDesc,
+                    totalSpots: event.totalSpots,
+                    spotsTaken: event.spotsTaken,
+                    org: event.org,
+                    sponsors: event.sponsors
+                })
+
+                // console.log(newZombie)
+            
+                newZombie.save((err) => {
+                    if (err) {
+                        console.log('Error on delete-event while creating zombie: ' + err)
+                        status = '500'
+                    }
+                    else {
+                        console.log('Added event to zombie collection')
+                    }
+                })
+
+                for (let i = 0; i < event.sponsors.length; i++) {
+                    const sponsorID = event.sponsors[i]
+                    const sponsorPurchase = await purchases.findOne({ sponsorID: sponsorID })
+                    // console.log("found purchase: ", sponsorPurchase, " for ID " + sponsorID)
+                    
+                    let newZombieEvents = []
+                    
+                    // move event from events array to zombieEvents array
+                    let idx = sponsorPurchase.events.indexOf(event._id)
+                    while (idx > -1) {
+                        sponsorPurchase.events.splice(idx, 1)
+                        newZombieEvents.push(event._id)
+
+                        idx = sponsorPurchase.events.indexOf(event._id)  // event might have quantity > 1
+                    }
+                    console.log(newZombieEvents)
+
+                    if (newZombieEvents.length > 0) {
+                        await purchases.findOneAndUpdate(
+                            { sponsorID: sponsorID },
+                            { zombieEvents: newZombieEvents, events: sponsorPurchase.events })
+                            .catch((err) => {
+                                console.log('Error on delete-event while adding zombie events to purchase: ' + err)
+                                status = '500'
+                            })
+                    }
+                }
+            }
+            
+            events.findByIdAndRemove(id, (err) => {
                 if (err) {
                     console.log('Error on delete-event: ' + err)
-                    res.json({ status: '500' })
+                    res.json({ status: status })
                 }
                 else {
-                    console.log('Successfully deleted event: \n' + event)
-                    res.json({ status: '200' })
+                    console.log('Successfully deleted event\n')
+                    res.json({ status: status })
                 }
             })
         }
@@ -387,14 +517,14 @@ app.get('/verify-sponsor-code/:code', (req, res) => {
         })
 })
 
-app.post('/checkout-events', (req, res) => {
+app.post('/checkout-events', async(req, res) => {
     // create new sponsor
     var newSponsor = new sponsors({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         company: req.body.company,
         email: req.body.email,
-        sponsorLevel: req.body.sponsorLevel
+        sponsorLevel: req.body.sponsorLevel ? req.body.sponsorLevel : 'Not qualified'
     })
 
     newSponsor.save((err) => {
@@ -405,13 +535,25 @@ app.post('/checkout-events', (req, res) => {
         else {
             console.log('New sponsor created, id: ' + newSponsor._id)
         }
-    });
+    })
+
+    // console.log("got events from request: ")
+    // console.log(req.body.events)
+    let eventIDs = []
+    for (let i = 0; i < req.body.events.length; i++) {
+        for (let j = 0; j < req.body.events[i].quantity; j++) {
+            eventIDs.push(req.body.events[i].id)
+        }
+    }
+    // console.log("event IDs: ", eventIDs)
 
     // create a purchase
     const purchase = new purchases({
         sponsorID: newSponsor._id,
-        events: req.body.events,
+        events: eventIDs,
+        zombieEvents: undefined,
         totalAmount: req.body.totalAmount,
+        donationAmount: req.body.donationAmount ? req.body.donationAmount : undefined,
         dateSponsored: Date.now(),
         org: req.body.org
     })
@@ -428,48 +570,164 @@ app.post('/checkout-events', (req, res) => {
 
     let resStatus = { status: '200' }
 
-    for (let i = 0; i < purchase.events.length; i++) {
-        const eventID = purchase.events[i]
-        const eventOptions = {
-            $inc: { spotsTaken: 1 },
-            $push: { sponsors: newSponsor._id }
-        }
+    for (let i = 0; i < req.body.events.length; i++) {
+        const eventID = req.body.events[i].id
+        const event = await events.findById(eventID)
+        // console.log("found event to update: " + event)
 
-        const result = updateEvent(eventID, eventOptions)
+        let newSponsors = event.sponsors
+        newSponsors.push(newSponsor._id)
+
+        eventOptions = {
+            spotsTaken: event.spotsTaken + req.body.events[i].quantity,
+            sponsors: newSponsors
+        }
+        // console.log(eventOptions)
+
+        const result = await updateEvent(eventID, eventOptions)
         if (result.status != '200') {
             resStatus = result
         }
     }
 
     res.json(resStatus)
-
-    // TODO: generate invoice and send follow-up email
 })
 
 app.get('/get-all-purchased-events/:org', (req, res) => {
+    let purchasedEvents = []
 
-    // events.find({ spotsTaken: { $gt: 0 }, "sponsors.0": { $exists: true }, org: req.params.org })
-    //     .populate("sponsors")
-    //     .exec((err, result) => {
-    //         if (err) {
-    //             console.log("Error on get-all-purchased-events, " + err)
-    //         }
-    //         res.send(result)
-    //         console.log(result)
-    //     }
-    //     )
-
-    purchases.find({org: req.params.org })
+    purchases.find({ org: req.params.org })
         .populate("events")
+        .populate("zombieEvents")
         .populate("sponsorID")
-        .exec((err, result) => {
+        .exec((err, purchasedEvents) => {
             if (err) {
-                console.log("Error on get-all-purchased-events, " + err)
+                console.log("Error on querying events collection in get-all-purchased-events, " + err)
             }
-            res.send(result)
-            console.log(result)
+
+            // copy zombieEvents into events for each purchase
+            for (let i = 0; i < purchasedEvents.length; i++) {
+                if (purchasedEvents[i].zombieEvents.length > 0) {
+                    Array.prototype.push.apply(purchasedEvents[i].events, purchasedEvents[i].zombieEvents)
+                    delete purchasedEvents[i].zombieEvents
+                }
+            }
+
+            // console.log(purchasedEvents)
+            res.json(purchasedEvents)
+        })
+})
+
+app.delete('/delete-event-from-purchase', async (req, res) => {
+
+    // Remove event id, decrease total amount of purchase
+    const purchase = await purchases.findOne({ _id: req.body.purchaseId })
+    let index = purchase.events.indexOf(mongoose.Types.ObjectId(req.body.eventId))
+    let event = {}
+
+    if (index > -1) {
+        let newEvents = purchase.events
+        newEvents.splice(index, 1);
+
+        purchase.set({
+            events: newEvents,
+            totalAmount: purchase.totalAmount - req.body.eventPrice
+        })
+
+        event = await events.findOne({ _id: req.body.eventId })
+    }
+    else {
+        // zombie event
+        index = purchase.zombieEvents.indexOf(mongoose.Types.ObjectId(req.body.eventId))
+        let newZombieEvents = purchase.zombieEvents
+        newZombieEvents.splice(index, 1);
+
+        purchase.set({
+            zombieEvents: newZombieEvents,
+            totalAmount: purchase.totalAmount - req.body.eventPrice
+        })
+
+        event = await zombieEvents.findOne({ _id: req.body.eventId })
+    }
+
+    purchase.save((err) => {
+        if (err) {
+            console.log('Error on update purchase: ' + err)
         }
-        )
+        else {
+            console.log('Successfully update purchase\n')
+        }
+    })
+
+    // Decrement number of spots taken from event
+    // Remove sponsor
+    let newSponsors = event.sponsors
+    index = newSponsors.indexOf(mongoose.Types.ObjectId(req.body.sponsorId))
+    newSponsors.splice(index, 1)
+    
+    event.set({
+        spotsTaken: event.spotsTaken - 1,
+        sponsors: newSponsors
+    })
+
+    event.save((err) => {
+        if (err) {
+            console.log('Error on update event: ' + err)
+        }
+        else {
+            console.log('Successfully updated event\n')
+        }
+    })
+
+    // change sponsor level
+    var newLevel = await getLevelNameByAmount(req.body.name, req.body.totalAmount-req.body.eventPrice)
+    await sponsors.findOneAndUpdate(
+        { _id: req.body.sponsorId},
+        { sponsorLevel: newLevel ? newLevel : 'Not qualified' }
+    ).then(console.log("Updated sponsor level"))
+    
+    // check if events + zombieEvents arrays from purchase are empty
+    await purchases.find({ _id: req.body.purchaseId }, { events: 1, zombieEvents: 1 })
+        .exec(async(err, result) => {
+            if (err) {
+                console.log("Error on get-all-sponsors, " + err)
+            }
+
+            console.log(result[0])
+            const hasZombieEvents = false
+            if (result[0].zombieEvents) {
+                hasZombieEvents = (result[0].zombieEvents.length > 0)
+            }
+            
+            if (result[0].events.length === 0 && !hasZombieEvents) {
+
+                // remove purchase
+                await purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
+                    if (err) {
+                        console.log('Error on delete-purchase: ' + err)
+                        // res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Successfully deleted purchase: \n' + purchase)
+                        // res.json({ status: '200' })
+                    }
+                })
+
+                // remove sponsor
+                await sponsors.findByIdAndRemove(req.body.sponsorId, (err, sponsor) => {
+                    if (err) {
+                        console.log('Error on delete-sponsor: ' + err)
+                        // res.json({ status: '500' })
+                    }
+                    else {
+                        console.log('Successfully deleted sponsor: \n' + sponsor)
+                        res.json({ status: '200' })
+                    }
+                })
+            }
+        })
+
+
 })
 
 app.post('/create-sponsor', (req,res) => {
@@ -504,14 +762,13 @@ app.get('/get-all-sponsors/:org', (req, res) => {
                 console.log(result[i])
                 sponsors.push({sponsorLevel:result[i].sponsorID.sponsorLevel, company:result[i].sponsorID.company, totalAmount:result[i].totalAmount, _id:result[i].sponsorID._id})
             }
-            console.log(sponsors)
             res.json(sponsors)
         })
 })
 
 app.get('/get-org-info/:org', (req,res) => {
     orgs.find({ name: req.params.org })
-        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1})
+        .select({ address: 1, logoImage: 1, fundName: 1, shortName: 1, validAdmins : 1})
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
@@ -525,8 +782,8 @@ app.get('/get-org-info/:org', (req,res) => {
 
 app.put('/update-org-info', (req, res) => {
     orgs.findOneAndUpdate(
-        { name: req.body.name },
-        { '$set': { name: req.body.name, fundName: req.body.fundName, address: req.body.address, shortName: req.body.shortName } },
+        { validAdmins: req.body.email },
+        { name: req.body.name, fundName: req.body.fundName, address: req.body.address, shortName: req.body.shortName },
         (err, event) => {
             if (err) {
                 console.log('Error on update-org-info: ' + err)
@@ -557,7 +814,8 @@ app.get('/get-org-from-email/:email', (req, res) => {
                             logo: org.logoImage,
                             address: org.address,
                             sponsorCode: org.sponsorCode,
-                            fundName: org.fundName
+                            fundName: org.fundName,
+                            admin: org.admin
                         }
 
                         // console.log(result)
@@ -586,26 +844,6 @@ function generateRandom() {
     return result
 }
 
-
-function generateNewCodes() {
-    let date = new Date()
-    orgs.find(function(err, results) {
-        async.each(results, function (result, callback) {
-            let lastUpdated = new Date(result.updatedAt)
-            if ((date.getMonth() == 11 && lastUpdated.getMonth() == 5) || (date.getMonth() == 5 && lastUpdated.getMonth() == 11)) {
-                console.log(result.updatedAt)
-                result.sponsorCode = generateRandom()
-                result.save()
-            }
-            
-        });
-    });
-}
-
-// This makes the function run depending on the interval
-// Second parameter represents interval - 60000 ms = 1 min 
-myInterval = setInterval( generateNewCodes,   24 * 60 * 60000); 
-
 app.get('/get-sponsor-code/:org', (req, res) => {
     orgs.find({ name: req.params.org })
         .select({ sponsorCode: 1, updatedAt: 1 })
@@ -618,6 +856,22 @@ app.get('/get-sponsor-code/:org', (req, res) => {
                 res.json(result[0])
             }
         })
+})
+
+app.put('/update-sponsor-code', (req, res) => {
+    orgs.findOneAndUpdate(
+        { name: req.body.org },
+        { sponsorCode: generateRandom() },
+        function (error, success) {
+            if (error) {
+                console.log("Error", error);
+                res.send('Error')
+            } else {
+                console.log(success);
+                res.send('Updated sponsorship level')
+            }
+        }
+    );
 })
 
 
@@ -677,13 +931,13 @@ app.get('/get-org', (req,res) => {
     res.send('Get org')
 })
 
-function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2){
+function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, shortorgName, orgAddress, total, orgFundName, orgAddress2, orgEmailAddress){
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     const msg = {
         to: toInput, // Change to your recipient
         from: fromInput, // Change to your verified sender
         subject: subjectInput,
-        
+        cc: [sponsifyEmail, orgEmailAddress],
         
         templateId: 'd-ea66f6a85fef47ceba47c45f55ea34ae',
         dynamicTemplateData: {
@@ -693,7 +947,8 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             items : messageInput, 
             totalCost : "$" + total,
             orgFundName : orgFundName,
-            orgAddress2 : orgAddress2
+            orgAddress2 : orgAddress2, 
+            orgEmailAddress : orgEmailAddress,
             },
         }
         sgMail
@@ -707,10 +962,183 @@ function sendGridEmail(toInput, fromInput, subjectInput, messageInput, orgName, 
             console.error(error)
         })
 }
+
+function sendRequestCreatedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        cc: sponsifyEmail,
+        templateId: 'd-f148bb16c70548e09ab271ed526e04d9',
+        dynamicTemplateData: {
+            orgName : orgName
+        },
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        //html: 'Howdy,<br/><br/>Thank you for your interest in joining Sponsify! We will be in touch with you once your request for <strong>' + orgName + '</strong> has been reviewed by the admin team.<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
 app.post("/send-checkout-email", (req, res) => {
-    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2 } = req.body
+    const { firstNameInput, lastNameInput, emailInput, cartMessage, subject, student_org_name, orgShortName,orgAddress1, total, orgFundName, orgAddress2, orgEmailAddress } = req.body
     const name = firstNameInput + " " + lastNameInput;
-    sendGridEmail(emailInput,"sabrinapena@tamu.edu",subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2);
+    sendGridEmail(emailInput,sponsifyEmail,subject,cartMessage,student_org_name,orgShortName,orgAddress1, total, orgFundName, orgAddress2, orgEmailAddress);
+})
+
+app.post("/send-request-created-email", (req, res) => {
+    console.log(req.body)
+    const { email, name } = req.body
+    let subject = "Sponsify New User Request - " + name
+    sendRequestCreatedEmail(email, sponsifyEmail, subject, name);
+})
+
+app.get('/get-requests', (req, res) => {
+    requests.find()
+    .exec((err, result) => {
+        if (err) {
+            console.log("Error on get-requests, " + err)
+        }
+        else {
+            res.send(result)
+        }
+    }
+    )
+})
+
+app.post('/create-request', (req, res) => {
+    const newRequest = new requests({
+        name: req.body.name,
+        email: req.body.email,
+        description: req.body.description
+    })
+
+    newRequest.save((err) => {
+        if (err) {
+            console.log('Error on create-request: ' + err)
+            res.json({ status: '500' })
+        }
+        else {
+            console.log('Created new request')
+            res.json({ status: '200' })
+        }
+    })
+})
+
+function sendAccessDeniedEmail(toInput, fromInput, subjectInput) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        subject: subjectInput,
+        cc: sponsifyEmail,
+        templateId: 'd-7436b466a7f8469fa5b396429b70d1c2',
+        // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+       // html: 'Howdy,<br/><br/>Thank you for taking the time to request using Sponsify. Unfortunately, we will not be able to grant you access at the moment.<br/><br/>Please reach out to our email if you have any questions.<br/><br/>Thanks,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
+app.delete('/delete-request', (req, res) => {
+    const id = req.body.id
+
+    if (!id) {
+        console.log('Cannot delete org request, no id in request body')
+        res.json({ status: '400' })
+    }
+    else {
+        if (mongoose.Types.ObjectId.isValid(id)) {
+            requests.findByIdAndRemove(id, (err, event) => {
+                if (err) {
+                    console.log('Error on delete-request: ' + err)
+                    res.json({ status: '500' })
+                }
+                else {
+                    console.log('Successfully deleted request: \n' + event)
+                    res.json({ status: '200' })
+                }
+            })
+
+            sendAccessDeniedEmail(req.body.email, sponsifyEmail, "Sponsify Access Denied")
+
+        }
+        else {
+            console.log('Cannot delete request, invalid id in request body')
+            res.json({ status: '400' })
+        }
+    }
+})
+
+function sendAccessGrantedEmail(toInput, fromInput, subjectInput, orgName) {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to: toInput, // Change to your recipient
+        from: fromInput, // Change to your verified sender
+        cc: sponsifyEmail,
+        subject: subjectInput,
+        templateId:"d-1a4ab0ad027545d0b201dbaa2cf9010c",
+        dynamicTemplateData: {
+            orgName : orgName
+        } ,
+        // // text: 'Thank you for your interest in joining Sponsify! We will be in touch with you once your request has been reviewed by the admin team.\n\nBest,\nSponsify Team',
+        // html: 'Howdy!<br/><br/>Access has been granted for <strong>' + orgName + '</strong>. Please log in using this same email!<br/><br/>Best,<br/>Sponsify Team'
+        
+        }
+        console.log(msg)
+        sgMail
+        .send(msg)
+        .then((response) => {
+            console.log("Email sent")
+            console.log(response[0].statusCode)
+            console.log(response[0].headers)
+        })
+        .catch((error) => {
+            console.error(error.response.body)
+        })
+}
+
+app.post("/request-to-org", async (req, res) => {
+    const newOrg = new orgs({
+        name: "new",
+        validAdmins: [req.body.email],
+        sponsorCode: generateRandom()
+    })
+
+    newOrg.save((err) => {
+        if (err) {
+            console.log('Error on creating new org: ' + err)
+        }
+        else {
+            console.log('Created new org from request')
+        }
+    })
+
+    sendAccessGrantedEmail(req.body.email, sponsifyEmail, "Sponsify Access Granted!", req.body.name)
+    requests.deleteOne({ _id: req.body.id }).then(console.log("Deleted request"))
+
+
 })
 
 // The "catchall" handler: for any request that doesn't

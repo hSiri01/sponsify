@@ -10,17 +10,28 @@ const purchaseSchema = new mongoose.Schema({
     events: {
         type: [{
             type: mongoose.SchemaTypes.ObjectId,
-            ref: 'event'
+            ref: 'event',
         }],
         required: true,
         validate: {
-            validator: v => v.length > 0,
+            validator: v => (v.length > 0 || haveZombies(v)),
             message: props => `Events array is empty: ${props.value}`
         }
+    },
+    zombieEvents: {
+        type: [{
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'zombie',
+        }],
+        required: false
     },
     totalAmount: {
         type: Number,
         required: true
+    },
+    donationAmount: {
+        type: Number,
+        required: false
     },
     dateSponsored: {
         type: Date,
@@ -32,5 +43,9 @@ const purchaseSchema = new mongoose.Schema({
         required: true
     }
 })
+
+function haveZombies(value) {
+    return (this.zombieEvents && this.zombieEvents.length > 0);
+}
 
 module.exports = mongoose.model('purchases', purchaseSchema);

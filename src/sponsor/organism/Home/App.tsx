@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid,Link } from '@mui/material';
 import Logo from '../../../assets/images/logos/logo.png';
 import Support from '../../../assets/images/graphics/support.svg';
 import { theme} from '../../../utils/theme';
@@ -13,12 +13,14 @@ import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
 import {useNavigate} from "react-router-dom"
 import { VerifySponsorCode } from '../../../utils/api-types';
+import { useCart } from '../../../contexts/Cart';
 
 
 interface Props {
 }
 
 const SponsorHome = (props: Props) => {
+    const { clearCart, cart } = useCart()
     const [input, setInput] = React.useState('');
     const [openAlert, setOpenAlert] = React.useState(false);
     const navigate = useNavigate();
@@ -40,6 +42,7 @@ const SponsorHome = (props: Props) => {
     }
 
     const handleVerifyCode = async () => {
+        clearCart() //Need to reset cart for each individual user
         if (input === '') {
 
             setOpenAlert(true)
@@ -118,6 +121,10 @@ const SponsorHome = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', margin: theme.spacing(6) }}>
                     <img style={{ maxHeight: theme.spacing(60), marginTop: theme.spacing(10) }} src={Support} alt="Giving money" />
+                </Grid>
+
+                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mb: theme.spacing(6), mt: theme.spacing(6) }}>
+                    <Link href="/admin-login" color="inherit">Administrator? </Link>
                 </Grid>
             </Grid>
             

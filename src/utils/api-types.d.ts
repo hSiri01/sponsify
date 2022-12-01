@@ -1,6 +1,7 @@
-import {Event, SponsorshipLevel, FAQ, Organization, Purchase, Sponsor} from './mongodb-types'
+import {Event, SponsorshipLevel, FAQ, Organization, Purchase, Sponsor, Request} from './mongodb-types'
 
 export type GetAllFaq = FAQ[]
+export type GetRequests = Request[]
 export type UpdateFaq = string
 export type CreateFaq = string
 export type DeleteFaq = string

@@ -8,7 +8,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import MenuBar from '../../molecule/MenuBar/App'
 import FormData from 'form-data'
-import ShoppingCart from '@mui/icons-material/ShoppingCart';
+import MediaQuery from 'react-responsive'
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface Props {
@@ -18,8 +19,11 @@ interface Props {
 
 const BasicInfo = (props: Props) => {
 
+    const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+
     const student_org_name = JSON.parse(localStorage.getItem('org-name') || '""');
     const student_org_short_name = JSON.parse(localStorage.getItem('org-short-name') || '""');
+    const user_email = JSON.parse(localStorage.getItem('email') || '""');
     
     const [orgName, setOrgName] = React.useState(student_org_name)
     const [orgShortName, setOrgShortName] = React.useState(student_org_short_name)
@@ -37,6 +41,7 @@ const BasicInfo = (props: Props) => {
     const uploadPreset = 'db6q2mz0'
     const cloudName = "dmkykmach"
 
+    console.log(student_org_name)
     
     React.useEffect(() => {
         const fetchOrgInfo = async() => {
@@ -69,6 +74,7 @@ const BasicInfo = (props: Props) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                email: user_email,
                 name: orgName,
                 address: {
                     streetAddress: streetAddress,
@@ -82,6 +88,8 @@ const BasicInfo = (props: Props) => {
             })
         })
             .then(() => {
+                localStorage.setItem('org-name', JSON.stringify(orgName))
+                localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
                 window.location.reload()})
     }
 
@@ -126,37 +134,110 @@ const BasicInfo = (props: Props) => {
     return (
         <ThemeProvider theme={theme}>
 
+            {isAuthenticated && student_org_name !== "" && (
+            <>
             <MenuBar />
 
-            <Grid container sx={{ backgroundColor: "#f3f3f3" }}>
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+            <div style={{
+                backgroundColor: "#f3f3f3",
+                minWidth: "100vw",
+                minHeight: "100vh",
+            }}>
+            <Grid container >
+                    <MediaQuery minWidth={1200}>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(30),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
 
-                <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
-                    <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                        <div>{'\u00D7'}</div>
-                    </Typography>
-                </Grid>
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                <div>{'\u00D7'}</div>
+                            </Typography>
+                        </Grid>
 
-                <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
-                    src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{student_org_short_name}</Typography>}
-                </Grid>
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
+                            src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{student_org_short_name}</Typography>}
+                        </Grid>
 
-                <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                </Grid>
+                        <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery minWidth={500} maxWidth={1199}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(20),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
+
+                    <MediaQuery maxWidth={499}>
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center', ml: "8%" }}>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{
+                                maxHeight: theme.spacing(15),
+                                marginTop: theme.spacing(10),
+                            }}
+                                src={Logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
+                            <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
+                                x
+                            </Typography>
+                        </Grid>
+
+                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                            <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        </Grid>
+
+                        <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        </Grid>
+                    </MediaQuery>
 
 
 
 
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: theme.spacing(10) }}>
+                <Grid item xs={12} sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    marginTop: theme.spacing(10),
+                    minWidth: theme.spacing(100), 
+                    [theme.breakpoints.down('sm')]: {
+                        ml: theme.spacing(5),
+                    }, 
+                     }}>
                     <Typography variant="h4">
-                        {orgShortName} Basic Information
+                        {student_org_short_name} Basic Information
                     </Typography>
                 </Grid>
 
@@ -164,17 +245,29 @@ const BasicInfo = (props: Props) => {
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
                     <TextField
-                        sx={{ minWidth: theme.spacing(100), mb: theme.spacing(4) }}
+                        sx={{ 
+                            minWidth: theme.spacing(100), 
+                            mb: theme.spacing(4),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(60),    
+                            }, 
+                        }}
+                        required
                         id="outlined-basic"
-                        label="Organization"
+                        label={student_org_name==="new" ? "Organization Name Required" : "Organization"}
                         variant="outlined"
-                        value={orgName}
+                        value={orgName === "new" ? "" : orgName}
                         onChange={ev => setOrgName(ev.target.value)} />
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(2) }}>
                     <TextField
-                        sx={{ minWidth: theme.spacing(100) }}
+                        sx={{ 
+                            minWidth: theme.spacing(100),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(60),
+                            },
+                         }}
                         id="outlined-basic"
                         label="Street Address"
                         variant="outlined"
@@ -186,7 +279,12 @@ const BasicInfo = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
 
                     <TextField
-                        sx={{ minWidth: theme.spacing(100)}}
+                        sx={{
+                            minWidth: theme.spacing(100),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(60),
+                            },
+                        }}
                         id="outlined-basic"
                         label="Street Address 2"
                         variant="outlined"
@@ -198,7 +296,12 @@ const BasicInfo = (props: Props) => {
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
 
                     <TextField
-                        sx={{ minWidth: theme.spacing(100)}}
+                        sx={{
+                            minWidth: theme.spacing(100),
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: theme.spacing(60),
+                            },
+                        }}
                         id="outlined-basic"
                         label="City"
                         variant="outlined"
@@ -207,26 +310,59 @@ const BasicInfo = (props: Props) => {
 
                 </Grid>
 
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(6) }}>
-
+                    <Grid item sm={6} xs={12} sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'right',
+                        mt: theme.spacing(5),
+                        [theme.breakpoints.down('sm')]: {
+                            display: 'flex', justifyContent: 'center',
+                            
+                        }, 
+                        }}>
                     <TextField
-                        sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2)}}
+                        sx={{ 
+                            minWidth: theme.spacing(10),
+                            margin: theme.spacing(2),
+                        }}
                         id="outlined-basic"
                         label="State"
                         variant="outlined"
                         value={state}
                         onChange={ev => setState(ev.target.value)} />
+                    </Grid>
 
+                    <Grid item sm={6} xs={12}
+                        sx={{
+                            mt: theme.spacing(5),
+                            [theme.breakpoints.down('sm')]: {
+                                display: 'flex', 
+                                justifyContent: 'center',
+                               
+                            },
+                        }} >
                     <TextField
-                        sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2), mb: theme.spacing(4) }}
+                        sx={{ 
+                            minWidth: theme.spacing(10), 
+                            margin: theme.spacing(2), 
+                            mb: theme.spacing(4) }}
                         id="outlined-basic"
                         label="Zipcode"
                         variant="outlined"
                         value={zipcode > -1 ? zipcode : ""}
                         onChange={ev => setZipcode(+ev.target.value)} />
+                    </Grid>
 
-                </Grid>
-                <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center',  }}>
+               
+
+
+                    <Grid item sm={6} xs={12} sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'right',
+                        [theme.breakpoints.down('sm')]: {
+                            display: 'flex', justifyContent: 'center',
+                            mt: theme.spacing(5)
+                        },
+                    }}>
 
                     <TextField
                         sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2)}}
@@ -235,6 +371,16 @@ const BasicInfo = (props: Props) => {
                         variant="outlined"
                         value={orgFundName}
                         onChange={ev => setOrgFundName(ev.target.value)} />
+                    </Grid>
+
+                    <Grid item sm={6} xs={12}
+                        sx={{
+                            [theme.breakpoints.down('sm')]: {
+                                display: 'flex',
+                                justifyContent: 'center',
+                                mt: theme.spacing(5),
+                            },
+                        }} >
 
                     <TextField
                         sx={{ minWidth: theme.spacing(10), margin: theme.spacing(2), mb: theme.spacing(4) }}
@@ -244,14 +390,14 @@ const BasicInfo = (props: Props) => {
                         value={orgShortName}
                         onChange={ev => setOrgShortName(ev.target.value)} />
 
-                </Grid>
+                    </Grid>
                
                 <Grid item xs={12} > 
                     
                         <iframe title="dummyframe" name="dummyframe" id="dummyframe" height="0%" width="0%"></iframe>
                         <form  onSubmit={uploadImage} action ="#" /*method="POST" action="/create-logo"*/ target = "dummyframe" encType="multipart/form-data">
                             <input type="hidden" name="organization" value={student_org_name} />
-                            <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(10)}}>
+                            <Grid item xs = {12} sx ={{justifyContent: 'center',  display: 'flex',alignItems: 'center', margin:"auto", mt: theme.spacing(5)}}>
                             
                                 <Button
                                 variant="contained"
@@ -292,7 +438,7 @@ const BasicInfo = (props: Props) => {
                                         ml: theme.spacing(5),
                                     }} 
                                 
-                                    >Save</Button>
+                                    >SAVE</Button>
 
                             </Grid>
                             
@@ -308,9 +454,34 @@ const BasicInfo = (props: Props) => {
 
 
             </Grid>
+            </div>
 
+            </>
+            )}
 
-            
+            {(!isLoading && !isAuthenticated) && (
+                <Grid container>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
+                    </Grid>
+                    
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Typography variant="h5">
+                            Login below to access Sponsify
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop:theme.spacing(10) }}>
+                        <Button onClick={() => loginWithRedirect()} variant="contained" size="large" color="primary" sx={{
+                                borderRadius: 0,
+                                pt: theme.spacing(3),
+                                pb: theme.spacing(3),
+                                pl: theme.spacing(8),
+                                pr: theme.spacing(8),
+                                ml: theme.spacing(5),
+                            }}>Login</Button>
+                    </Grid>
+                </Grid> 
+            )}
 
         </ThemeProvider>
 
