@@ -618,13 +618,32 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
     // Remove event id, decrease total amount of purchase
     const purchase = await purchases.findOne({ _id: req.body.purchaseId })
     let index = purchase.events.indexOf(mongoose.Types.ObjectId(req.body.eventId))
-    let newEvents = purchase.events
-    newEvents.splice(index, 1);
+    let event = {}
 
-    purchase.set({
-        events: newEvents,
-        totalAmount: purchase.totalAmount - req.body.eventPrice
-    })
+    if (index > -1) {
+        let newEvents = purchase.events
+        newEvents.splice(index, 1);
+
+        purchase.set({
+            events: newEvents,
+            totalAmount: purchase.totalAmount - req.body.eventPrice
+        })
+
+        event = await events.findOne({ _id: req.body.eventId })
+    }
+    else {
+        // zombie event
+        index = purchase.zombieEvents.indexOf(mongoose.Types.ObjectId(req.body.eventId))
+        let newZombieEvents = purchase.zombieEvents
+        newZombieEvents.splice(index, 1);
+
+        purchase.set({
+            zombieEvents: newZombieEvents,
+            totalAmount: purchase.totalAmount - req.body.eventPrice
+        })
+
+        event = await zombieEvents.findOne({ _id: req.body.eventId })
+    }
 
     purchase.save((err) => {
         if (err) {
@@ -637,7 +656,6 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
 
     // Decrement number of spots taken from event
     // Remove sponsor
-    const event = await events.findOne({ _id: req.body.eventId })
     let newSponsors = event.sponsors
     index = newSponsors.indexOf(mongoose.Types.ObjectId(req.body.sponsorId))
     newSponsors.splice(index, 1)
@@ -652,7 +670,7 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
             console.log('Error on update event: ' + err)
         }
         else {
-            console.log('Successfully update event\n')
+            console.log('Successfully updated event\n')
         }
     })
 
@@ -663,17 +681,23 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
         { sponsorLevel: newLevel ? newLevel : 'Not qualified' }
     ).then(console.log("Updated sponsor level"))
     
-    // check if events array from purchase is empty
-    await purchases.find({ _id: req.body.purchaseId }, { events: 1 })
+    // check if events + zombieEvents arrays from purchase are empty
+    await purchases.find({ _id: req.body.purchaseId }, { events: 1, zombieEvents: 1 })
         .exec(async(err, result) => {
             if (err) {
                 console.log("Error on get-all-sponsors, " + err)
             }
+
+            console.log(result[0])
+            const hasZombieEvents = false
+            if (result[0].zombieEvents) {
+                hasZombieEvents = (result[0].zombieEvents.length > 0)
+            }
             
-            if (result[0].events.length == 0) {
+            if (result[0].events.length === 0 && !hasZombieEvents) {
 
                 // remove purchase
-                purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
+                await purchases.findByIdAndRemove(req.body.purchaseId, (err, purchase) => {
                     if (err) {
                         console.log('Error on delete-purchase: ' + err)
                         // res.json({ status: '500' })
@@ -685,13 +709,13 @@ app.delete('/delete-event-from-purchase', async (req, res) => {
                 })
 
                 // remove sponsor
-                sponsors.findByIdAndRemove(req.body.sponsorId, (err, purchase) => {
+                await sponsors.findByIdAndRemove(req.body.sponsorId, (err, sponsor) => {
                     if (err) {
                         console.log('Error on delete-sponsor: ' + err)
                         // res.json({ status: '500' })
                     }
                     else {
-                        console.log('Successfully deleted sponsor: \n' + purchase)
+                        console.log('Successfully deleted sponsor: \n' + sponsor)
                         res.json({ status: '200' })
                     }
                 })
@@ -728,6 +752,7 @@ app.get('/get-all-sponsors/:org', (req, res) => {
             let sponsors = []
             for (let i = 0; i < result.length; i++) 
             {
+                console.log(result[i])
                 sponsors.push({sponsorLevel:result[i].sponsorID.sponsorLevel, company:result[i].sponsorID.company, totalAmount:result[i].totalAmount, _id:result[i].sponsorID._id})
             }
             res.json(sponsors)
