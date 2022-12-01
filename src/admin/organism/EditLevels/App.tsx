@@ -52,6 +52,11 @@ const EditLevels = (props: Props) => {
         setMinAmountError( false )
         setMaxAmountError(false)
         setColorError(false)
+
+        setLevelName('')
+        setMinAmount('')
+        setMaxAmount('')
+        setDes('')
     }
 
 
