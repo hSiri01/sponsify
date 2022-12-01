@@ -302,7 +302,7 @@ app.get('/check-event-availability/:id', (req, res) => {
                 console.log("Error on check-event-availability, " + err)
             }
             else {
-                if (result[0].spotsTaken >= result[0].totalSpots) {
+                if (result[0].spotsTaken >= result[0].totalSpots && result[0].name !== "General Donation") {
                     response = false
                     res.send({ cleared: false})
                 } else {
@@ -537,8 +537,8 @@ app.post('/checkout-events', async(req, res) => {
         }
     })
 
-    // console.log("got events from request: ")
-    // console.log(req.body.events)
+    console.log("got events from request: ")
+    console.log(req.body.events)
     let eventIDs = []
     for (let i = 0; i < req.body.events.length; i++) {
         for (let j = 0; j < req.body.events[i].quantity; j++) {

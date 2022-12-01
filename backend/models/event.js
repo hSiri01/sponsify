@@ -63,7 +63,7 @@ const eventSchema = new mongoose.Schema({
 })
 
 function checkSpotsTaken(value) {
-    return (value >= 0 && value <= this.totalSpots);
+    return (this.name === "General Donation") || (value >= 0 && value <= this.totalSpots);
 }
 
 function checkEndDate(value) {
