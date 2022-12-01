@@ -160,9 +160,9 @@ const Dashboard = (props: Props) => {
 
                         <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
-                            src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{student_org_short_name}</Typography>}
+                            src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{orgShortName}</Typography>}
                         </Grid>
-
+                        
                         <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                         </Grid>
                     </MediaQuery>
@@ -181,12 +181,13 @@ const Dashboard = (props: Props) => {
 
                         <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
                             <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                                x
+                                <div>{'\u00D7'}</div>
                             </Typography>
                         </Grid>
 
-                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <img style={{ maxHeight: theme.spacing(20), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
+                            src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{orgShortName}</Typography>}
                         </Grid>
 
                         <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -207,7 +208,7 @@ const Dashboard = (props: Props) => {
 
                         <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', mt: theme.spacing(18) }}>
                             <Typography variant="h4" sx={{ fontFamily: "Oxygen" }}>
-                                x
+                                <div>{'\u00D7'}</div>
                             </Typography>
                         </Grid>
                         
@@ -218,7 +219,7 @@ const Dashboard = (props: Props) => {
                                 size="large" 
                                 color="secondary" 
                             sx={{
-                                
+ 
                                 color: 'white',
                                 mb: theme.spacing(2),
                                 backgroundColor: '#434343',
@@ -253,10 +254,11 @@ const Dashboard = (props: Props) => {
                             </DialogActions>
                         </Dialog>
 
-                        <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <img style={{ maxHeight: theme.spacing(15), marginTop: theme.spacing(10) }} src={logo} alt="Sponsify logo" />
+                        <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {logo ? <img style={{ maxHeight: theme.spacing(30), height: 120, width: 240, objectFit: 'contain', marginTop: theme.spacing(10) }} 
+                            src={logo} alt={"Org Logo"} /> : <Typography variant="h3">{orgShortName}</Typography>}
                         </Grid>
-
+                        
                         <Grid item xs={3} sx={{ display: 'flex', justifyContent: 'center' }}>
                         </Grid>
                     </MediaQuery>
