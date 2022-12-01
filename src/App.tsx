@@ -11,20 +11,21 @@ import Checkout from './sponsor/organism/Checkout/App'
 import Inbox from './sponsor/organism/Inbox/App'
 import CartProvider from './contexts/Cart'
 
-import EditFAQ from './admin/organism/EditFAQ/App';
+import AdminLogin from './admin/organism/Home/App';
 import Dashboard from './admin/organism/Dashboard/App'
+import BasicInfo from './admin/organism/BasicInfo/App';
+import EditFAQ from './admin/organism/EditFAQ/App';
+import EditLevels from './admin/organism/EditLevels/App';
 import EditEvents from './admin/organism/EditEvents/App'
 import PurchaseHistory from './admin/organism/PurchaseHistory/App';
-import EditLevels from './admin/organism/EditLevels/App';
-import BasicInfo from './admin/organism/BasicInfo/App';
 
-import AdminLogin from './admin/organism/Home/App';
 import CheckBackLater from './sponsor/organism/CheckBackLater/App'
 
 import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 
 const App: React.FC = () => {
@@ -42,16 +43,15 @@ const App: React.FC = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/check-back-later" element={<CheckBackLater />} />
+            <Route path="*" element={<Navigate to="/check-back-later" />} />
 
-            <Route path="/faq-edit" element={<EditFAQ />} />
-          
             <Route path="/admin-login" element={<AdminLogin/>} />
-            <Route path="/levels-edit" element={<EditLevels />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/basic-info" element={<BasicInfo />} />
+            <Route path="/faq-edit" element={<EditFAQ />} />
+            <Route path="/levels-edit" element={<EditLevels />} />
             <Route path="/events-edit" element={<EditEvents />} />
             <Route path="/summary" element={<PurchaseHistory />} />
-            <Route path="/basic-info" element={<BasicInfo />} />
-
           </Routes>
 
         </BrowserRouter>
