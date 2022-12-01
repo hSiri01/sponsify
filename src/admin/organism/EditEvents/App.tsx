@@ -197,8 +197,6 @@ const EditEvents = (props: Props) => {
 
         <ThemeProvider theme={theme}>
 
-            <MenuBar />
-
             <div style={{
                 backgroundColor: "#f3f3f3",
                 minWidth: "100vw",
@@ -207,6 +205,8 @@ const EditEvents = (props: Props) => {
 
             {isAuthenticated && student_org_name !== "" && (
                 <>
+                    <MenuBar />
+                    
                     <Grid container>
                             <MediaQuery minWidth={1200}>
                                 <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center', }}>
@@ -773,7 +773,7 @@ const EditEvents = (props: Props) => {
             )}
 
             {(!isLoading && !isAuthenticated) && (
-                <Grid container sx={{ backgroundColor: "#fff" }}>
+                <Grid container>
                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <img style={{ maxHeight: theme.spacing(30), marginTop: theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
                     </Grid>

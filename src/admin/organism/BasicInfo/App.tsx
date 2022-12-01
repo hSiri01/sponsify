@@ -459,7 +459,7 @@ const BasicInfo = (props: Props) => {
             )}
 
             {(!isLoading && !isAuthenticated) && (
-                <Grid container sx={{ backgroundColor:"#fff"}}>
+                <Grid container>
                     <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
                         <img style={{ maxHeight: theme.spacing(30), marginTop:theme.spacing(10) }} src={Logo} alt="Sponsify logo" />
                     </Grid>
