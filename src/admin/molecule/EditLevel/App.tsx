@@ -90,7 +90,7 @@ const EditLevel = (props: Props) => {
     const handleCloseConfirmation = () => setOpenConfirmation(false);
 
     const handleUpdateLevel = async () => {
-        if ((maxAmount ? (Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0 ? true : false) && (Number(maxAmount) > Number(minAmount))): true) && Number.isFinite(Number(minAmount)) && levelName.length > 0 && des.length > 0 && Number(minAmount) >= 0 && color ) {
+        if ((maxAmount ? (Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0 ? true : false) && (Number(maxAmount) > Number(minAmount))): true) && minAmount && Number.isFinite(Number(minAmount)) && levelName.length > 0 && des.length > 0 && Number(minAmount) >= 0 && color ) {
             const requestOptions = {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -112,8 +112,8 @@ const EditLevel = (props: Props) => {
         else{
 
             setLevelNameError(!levelName)
-            setDescriptionError(!des)                
-            setMinAmountError((Number.isFinite(Number(minAmount)) ? (Number(minAmount) >= 0 ? false : true) : true ) )
+            setDescriptionError(!des)         
+            setMinAmountError(minAmount ? (Number.isFinite(Number(minAmount)) ? (Number(minAmount) >= 0 ? false : true) : true ) : true )
             setMaxAmountError(maxAmount ?  (( Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0) && (Number(maxAmount) > Number(minAmount)) ) ? false : true): false)
             setColorError(!color)
         }

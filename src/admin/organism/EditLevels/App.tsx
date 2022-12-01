@@ -129,8 +129,8 @@ const EditLevels = (props: Props) => {
         }
         else{
             setLevelNameError(!levelName)
-            setDescriptionError(!des)                
-            setMinAmountError((Number.isFinite(Number(minAmount)) ? (Number(minAmount) >= 0 ? false : true) : true ) )
+            setDescriptionError(!des)     
+            setMinAmountError( minAmount ? (Number.isFinite(Number(minAmount)) ? (Number(minAmount) >= 0 ? false : true) : true ) : true )
             setMaxAmountError(maxAmount ?  (( Number.isFinite(Number(maxAmount)) && (Number(maxAmount) > 0) && (Number(maxAmount) > Number(minAmount)) ) ? false : true): false)
             setColorError(!color)
         }
