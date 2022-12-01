@@ -460,7 +460,7 @@ const Events = (props: Props) => {
                                     id={event._id}
                                     short_description={event.briefDesc}
                                     long_description={event.desc}
-                                    avg_attendance={event.avgAttendance ? event.avgAttendance : '-'}
+                                    avg_attendance={event.avgAttendance > -1 ? event.avgAttendance : '-'}
                                     occurrences={event.totalSpots - event.spotsTaken}
                                     price={event.price}
                                     date_start={new Date(event.date)}
