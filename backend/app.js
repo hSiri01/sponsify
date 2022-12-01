@@ -10,7 +10,6 @@ const zombieEvents = require('./models/zombie')
 const app = express()
 const bodyParser = require('body-parser');
 const path = require('path');
-const sponsor = require('./models/sponsor');
 var cors = require('cors');
 var async = require('async');
 app.use(cors())
@@ -51,7 +50,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error!!\n'))
 
 app.get('/', (req, res) => {
-    res.send('Hello! This is the default route for the backend server.')
+    res.send('Hello! This is the default route for the backend server.');
 })
 
 app.get('/get-all-FAQ/:org', (req, res) => {
@@ -59,7 +58,8 @@ app.get('/get-all-FAQ/:org', (req, res) => {
         .select({ FAQ: 1 })
         .exec((err, result) => {
             if (err) {
-                console.log("Error on get-all-FAQ, " + err)
+                console.log("Error on get-all-FAQ, " + err);
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.send(result[0].FAQ)
@@ -138,6 +138,7 @@ app.get('/get-all-levels/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-levels, " + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.json(result[0].levels)
@@ -176,6 +177,7 @@ app.get('/get-level-by-amount/:org/:amount', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-level-by-amount, " + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 const amount = req.params.amount
@@ -270,6 +272,7 @@ app.get('/get-enabled-events/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-enabled-events, " + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.send(result)
@@ -283,6 +286,7 @@ app.get('/get-all-events/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-all-events, " + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.send(result)
@@ -502,6 +506,7 @@ app.get('/verify-sponsor-code/:code', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log('Error on verify-sponsor-code, ' + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
 
             if (result.length == 0) {
@@ -735,7 +740,9 @@ app.post('/create-sponsor', (req,res) => {
         sponsorLevel: req.body.sponsorLevel
     });
     newSponsor.save((err) => {
-        if (err) console.log("Error on create sponsor, " + err);
+        if (err) {
+            console.log("Error on create sponsor, " + err);
+        }
         //else it saved
     });
 })
@@ -765,6 +772,7 @@ app.get('/get-org-info/:org', (req,res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-org-info, " + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.json(result[0])
@@ -842,6 +850,7 @@ app.get('/get-sponsor-code/:org', (req, res) => {
         .exec((err, result) => {
             if (err) {
                 console.log("Error on get-sponsor-code, " + err)
+                res.sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
             }
             else {
                 res.json(result[0])
@@ -1135,7 +1144,15 @@ app.post("/request-to-org", async (req, res) => {
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'build', 'index.html'));
+    //console.log('redirecting')
+    //res.redirect('/redirect');
+    res.redirect(404, '../src/sponsor/organism/CheckBackLater');
+});
+
+// redirect to /check-back-later page on error
+app.get('/redirect', (req, res) => {
+    //console.log('redirected')
+    res.status(404).sendFile(path.join(__dirname, '../src/sponsor/organism/CheckBackLater'));
 });
 
 app.listen(port, () => {
