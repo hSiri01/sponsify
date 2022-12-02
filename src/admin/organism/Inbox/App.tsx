@@ -48,7 +48,7 @@ const Inbox = (props: Props) => {
                 </Grid>
 
                 <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'right', margin: theme.spacing(6) }}>
-                    <Button href="/" 
+                    <Button href="/admin-login" 
                             variant="contained" 
                             size="large" 
                             color="secondary" 
