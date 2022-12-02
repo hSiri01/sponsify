@@ -90,7 +90,8 @@ const BasicInfo = (props: Props) => {
             .then(() => {
                 localStorage.setItem('org-name', JSON.stringify(orgName))
                 localStorage.setItem('org-short-name', JSON.stringify(orgShortName))
-                window.location.reload()})
+                //window.location.reload()
+            })
     }
 
     const handleCreateLogoUrl =  (url : string) => {
@@ -125,7 +126,6 @@ const BasicInfo = (props: Props) => {
         .then(resp => resp.json())
         .then(data => {
         handleCreateLogoUrl(data.url)
-        //setLogo(data.url)
         })
         .catch(err => console.log(err))
         }
