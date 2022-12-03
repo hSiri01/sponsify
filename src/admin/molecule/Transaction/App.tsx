@@ -106,7 +106,7 @@ const Transaction = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5), ml: theme.spacing(8) }}>
-                                <Typography sx={{ color: "#979797" }} variant="h6">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="h6">{purchase_date.getMonth() + 1}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5), pr: theme.spacing(5) }}>
@@ -215,7 +215,7 @@ const Transaction = (props: Props) => {
                             </Grid>
 
                             <Grid item xs={2} sx={{ marginTop: theme.spacing(5), }}>
-                                <Typography sx={{ color: "#979797" }} variant="body2">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{purchase_date.getMonth() + 1}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
                             </Grid>
 
                             <Grid item xs={1} sx={{ marginTop: theme.spacing(5) }}>
@@ -251,7 +251,7 @@ const Transaction = (props: Props) => {
 
                             <Grid item xs={4} sx={{ marginTop: theme.spacing(3), pl: theme.spacing(5) }}>
                                 <Typography sx={{ color: "#367c63", fontWeight: "600" }} variant="body2">${price}</Typography>
-                                <Typography sx={{ color: "#979797" }} variant="body2">{purchase_date.getMonth()}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
+                                <Typography sx={{ color: "#979797" }} variant="body2">{purchase_date.getMonth() + 1}/{purchase_date.getDate()}/{purchase_date.getFullYear()}</Typography>
                             </Grid>
 
                             <Grid item xs={12} sx={{ marginTop: theme.spacing(5), pr: theme.spacing(3), textAlign:'center' }}>
